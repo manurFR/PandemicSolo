@@ -1,0 +1,65 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+
+	<!-- Complement to pom.xml for use by the maven assembly plugin : Package 
+		a release inside a zip file, including the dependencies inside a lib/ subfolder. -->
+
+	<id>release</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<!-- Include default files -->
+			<directory>${project.basedir}</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>README*</include>
+				<include>LICENSE*</include>
+				<include>*.bat</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<!-- The sources and test sources jar files, inside a src/ subfolder -->
+			<directory>${project.build.directory}</directory>
+			<outputDirectory>src/</outputDirectory>
+			<includes>
+				<include>/${project.build.finalName}*sources.jar</include>
+				<include>*.xml</include>				
+			</includes>
+		</fileSet>
+		<fileSet>
+			<!-- The XML configuration files, inside the src/ subfolder -->
+			<directory>${project.basedir}</directory>
+			<outputDirectory>src/</outputDirectory>
+			<includes>
+				<include>*.xml</include>				
+			</includes>
+		</fileSet>		
+	</fileSets>
+	<files>
+		<!-- The shell launcher, with executable rights -->
+		<file>
+			<source>${project.basedir}/PandemicSolo.sh</source>
+			<outputDirectory>/</outputDirectory>
+			<fileMode>755</fileMode>
+		</file>
+		<!-- The project jar file, renamed for easy use by shell or DOS launchers -->
+		<file>
+			<source>${project.build.directory}/${project.build.finalName}.jar</source>
+			<outputDirectory>/</outputDirectory>
+			<destName>PandemicSolo.jar</destName>
+		</file>
+	</files>
+	<dependencySets>
+		<dependencySet>
+			<!-- Include runtime dependencies inside a lib/ subfolder -->
+			<outputDirectory>lib/</outputDirectory>
+			<useProjectArtifact>false</useProjectArtifact>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+</assembly>

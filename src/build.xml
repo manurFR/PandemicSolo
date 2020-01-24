@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- OBSOLETE
+
+	 DO NOT USE ANYMORE. 
+	 Use maven instead : mvn install, or mvn assembly:assembly to produce a packaged zip release file. 
+ -->
+	
+<project default="create_run_jar" name="Create Runnable Jar for PandemicSolo with libraries excluded">
+	<property name="jar.name" value="PandemicSolo.jar"/>
+	<property name="files.in.zip" value="${jar.name},LICENSE.txt,README.txt,PandemicSolo.bat,PandemicSolo.sh"/>
+	<property name="excluded.libraries" value="**/mockito-all-1.8.5.jar"/> <!-- Some libraries should not be deployed, they're only needed to run unit tests -->
+	
+    <fileset id="dependencies" dir="./lib">
+		<include name="**/*.jar" />
+	    <exclude name="${excluded.libraries}"/>
+	</fileset>
+		
+	<path id="dependencies.path">
+		<fileset refid="dependencies"/>
+	</path>
+	
+	<!-- ================================= 
+          target: create_run_jar              
+         ================================= -->	
+    <target name="create_run_jar">
+    	<!-- Prepare the classpath -->
+    	<manifestclasspath property="dependencies.list" jarfile="PandemicSolo.jar">
+    		<classpath refid="dependencies.path"/>
+    	</manifestclasspath>
+    	<echo message="Manifest Classpath: ${dependencies.list}" />
+    	
+        <jar destfile="./${jar.name}" compress="true" update="false">
+
+   		<!-- Include the *.class files at the root of the jar -->
+        	<fileset dir="./bin"/>
+        		
+  		<!-- Include the rest of files (except useless stuff like former builds) in their respective folders -->
+  			<fileset dir="./" excludes="**/PandemicSolo.jar,bin/,lib/,**/.DS_Store,.hg/**/*,.hgtags,.hg,.hgtags,.hgignore,.settings/*,.settings,**/*.zip,**/*.jar,**/*.log" />
+			<manifest>
+                <attribute name="Main-Class" value="pandemic.PandemicSolo"/>
+				<attribute name="Class-Path" value=". ${dependencies.list}"/>
+            </manifest>
+        </jar>
+    	
+    	<!-- Show the content of the created jar, for human checking -->
+    	<apply executable="jar">
+    		<arg value="tf"/>
+    		<filelist files="${jar.name}"/>
+    	</apply>
+    </target>
+	<!-- ================================= 
+          target: zipToDeploy              
+         ================================= -->
+	<!-- **** IMPORTANT **** Run with VM argument "-d32" ! **** -->
+    <target name="zipToDeploy" depends="create_run_jar" description="Make a JAR and then a zip ready to deploy">
+    	<input message="Please enter version number:" addproperty="version"/> 
+        <zip destfile="PandemicSolo_${version}.zip"
+        	basedir="."
+        	includes="${files.in.zip},${dependencies.list}"/>
+    </target>
+
+</project>
+        

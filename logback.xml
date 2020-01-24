@@ -1,0 +1,41 @@
+<configuration>
+
+  <appender name="logFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>pandemic.log</file>
+    <append>true</append>
+
+	<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+		<maxFileSize>25MB</maxFileSize>
+	</triggeringPolicy>
+    
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+    	<fileNamePattern>pandemic%i.old.log</fileNamePattern>
+    	<minIndex>1</minIndex>
+    	<maxIndex>1</maxIndex>
+    </rollingPolicy>
+    
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="systemOut" class="ch.qos.logback.core.ConsoleAppender">
+      <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="pandemic.util.GenericResourceProvider" level="INHERITED"/>
+  <logger name="pandemic.model" level="INHERITED"/>
+
+  <root level="OFF"> <!-- We don't need logging output during Maven builds (specifically, the tests). 
+                          The level will be changed programatically during application starting. -->
+  	<!-- The useless appenders will be detached dynamically at application starting -->
+    <appender-ref ref="logFile" />
+    <appender-ref ref="systemOut" />
+  </root>
+</configuration>

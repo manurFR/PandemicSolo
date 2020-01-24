@@ -1,0 +1,198 @@
+/**
+ *   Copyright (C) 2011 Emmanuel Bizieau <manur@manur.org>
+ * 
+ *   This file is part of PandemicSolo.
+ *
+ *   PandemicSolo is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   PandemicSolo is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with PandemicSolo.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package pandemic.dialog;
+
+import java.awt.Desktop;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+
+import pandemic.GameManager;
+import pandemic.util.ResourceProvider;
+
+/**
+ * About box
+ * 
+ * @author manur
+ * @since v2.7
+ */
+public class AboutBox extends JDialog {
+	/*
+	 * WARNING - Using this randomly generated UID was a bad idea.
+	 * During the next change to this class, please modify the value to
+	 * the new version number ; example :
+	 *  private static final long serialVersionUID = 28L; // last major change : v2.8
+	 */
+	private static final long serialVersionUID = -890377910994816582L;
+
+	private GameManager gameManager;
+	
+	private final JPanel contentPanel = new JPanel();
+
+	/**
+	 * Create the dialog.
+	 */
+	public AboutBox(Frame owner) {
+		super(owner, true); // Modal dialog
+	}
+	
+	/**
+	 * Display the graphical components
+	 * @param resourceProvider The ResourceProvider that will be queried to get the icons
+	 */
+	public void createComponents(ResourceProvider resourceProvider) {
+		setBounds(0, 0, 520, 420);
+		setLocationRelativeTo(getOwner());
+
+		getContentPane().setLayout(null);
+		contentPanel.setBounds(0, 0, 480, 350);
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.setLayout(null);
+		getContentPane().add(contentPanel);
+
+		ImageIcon iconCube = resourceProvider.getIcon("swuerfel_blau.jpg");
+		JLabel labelCube1 = new JLabel(iconCube);
+		labelCube1.setBounds(36, 58, iconCube.getIconWidth(), iconCube.getIconHeight());
+		JLabel labelCube2 = new JLabel(iconCube);
+		labelCube2.setBounds(26, 74, iconCube.getIconWidth(), iconCube.getIconHeight());
+		JLabel labelCube3 = new JLabel(iconCube);
+		labelCube3.setBounds(46, 74, iconCube.getIconWidth(), iconCube.getIconHeight());
+
+		contentPanel.add(labelCube1);
+		contentPanel.add(labelCube2);
+		contentPanel.add(labelCube3);
+
+		ImageIcon iconPawn = resourceProvider.getIcon("figur_rot.jpg");
+		JLabel labelPawn = new JLabel(iconPawn);
+		labelPawn.setBounds(120, 60, iconPawn.getIconWidth(), iconPawn
+				.getIconHeight());
+
+		contentPanel.add(labelPawn);
+
+		ImageIcon iconRemedy = resourceProvider.getIcon("gegenmittel_gelb.jpg");
+		JLabel labelRemedy = new JLabel(iconRemedy);
+		labelRemedy.setBounds(15, 15, iconRemedy.getIconWidth(), iconRemedy.getIconHeight());
+
+		contentPanel.add(labelRemedy);
+
+		ImageIcon iconInfection = resourceProvider.getIcon("infection_token.jpg");
+		JLabel labelInfection = new JLabel(iconInfection);
+		labelInfection.setBounds(80, 60, iconInfection.getIconWidth(), iconInfection.getIconHeight());
+
+		contentPanel.add(labelInfection);
+
+		ImageIcon iconEpidemic = resourceProvider.getIcon("card0.jpg");
+		JLabel labelEpidemic = new JLabel(iconEpidemic);
+		labelEpidemic.setBounds(10, 35, iconEpidemic.getIconWidth(), iconEpidemic.getIconHeight());
+
+		contentPanel.add(labelEpidemic);
+
+		ImageIcon iconParis = resourceProvider.getIcon("card35.jpg");
+		JLabel labelParis = new JLabel(iconParis);
+		labelParis.setBounds(30, 10, iconParis.getIconWidth(), iconParis.getIconHeight());
+
+		contentPanel.add(labelParis);
+
+		JLabel lblPandemicSolitaire = new JLabel("Pandemic Solitaire");
+		lblPandemicSolitaire.setFont(new Font("Lucida Grande", Font.BOLD, 16));
+		lblPandemicSolitaire.setBounds(222, 47, 161, 16);
+		contentPanel.add(lblPandemicSolitaire);
+
+		JLabel lblVersion = new JLabel("version 2.7");
+		lblVersion.setBounds(266, 70, 70, 16);
+		contentPanel.add(lblVersion);
+
+		Font lucida12 = new Font("Lucida Grande", Font.PLAIN, 12);
+		
+		JTextPane txtpnPandemicAGame = new JTextPane();
+		txtpnPandemicAGame.setFont(lucida12);
+		txtpnPandemicAGame.setText("Computer adaptation by Emmanuel \"manur\" Bizieau\nInitial adaptation by Andras \"jancsoo\" Domian\n\nPandemic, a game by Matt Leacock\nPandemic: On the Brink by Matt Leacock and Thomas Lehmann\nArt by Josh Cappel and R\u00E9gis Moulun\nPublished by Z-Man Games");
+		txtpnPandemicAGame.setBackground(UIManager.getColor("Panel.background"));
+		txtpnPandemicAGame.setEditable(false);
+		txtpnPandemicAGame.setBounds(46, 122, 374, 120);
+		contentPanel.add(txtpnPandemicAGame);
+		
+		JTextPane txtpnCurrentConfig = new JTextPane();
+		txtpnCurrentConfig.setFont(lucida12);
+		String[] configDetails = gameManager.getCurrentModel().getConfig().giveDetails();
+		String config = "Current configuration :\n";
+		for (String line : configDetails)
+		{
+			config += line + "\n";
+		}
+		txtpnCurrentConfig.setText(config);
+		txtpnCurrentConfig.setBackground(UIManager.getColor("Panel.background"));
+		txtpnCurrentConfig.setEditable(false);
+		txtpnCurrentConfig.setBounds(46, 245, 450, 100);
+		contentPanel.add(txtpnCurrentConfig);
+
+		JPanel buttonPane = new JPanel();
+		buttonPane.setBounds(0, 350, 480, 39);
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane);
+
+		JButton okButton = new JButton("OK");
+		okButton.setActionCommand("OK");
+		okButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AboutBox.this.dispose(); // Close the box
+			}
+		});
+
+		JButton btnReadmetxt = new JButton("README.txt");
+		btnReadmetxt.setActionCommand("OK");
+		btnReadmetxt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Desktop.getDesktop().edit(new File("README.txt"));
+				} catch (IOException exception) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Sorry, it doesn't work on your system. Please open the README.txt file from your file explorer.",
+									"Failed to open README.txt",
+									JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		buttonPane.add(btnReadmetxt);
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+	}
+
+	public void setGameManager(GameManager gameManager) {
+		this.gameManager = gameManager;
+	}
+}
