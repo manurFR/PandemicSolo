@@ -83,6 +83,11 @@ public class ComponentsFactory {
 	
 	private static final int CUBES_PER_LINE = 12;
 	
+	private static final Integer[] EVENTS_CORE = {49, 50, 51, 52, 53};
+	private static final Integer[] EVENTS_ONTHEBRINK = {54, 55, 56, 57, 58, 59, 60, 61};
+
+	private static final Integer[] EVENTS_FORBIDDEN_IN_SURVIVAL_MODE = {50, 52, 53, 55, 57};
+
 	private static final String RESOURCEBUNDLE_BASENAME = "componentsCoordinates";
 	
 	private ResourceProvider resourceProvider;
@@ -242,10 +247,13 @@ public class ComponentsFactory {
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
         int yPos = getYCoordinate(KEY_CARD_DEFAULTPOSITION);
         String templateName = getValue(KEY_CARD_DEFAULTPOSITION, 2);
-        
+
+		List<Integer> availableEvents = new ArrayList<Integer>();
+		availableEvents.addAll(Arrays.asList(EVENTS_CORE));
+
         if (!useNewSpecialEvents) {
             // Classic version
-            for (int eventId=49; eventId<54; eventId++) {
+			for (Integer eventId: availableEvents) {
                 String imageName = MessageFormat.format(templateName, eventId);
                 
                 String eventName = getValue(KEY_CARD_SPECIALEVENT + eventId, 0);
@@ -258,8 +266,7 @@ public class ComponentsFactory {
             }
         } else {
             // On the Brink : nbOfRoles*2 special events, taken at random between the 13 available cards
-            Integer[] eventIds = {49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61};
-            List<Integer> availableEvents = Arrays.asList(eventIds);
+            availableEvents.addAll(Arrays.asList(EVENTS_ONTHEBRINK));
             // Shuffle the 13 cards
             Collections.shuffle(availableEvents);
             // Take the first nbOfRoles*2 and put it in the deck
