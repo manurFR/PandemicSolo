@@ -240,9 +240,10 @@ public class ComponentsFactory {
      * Create the deck of Special Event cards
 	 * @param config Whether the new Special Events from the Expansion should be used,
 	 *          along with the alternative number of Special Event cards in the card and their random selection
+	 * @param randomizer
 	 *
 	 */
-    public List<Card> createSpecialEvents(GameConfig config) {
+    public List<Card> createSpecialEvents(GameConfig config, Random randomizer) {
         List<Card> specialEventsCards = new ArrayList<Card>();
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
@@ -262,7 +263,7 @@ public class ComponentsFactory {
 			availableEvents.removeAll(Arrays.asList(EVENTS_FORBIDDEN_IN_SURVIVAL_MODE));
 		}
 
-		Collections.shuffle(availableEvents);
+		Collections.shuffle(availableEvents, randomizer);
 
 		int nbEventCardsToCreate;
 		if (config.isEventsCore() && !config.isEventsOnTheBrink()) {
@@ -321,18 +322,17 @@ public class ComponentsFactory {
     /**
      * Add the three specific Event cards for the Mutation variant.
      * The cards are placed randomly in the deck, except at the top and bottom.
-     * @param pileDeck The deck of cards where to insert the Mutation Event cards
-     * @param cardsLibrary We also add the new cards in the Library to keep a reference on them
-     */
-    public void addMutationEventsCards(List<Card> pileDeck, List<Card> cardsLibrary) {
+	 * @param pileDeck The deck of cards where to insert the Mutation Event cards
+	 * @param cardsLibrary We also add the new cards in the Library to keep a reference on them
+	 * @param randomizer Utility to get random numbers
+	 */
+    public void addMutationEventsCards(List<Card> pileDeck, List<Card> cardsLibrary, Random randomizer) {
         logger.debug("...remaining player cards deck size : {}", pileDeck.size());
         
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
         int yPos = getYCoordinate(KEY_CARD_DEFAULTPOSITION);
         String templateName = getValue(KEY_CARD_DEFAULTPOSITION, 2);
-        
-        Random randomizer = new Random();
-        
+
         for (int cardIndex=301; cardIndex<=303; cardIndex++) {
             String imageName = MessageFormat.format(templateName, cardIndex);
             
@@ -352,10 +352,11 @@ public class ComponentsFactory {
     
     /**
      * Create the deck of epidemic cards
-     * @param nbOfEpidemicCards Number of epidemic cards in the game, depends on the selected difficulty
-     * @param playVirulentStrain Whether the Virulent Strain variant, which has a different set of epidemic cards, is played
-     */
-    public List<Card> createEpidemicCards(int nbOfEpidemicCards, boolean playVirulentStrain) {
+	 * @param nbOfEpidemicCards Number of epidemic cards in the game, depends on the selected difficulty
+	 * @param playVirulentStrain Whether the Virulent Strain variant, which has a different set of epidemic cards, is played
+	 * @param randomizer
+	 */
+    public List<Card> createEpidemicCards(int nbOfEpidemicCards, boolean playVirulentStrain, Random randomizer) {
         List<Card> epidemicCards = new ArrayList<Card>();
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
@@ -367,7 +368,7 @@ public class ComponentsFactory {
             // We have to take nbOfEpidemicCards randomly from that set
             Integer[] cardIds = {201, 202, 203, 204, 205, 206, 207, 208};
             List<Integer> availableCards = Arrays.asList(cardIds);
-            Collections.shuffle(availableCards);
+            Collections.shuffle(availableCards, randomizer);
             for (int cardIndex=0; cardIndex<nbOfEpidemicCards; cardIndex++) {
                 String imageName = MessageFormat.format(templateName, availableCards.get(cardIndex));
                 
@@ -399,19 +400,17 @@ public class ComponentsFactory {
      * Add a List of cards evenly inside a deck. The deck is splitted in as many piles as there are cards to add.
      * (See specifics in the javadoc for determinePileSizes().)
      * Each card is added randomly inside a pile.
-     * @param cardsLibrary The deck where to insert the new cards
-     * @param cardsToAdd The List of cards to add evenly to the deck
-     */
-    public void addCardsEvenly(List<Card> cardsLibrary, List<Card> cardsToAdd) {
+	 * @param cardsLibrary The deck where to insert the new cards
+	 * @param cardsToAdd The List of cards to add evenly to the deck
+	 * @param randomizer
+	 */
+    public void addCardsEvenly(List<Card> cardsLibrary, List<Card> cardsToAdd, Random randomizer) {
         int nbOfPiles = cardsToAdd.size();
         logger.debug("...nb of cards in deck : {}", cardsLibrary.size());
         logger.debug("...nb of piles / cards to add : {}", nbOfPiles);
     	
     	int[] pileSizes = determinePileSizes(cardsLibrary.size(), cardsToAdd.size());
-        
-        
-        Random randomizer = new Random();
-        
+
         int currentSum = 0;
         for (int i=0; i<nbOfPiles; i++) {
             // Each card is inserted between the start and the end index of its pile.
@@ -432,7 +431,7 @@ public class ComponentsFactory {
     
     /**
      * Prepare an array specifying the number of cards in each pile.
-     * We need to follow the very precise rules from the rulebook :
+     * We need to follow precisely the rulebook :
      * #8. (...) Make the piles as equal in size as is possible.
 	 * #9. (...) If the piles aren't exactly the same size, stack them so that the larger piles are above the smaller piles.
 	 * Thanks to BGG user B Factor for pointing this out.

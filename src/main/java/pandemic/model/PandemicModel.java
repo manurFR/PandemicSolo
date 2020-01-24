@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +50,11 @@ import pandemic.util.RolesObserver;
 
 public class PandemicModel implements Serializable {
 
-	private static final long serialVersionUID = 28L; // Last change for version 2.8
+	private static final long serialVersionUID = 28L;
 	
 	private static final Logger logger = LoggerFactory.getLogger(PandemicModel.class);
+
+	private Random randomizer;
 
 	private GameConfig config;
 
@@ -95,6 +98,11 @@ public class PandemicModel implements Serializable {
 		componentsFactory.setResourceProvider(resourceProvider);
 
 		/**************************************************************************
+		 *                            Randomizer                                  *
+		 **************************************************************************/
+		randomizer = new Random();
+
+		/**************************************************************************
 		 *                               Roles                                    *
 		 **************************************************************************/
 		
@@ -114,15 +122,15 @@ public class PandemicModel implements Serializable {
 		 **************************************************************************/
 		
 		for (int q=1; q<=48; q++) {
-		    infectionDeck.add(new Integer(q));
+		    infectionDeck.add(q);
 		}
-		Collections.shuffle(infectionDeck);
+		Collections.shuffle(infectionDeck, randomizer);
 
 		// Mutation expansion
 		// The two mutation cards are put on top of the Infection *discard* pile
 		if (config.isPlayMutation()) {
-			discardPile.add(0, new Integer(100));
-			discardPile.add(1, new Integer(101));
+			discardPile.add(0, 100);
+			discardPile.add(1, 101);
 
 			logger.debug("...add mutation to infection discard pile : {}", discardPile.get(0));
 			logger.debug("...add mutation to infection discard pile : {}", discardPile.get(0));
@@ -145,10 +153,10 @@ public class PandemicModel implements Serializable {
 
 		// First, let's set up a deck containing only player (city) cards and Special Events		
 		cardsLibrary.addAll(componentsFactory.createPlayerCards(cityList));
-		cardsLibrary.addAll(componentsFactory.createSpecialEvents(config));
+		cardsLibrary.addAll(componentsFactory.createSpecialEvents(config, randomizer));
 		
 		// Then shuffle
-		Collections.shuffle(cardsLibrary);
+		Collections.shuffle(cardsLibrary, randomizer);
 		
 		// Distribute (and remove the distributed cards from the library)
 		componentsFactory.distributeStartingCards(cardsLibrary, config.getNbOfRoles());
@@ -163,16 +171,16 @@ public class PandemicModel implements Serializable {
 		
 		// Add the Mutation event cards randomly in the deck
 		if (config.isPlayMutation()) {
-			componentsFactory.addMutationEventsCards(playerDeck, cardsLibrary);
+			componentsFactory.addMutationEventsCards(playerDeck, cardsLibrary, randomizer);
 		}
 		
 		// Get the epidemic cards...
-		List<Card> epidemicCards = componentsFactory.createEpidemicCards(config.getNbOfEpidemics(), config.isPlayVirulentStrain()); 
+		List<Card> epidemicCards = componentsFactory.createEpidemicCards(config.getNbOfEpidemics(), config.isPlayVirulentStrain(), randomizer);
 		
 		// ...And add them intelligently to the library, dividing the deck in as many stacks 
 		//  as there are epidemics to add, and adding one epidemic card at a random place in each stack
 		logger.debug("Add Epidemic cards :");
-		componentsFactory.addCardsEvenly(playerDeck, epidemicCards);
+		componentsFactory.addCardsEvenly(playerDeck, epidemicCards, randomizer);
 		
 		// Finally, add the epidemic cards in the library to keep a reference on them
 		cardsLibrary.addAll(epidemicCards);
@@ -260,7 +268,7 @@ public class PandemicModel implements Serializable {
 	private List<Role> drawRoles(List<Role> availableRoles, int nbOfRoles) {
 		List<Role> chosenRoles = new ArrayList<Role>();
 
-		Collections.shuffle(availableRoles);
+		Collections.shuffle(availableRoles, randomizer);
 
 		// Let's take the first "nbOfRoles" roles
 		for (int roleIndex=0; roleIndex<nbOfRoles; roleIndex++) {
@@ -338,7 +346,7 @@ public class PandemicModel implements Serializable {
 		}
 		logger.debug(sb.toString());
 		
-		Collections.shuffle(discardPile);
+		Collections.shuffle(discardPile, randomizer);
 	      // Notify the observers
         for (DecksObserver observer : decksObservers) {
             observer.infectionDeckShuffled();
@@ -494,22 +502,22 @@ public class PandemicModel implements Serializable {
 		if (!rolesObservers.contains(observer)) {
 			rolesObservers.add(observer);
 		}
-	}	
-	
+	}
+
 	/**********************************************************************/
-	
+
 	public int getNbOfRoles() {
 		return config.getNbOfRoles();
 	}
-	
+
 	public int getNbOfPlayerCards() {
 		return playerDeck.size();
 	}
-	
+
 	public List<Card> getPlayerDeck() {
 		return playerDeck;
 	}
-	
+
 	public List<PandemicObject> getCountersLibrary() {
 		return countersLibrary;
 	}
@@ -521,11 +529,11 @@ public class PandemicModel implements Serializable {
 	public List<City> getCityList() {
 		return cityList;
 	}
-	
+
 	public List<Role> getAllRoles() {
 		return allRoles;
 	}
-	
+
 	public List<Role> getAffectedRoles() {
 		return affectedRoles;
 	}
@@ -533,13 +541,12 @@ public class PandemicModel implements Serializable {
 	public List<Integer> getInfectionDeck() {
 		return infectionDeck;
 	}
-	
+
 	public List<Integer> getDiscardPile() {
 		return discardPile;
 	}
-	
+
 	public GameConfig getConfig() {
 		return config;
 	}
-
 }
