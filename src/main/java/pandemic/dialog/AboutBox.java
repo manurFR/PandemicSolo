@@ -38,6 +38,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import pandemic.GameManager;
+import pandemic.PandemicSolo;
 import pandemic.util.ResourceProvider;
 
 /**
@@ -47,13 +48,7 @@ import pandemic.util.ResourceProvider;
  * @since v2.7
  */
 public class AboutBox extends JDialog {
-	/*
-	 * WARNING - Using this randomly generated UID was a bad idea.
-	 * During the next change to this class, please modify the value to
-	 * the new version number ; example :
-	 *  private static final long serialVersionUID = 28L; // last major change : v2.8
-	 */
-	private static final long serialVersionUID = -890377910994816582L;
+	private static final long serialVersionUID = 28L;
 
 	private GameManager gameManager;
 	
@@ -71,11 +66,11 @@ public class AboutBox extends JDialog {
 	 * @param resourceProvider The ResourceProvider that will be queried to get the icons
 	 */
 	public void createComponents(ResourceProvider resourceProvider) {
-		setBounds(0, 0, 520, 420);
+		setBounds(0, 0, 520, 470);
 		setLocationRelativeTo(getOwner());
 
 		getContentPane().setLayout(null);
-		contentPanel.setBounds(0, 0, 480, 350);
+		contentPanel.setBounds(0, 0, 480, 370);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setLayout(null);
 		getContentPane().add(contentPanel);
@@ -125,11 +120,13 @@ public class AboutBox extends JDialog {
 
 		JLabel lblPandemicSolitaire = new JLabel("Pandemic Solitaire");
 		lblPandemicSolitaire.setFont(new Font("Lucida Grande", Font.BOLD, 16));
-		lblPandemicSolitaire.setBounds(222, 47, 161, 16);
+		lblPandemicSolitaire.setBounds(222, 47, 180, 16);
+		lblPandemicSolitaire.setHorizontalAlignment(JLabel.CENTER);
 		contentPanel.add(lblPandemicSolitaire);
 
-		JLabel lblVersion = new JLabel("version 2.7");
-		lblVersion.setBounds(266, 70, 70, 16);
+		JLabel lblVersion = new JLabel("version " + PandemicSolo.VERSION);
+		lblVersion.setBounds(222, 70, 180, 16);
+		lblVersion.setHorizontalAlignment(JLabel.CENTER);
 		contentPanel.add(lblVersion);
 
 		Font lucida12 = new Font("Lucida Grande", Font.PLAIN, 12);
@@ -153,11 +150,11 @@ public class AboutBox extends JDialog {
 		txtpnCurrentConfig.setText(config);
 		txtpnCurrentConfig.setBackground(UIManager.getColor("Panel.background"));
 		txtpnCurrentConfig.setEditable(false);
-		txtpnCurrentConfig.setBounds(46, 245, 450, 100);
+		txtpnCurrentConfig.setBounds(46, 245, 450, 140);
 		contentPanel.add(txtpnCurrentConfig);
 
 		JPanel buttonPane = new JPanel();
-		buttonPane.setBounds(0, 350, 480, 39);
+		buttonPane.setBounds(0, 370, 480, 39);
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane);
 

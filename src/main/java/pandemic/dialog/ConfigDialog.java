@@ -56,7 +56,7 @@ import pandemic.util.ResourceProvider;
  */
 public class ConfigDialog extends JDialog {
 
-	private static final long serialVersionUID = 27L; // last major change : v2.7
+	private static final long serialVersionUID = 28L;
 	
 	private static final int ICON_CENTER = 55;
 	
@@ -68,6 +68,7 @@ public class ConfigDialog extends JDialog {
 	public JComboBox comboBoxDifficultyLevel = new JComboBox();
 	public JCheckBox chckbxEventsCore = new JCheckBox();
 	public JCheckBox chckbxEventsOnTheBrink = new JCheckBox();
+	public JCheckBox chckbxSurvivalMode = new JCheckBox();
 	public JCheckBox chckbxVirulentStrain = new JCheckBox();
 	public JCheckBox chckbxMutation = new JCheckBox();
 	
@@ -97,6 +98,7 @@ public class ConfigDialog extends JDialog {
 		modelConfig.setEventsOnTheBrink(chckbxEventsOnTheBrink.isSelected());
 		modelConfig.setPlayVirulentStrain(chckbxVirulentStrain.isSelected());
 		modelConfig.setPlayMutation(chckbxMutation.isSelected());
+		modelConfig.setSurvivalMode(chckbxSurvivalMode.isSelected());
 
 		this.dispose();
 	}
@@ -125,6 +127,7 @@ public class ConfigDialog extends JDialog {
 		chckbxEventsOnTheBrink.setSelected(modelConfig.isEventsOnTheBrink());
 		chckbxVirulentStrain.setSelected(modelConfig.isPlayVirulentStrain());
 		chckbxMutation.setSelected(modelConfig.isPlayMutation());
+		chckbxSurvivalMode.setSelected(modelConfig.isSurvivalMode());
 	}
 
 	/**
@@ -136,7 +139,7 @@ public class ConfigDialog extends JDialog {
 		JPanel contentPanel = new JPanel();
 
 		setTitle("New game...");
-		setBounds(0, 0, 570, 540);
+		setBounds(0, 0, 700, 560);
 		// Center the dialog relatively to the owner Frame
 		setLocationRelativeTo(getOwner());
 
@@ -203,16 +206,20 @@ public class ConfigDialog extends JDialog {
 		contentPanel.add(comboBoxDifficultyLevel);
 
 		JLabel lblEventCards = new JLabel("Event Cards :");
-		lblEventCards.setBounds(116, 260, 110, 16);
+		lblEventCards.setBounds(116, 250, 110, 16);
 		contentPanel.add(lblEventCards);
 
 		chckbxEventsCore.setText("Core");
-		chckbxEventsCore.setBounds(116, 285, 80, 23);
+		chckbxEventsCore.setBounds(116, 275, 80, 23);
 		contentPanel.add(chckbxEventsCore);
 
 		chckbxEventsOnTheBrink.setText("On The Brink");
-		chckbxEventsOnTheBrink.setBounds(200, 285, 100, 23);
+		chckbxEventsOnTheBrink.setBounds(200, 275, 100, 23);
 		contentPanel.add(chckbxEventsOnTheBrink);
+
+		chckbxSurvivalMode.setText("Survival Mode (no event or role that could influence the roles or the infection deck)");
+		chckbxSurvivalMode.setBounds(130, 300, 500, 23);
+		contentPanel.add(chckbxSurvivalMode);
 
 		chckbxVirulentStrain.setText("Add the VIRULENT STRAIN challenge");
 		chckbxVirulentStrain.setBounds(116, 363, 280, 23);

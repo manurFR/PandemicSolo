@@ -6,6 +6,8 @@
 # Log file
 *.log
 
+target/
+
 # BlueJ files
 *.ctxt
 
@@ -25,4 +27,4 @@
 hs_err_pid*
 
 *.iml
-/.idea/
+.idea/*

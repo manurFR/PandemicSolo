@@ -35,13 +35,7 @@ import pandemic.model.Disease;
  * @since v2.6
  */
 public class GameConfig implements Serializable {
-	/*
-	 * WARNING - Using this randomly generated UID was a bad idea.
-	 * During the next change to this class, please modify the value to
-	 * the new version number ; example :
-	 *  private static final long serialVersionUID = 28L; // last major change : v2.8
-	 */
-	private static final long serialVersionUID = -583917870933664080L;
+	private static final long serialVersionUID = 28L;
 	
 	private static final Logger logger = LoggerFactory.getLogger(GameConfig.class);
 	
@@ -56,6 +50,7 @@ public class GameConfig implements Serializable {
 	private boolean eventsOnTheBrink;
 	private boolean playVirulentStrain;
 	private boolean playMutation;
+	private boolean survivalMode;
 	
 	/**
 	 * Log the details of this game configuration through the Logger
@@ -68,7 +63,7 @@ public class GameConfig implements Serializable {
 	}
 	
 	public String[] giveDetails() {
-		String[] details = new String[5];
+		String[] details = new String[6];
 		
 		StringBuilder sb = new StringBuilder("Number of roles : ");
 		sb.append(nbOfRoles);
@@ -110,6 +105,10 @@ public class GameConfig implements Serializable {
 		sb = new StringBuilder("Playing Mutation expansion ? ");
 		sb.append(playMutation ? YES : NO);
 		details[4] = sb.toString();
+
+		sb = new StringBuilder("Survival Mode ? ");
+		sb.append(survivalMode ? YES : NO);
+		details[5] = sb.toString();
 		
 		return details;
 	}
@@ -216,5 +215,13 @@ public class GameConfig implements Serializable {
 
 	public void setPlayMutation(boolean playMutation) {
 		this.playMutation = playMutation;
+	}
+
+	public boolean isSurvivalMode() {
+		return survivalMode;
+	}
+
+	public void setSurvivalMode(boolean survivalMode) {
+		this.survivalMode = survivalMode;
 	}
 }

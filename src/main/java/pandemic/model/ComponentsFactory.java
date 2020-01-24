@@ -257,12 +257,17 @@ public class ComponentsFactory {
 		if (config.isEventsOnTheBrink()) {
 			availableEvents.addAll(Arrays.asList(EVENTS_ONTHEBRINK));
 		}
+
+		if (config.isSurvivalMode()) {
+			availableEvents.removeAll(Arrays.asList(EVENTS_FORBIDDEN_IN_SURVIVAL_MODE));
+		}
+
 		Collections.shuffle(availableEvents);
 
 		int nbEventCardsToCreate;
 		if (config.isEventsCore() && !config.isEventsOnTheBrink()) {
-			// if we're playing only with the core game, take all 5 core event cards
-			nbEventCardsToCreate = 5;
+			// if we're playing only with the core game, take all core event cards (minus the ones removed if in Survival mode)
+			nbEventCardsToCreate = availableEvents.size();
 		} else {
 			// Pick nbOfRoles*2 special events, taken at random between available cards
 			nbEventCardsToCreate = Math.min(config.getNbOfRoles() * 2, availableEvents.size());
