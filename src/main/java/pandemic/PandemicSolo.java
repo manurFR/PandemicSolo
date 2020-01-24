@@ -59,6 +59,7 @@ public class PandemicSolo {
 	public static final String VERSION = "2.7.1";
 	
 	public static final boolean IS_MACOS = System.getProperty("os.name").startsWith("Mac OS X");
+	public static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 	
 	private static final Logger logger = LoggerFactory.getLogger(PandemicSolo.class);
 	private static final String LOGBACK_FILE_APPENDER = "logFile";

@@ -24,8 +24,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -173,7 +172,24 @@ public class AboutBox extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Desktop.getDesktop().edit(new File("README.txt"));
+					File readmeFile;
+					if (PandemicSolo.IS_WINDOWS) {
+						// on windows, change line endings to CRLF
+						BufferedReader reader = new BufferedReader(new FileReader("README.txt"));
+						readmeFile = File.createTempFile("README_tmp", ".txt");
+						BufferedWriter writer = new BufferedWriter(new FileWriter(readmeFile));
+
+						String line;
+						while ((line = reader.readLine()) != null) {
+							writer.write(line);
+							writer.newLine();
+						}
+						writer.close();
+						reader.close();
+					} else {
+						readmeFile = new File("README.txt");
+					}
+					Desktop.getDesktop().edit(readmeFile);
 				} catch (IOException exception) {
 					JOptionPane
 							.showMessageDialog(
