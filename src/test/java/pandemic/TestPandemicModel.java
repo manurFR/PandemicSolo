@@ -52,7 +52,7 @@ public class TestPandemicModel {
 		config.setDifficultyLevel(DifficultyLevel.NORMAL);
 		config.setNbOfRoles(4);
 		config.setUseAllRoles(true);
-		config.setUseNewSpecialEvents(false);
+		config.setEventsOnTheBrink(false);
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
 

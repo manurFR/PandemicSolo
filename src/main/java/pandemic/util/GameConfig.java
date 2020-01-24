@@ -19,6 +19,8 @@
 package pandemic.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +52,8 @@ public class GameConfig implements Serializable {
 	private int nbOfRoles;
 	private boolean useAllRoles;
 	private boolean useRevisedOperationsExpert;
-	private boolean useNewSpecialEvents;
+	private boolean eventsCore;
+	private boolean eventsOnTheBrink;
 	private boolean playVirulentStrain;
 	private boolean playMutation;
 	
@@ -80,8 +83,24 @@ public class GameConfig implements Serializable {
 		sb.append(difficultyLevel);
 		details[1] = sb.toString();
 		
-		sb = new StringBuilder("Using new Special Events ? ");
-		sb.append(useNewSpecialEvents ? YES : NO);
+		sb = new StringBuilder("Event Cards used : ");
+		List<String> eventCards = new ArrayList<String>();
+		if (eventsCore) {
+			eventCards.add("Core");
+		}
+		if (eventsOnTheBrink) {
+			eventCards.add("On The Brink");
+		}
+		if (eventCards.isEmpty()) {
+			eventCards.add("None");
+		}
+		int nbSets = eventCards.size();
+		for (int i=0; i<nbSets; i++) {
+			sb.append(eventCards.get(i));
+			if (i<nbSets-1) {
+				sb.append(" | ");
+			}
+		}
 		details[2] = sb.toString();
 
 		sb = new StringBuilder("Playing Virulent Strain expansion ? ");
@@ -107,7 +126,8 @@ public class GameConfig implements Serializable {
 		config.setNbOfRoles(2);
 		config.setUseAllRoles(true);
 		config.setUseRevisedOperationsExpert(true);
-		config.setUseNewSpecialEvents(true);
+		config.setEventsCore(true);
+		config.setEventsOnTheBrink(true);
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
 		
@@ -164,14 +184,22 @@ public class GameConfig implements Serializable {
 
 	public void setUseRevisedOperationsExpert(boolean useRevisedOperationsExpert) {
 		this.useRevisedOperationsExpert = useRevisedOperationsExpert;
-	}	
-
-	public boolean isUseNewSpecialEvents() {
-		return useNewSpecialEvents;
 	}
 
-	public void setUseNewSpecialEvents(boolean useNewSpecialEvents) {
-		this.useNewSpecialEvents = useNewSpecialEvents;
+	public boolean isEventsCore() {
+		return eventsCore;
+	}
+
+	public void setEventsCore(boolean eventsCore) {
+		this.eventsCore = eventsCore;
+	}
+
+	public boolean isEventsOnTheBrink() {
+		return eventsOnTheBrink;
+	}
+
+	public void setEventsOnTheBrink(boolean eventsOnTheBrink) {
+		this.eventsOnTheBrink = eventsOnTheBrink;
 	}
 
 	public boolean isPlayVirulentStrain() {
@@ -189,5 +217,4 @@ public class GameConfig implements Serializable {
 	public void setPlayMutation(boolean playMutation) {
 		this.playMutation = playMutation;
 	}
-
 }

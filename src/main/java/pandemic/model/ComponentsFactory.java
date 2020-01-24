@@ -38,6 +38,7 @@ import pandemic.model.objects.City;
 import pandemic.model.objects.Cube;
 import pandemic.model.objects.PandemicObject;
 import pandemic.model.objects.Role;
+import pandemic.util.GameConfig;
 import pandemic.util.ResourceProvider;
 
 /**
@@ -237,11 +238,11 @@ public class ComponentsFactory {
     
     /**
      * Create the deck of Special Event cards
-     * @param useNewSpecialEvents Whether the new Special Events from the Expansion should be used, 
-     *          along with the alternative number of Special Event cards in the card and their random selection
-     * @param nbOfRoles Number of roles, used to compute the alternative number of Special Event cards if useNewSpecialEvents is true
-     */
-    public List<Card> createSpecialEvents(boolean useNewSpecialEvents, int nbOfRoles) {
+	 * @param config Whether the new Special Events from the Expansion should be used,
+	 *          along with the alternative number of Special Event cards in the card and their random selection
+	 *
+	 */
+    public List<Card> createSpecialEvents(GameConfig config) {
         List<Card> specialEventsCards = new ArrayList<Card>();
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
@@ -249,41 +250,37 @@ public class ComponentsFactory {
         String templateName = getValue(KEY_CARD_DEFAULTPOSITION, 2);
 
 		List<Integer> availableEvents = new ArrayList<Integer>();
-		availableEvents.addAll(Arrays.asList(EVENTS_CORE));
 
-        if (!useNewSpecialEvents) {
-            // Classic version
-			for (Integer eventId: availableEvents) {
-                String imageName = MessageFormat.format(templateName, eventId);
-                
-                String eventName = getValue(KEY_CARD_SPECIALEVENT + eventId, 0);
-                
-                ImageIcon imageIcon = resourceProvider.getIcon(imageName);
-                Card card = new Card(PandemicObject.Type.SPECIAL_EVENT_CARD, eventId, eventName, imageIcon, xPos, yPos, BoardZone.RESERVE);
-                logger.debug("...created {}", card);
-                
-                specialEventsCards.add(card);
-            }
-        } else {
-            // On the Brink : nbOfRoles*2 special events, taken at random between the 13 available cards
-            availableEvents.addAll(Arrays.asList(EVENTS_ONTHEBRINK));
-            // Shuffle the 13 cards
-            Collections.shuffle(availableEvents);
-            // Take the first nbOfRoles*2 and put it in the deck
-            for (int i=0; i<nbOfRoles*2; i++) {
-                int eventId = availableEvents.get(i);
-                
-                String imageName = MessageFormat.format(templateName, eventId);
-                
-                String eventName = getValue(KEY_CARD_SPECIALEVENT + eventId, 0);
-                
-                ImageIcon imageIcon = resourceProvider.getIcon(imageName);
-                Card card = new Card(PandemicObject.Type.SPECIAL_EVENT_CARD, eventId, eventName, imageIcon, xPos, yPos, BoardZone.RESERVE);
-                logger.debug("...created {}", card);
-                
-                specialEventsCards.add(card);
-            }
-        }       
+		if (config.isEventsCore()) {
+			availableEvents.addAll(Arrays.asList(EVENTS_CORE));
+		}
+		if (config.isEventsOnTheBrink()) {
+			availableEvents.addAll(Arrays.asList(EVENTS_ONTHEBRINK));
+		}
+		Collections.shuffle(availableEvents);
+
+		int nbEventCardsToCreate;
+		if (config.isEventsCore() && !config.isEventsOnTheBrink()) {
+			// if we're playing only with the core game, take all 5 core event cards
+			nbEventCardsToCreate = 5;
+		} else {
+			// Pick nbOfRoles*2 special events, taken at random between available cards
+			nbEventCardsToCreate = Math.min(config.getNbOfRoles() * 2, availableEvents.size());
+		}
+
+		for (int i=0; i<nbEventCardsToCreate; i++) {
+			int eventId = availableEvents.get(i);
+
+			String imageName = MessageFormat.format(templateName, eventId);
+
+			String eventName = getValue(KEY_CARD_SPECIALEVENT + eventId, 0);
+
+			ImageIcon imageIcon = resourceProvider.getIcon(imageName);
+			Card card = new Card(PandemicObject.Type.SPECIAL_EVENT_CARD, eventId, eventName, imageIcon, xPos, yPos, BoardZone.RESERVE);
+			logger.debug("...created {}", card);
+
+			specialEventsCards.add(card);
+        }
         
         return specialEventsCards;
     }    

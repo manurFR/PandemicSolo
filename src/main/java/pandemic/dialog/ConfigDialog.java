@@ -66,7 +66,8 @@ public class ConfigDialog extends JDialog {
 	public JCheckBox chckbxAddNewRoles = new JCheckBox();
 	public JCheckBox chckbxRevisedOpXprt = new JCheckBox();
 	public JComboBox comboBoxDifficultyLevel = new JComboBox();
-	public JCheckBox chckbxNewSpecialEvents = new JCheckBox();
+	public JCheckBox chckbxEventsCore = new JCheckBox();
+	public JCheckBox chckbxEventsOnTheBrink = new JCheckBox();
 	public JCheckBox chckbxVirulentStrain = new JCheckBox();
 	public JCheckBox chckbxMutation = new JCheckBox();
 	
@@ -92,7 +93,8 @@ public class ConfigDialog extends JDialog {
 		modelConfig.setUseAllRoles(chckbxAddNewRoles.isSelected());
 		modelConfig.setUseRevisedOperationsExpert(chckbxRevisedOpXprt.isSelected());
 		modelConfig.setDifficultyLevel((DifficultyLevel)comboBoxDifficultyLevel.getSelectedItem());
-		modelConfig.setUseNewSpecialEvents(chckbxNewSpecialEvents.isSelected());
+		modelConfig.setEventsCore(chckbxEventsCore.isSelected());
+		modelConfig.setEventsOnTheBrink(chckbxEventsOnTheBrink.isSelected());
 		modelConfig.setPlayVirulentStrain(chckbxVirulentStrain.isSelected());
 		modelConfig.setPlayMutation(chckbxMutation.isSelected());
 
@@ -119,7 +121,8 @@ public class ConfigDialog extends JDialog {
 		chckbxAddNewRoles.setSelected(modelConfig.isUseAllRoles());
 		chckbxRevisedOpXprt.setSelected(modelConfig.isUseRevisedOperationsExpert());
 		comboBoxDifficultyLevel.setSelectedItem(modelConfig.getDifficultyLevel());
-		chckbxNewSpecialEvents.setSelected(modelConfig.isUseNewSpecialEvents());
+		chckbxEventsCore.setSelected(modelConfig.isEventsCore());
+		chckbxEventsOnTheBrink.setSelected(modelConfig.isEventsOnTheBrink());
 		chckbxVirulentStrain.setSelected(modelConfig.isPlayVirulentStrain());
 		chckbxMutation.setSelected(modelConfig.isPlayMutation());
 	}
@@ -131,53 +134,53 @@ public class ConfigDialog extends JDialog {
 	 */
 	public void viewCreateComponents(ResourceProvider resourceProvider) {
 		JPanel contentPanel = new JPanel();
-		
+
 		setTitle("New game...");
 		setBounds(0, 0, 570, 540);
 		// Center the dialog relatively to the owner Frame
 		setLocationRelativeTo(getOwner());
-		
+
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		
+
 		JLabel lblTitle = new JLabel("Pandemic Solitaire v. " + PandemicSolo.VERSION);
 		lblTitle.setFont(new Font("Lucida Grande", Font.PLAIN, 24));
 		lblTitle.setBounds(28, 6, 294, 30);
 		contentPanel.add(lblTitle);
-		
+
 		JLabel lblCredits1 = new JLabel("Solitaire adaption of the Matt Leacock game.");
 		lblCredits1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblCredits1.setBounds(28, 40, 294, 16);
 		contentPanel.add(lblCredits1);
-		
+
 		JLabel lblCredits2 = new JLabel("Current version by Emmanuel \"manur\" Bizieau.");
 		lblCredits2.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblCredits2.setBounds(28, 57, 362, 16);
 		contentPanel.add(lblCredits2);
-	
+
 		// ** Icons **
-		
+
 		contentPanel.add(createIconLabel(resourceProvider.getIcon("roleicon.jpg"), 100));
 		contentPanel.add(createIconLabel(resourceProvider.getIcon("difficultyicon.jpg"), 165));
 		contentPanel.add(createIconLabel(resourceProvider.getIcon("speceventicon.jpg"), 250));
 		contentPanel.add(createIconLabel(resourceProvider.getIcon("virulenticon.jpg"), 335));
 		contentPanel.add(createIconLabel(resourceProvider.getIcon("mutationicon.jpg"), 420));
-		
+
 		// ** Input fields **
-		
+
 		JLabel lblNumberOfRoles = new JLabel("Number of roles :");
 		lblNumberOfRoles.setBounds(116, 120, 110, 16);
 		contentPanel.add(lblNumberOfRoles);
-		
+
 		comboBoxNbOfRoles.setBounds(231, 115, 64, 27);
 		contentPanel.add(comboBoxNbOfRoles);
-		
+
 		chckbxAddNewRoles.setText("Add new roles");
 		chckbxAddNewRoles.setBounds(299, 115, 188, 23);
 		contentPanel.add(chckbxAddNewRoles);
-		
+
 		chckbxAddNewRoles.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -187,35 +190,38 @@ public class ConfigDialog extends JDialog {
 				}
 			}
 		});
-		
+
 		chckbxRevisedOpXprt.setText("Use revised Operations Expert role");
 		chckbxRevisedOpXprt.setBounds(299, 138, 251, 23);
 		contentPanel.add(chckbxRevisedOpXprt);
-	
-		
+
 		JLabel lblDifficultyLevel = new JLabel("Difficulty level :");
 		lblDifficultyLevel.setBounds(116, 194, 110, 16);
 		contentPanel.add(lblDifficultyLevel);
-		
+
 		comboBoxDifficultyLevel.setBounds(231, 189, 251, 27);
 		contentPanel.add(comboBoxDifficultyLevel);
-		
-		chckbxNewSpecialEvents.setText("Use the new Special Event cards");
-		chckbxNewSpecialEvents.setBounds(116, 267, 239, 23);
-		contentPanel.add(chckbxNewSpecialEvents);
-		
-		JLabel lblrecommendedIfYou = new JLabel("(Recommended, if you intend to play the expansions!)");
-		lblrecommendedIfYou.setBounds(143, 290, 344, 16);
-		contentPanel.add(lblrecommendedIfYou);
-		
+
+		JLabel lblEventCards = new JLabel("Event Cards :");
+		lblEventCards.setBounds(116, 260, 110, 16);
+		contentPanel.add(lblEventCards);
+
+		chckbxEventsCore.setText("Core");
+		chckbxEventsCore.setBounds(116, 285, 80, 23);
+		contentPanel.add(chckbxEventsCore);
+
+		chckbxEventsOnTheBrink.setText("On The Brink");
+		chckbxEventsOnTheBrink.setBounds(200, 285, 100, 23);
+		contentPanel.add(chckbxEventsOnTheBrink);
+
 		chckbxVirulentStrain.setText("Add the VIRULENT STRAIN challenge");
 		chckbxVirulentStrain.setBounds(116, 363, 280, 23);
 		contentPanel.add(chckbxVirulentStrain);
-		
+
 		chckbxMutation.setText("Add the MUTATION challenge");
 		chckbxMutation.setBounds(116, 430, 222, 23);
 		contentPanel.add(chckbxMutation);
-				
+
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -240,7 +246,7 @@ public class ConfigDialog extends JDialog {
 		});
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
-		
+
 		// Closing the dialog is the same as clicking on Cancel
 		addWindowListener(new WindowAdapter() {
 			@Override

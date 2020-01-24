@@ -76,7 +76,8 @@ public class TestComponentsFactory {
 		basicConfig.setPlayMutation(false);
 		basicConfig.setPlayVirulentStrain(false);
 		basicConfig.setUseAllRoles(false);
-		basicConfig.setUseNewSpecialEvents(false);
+		basicConfig.setEventsCore(true);
+		basicConfig.setEventsOnTheBrink(false);
 		
 		advancedConfig = new GameConfig();
 		advancedConfig.setDifficultyLevel(DifficultyLevel.HEROIC);
@@ -84,7 +85,8 @@ public class TestComponentsFactory {
 		advancedConfig.setPlayMutation(true);
 		advancedConfig.setPlayVirulentStrain(true);
 		advancedConfig.setUseAllRoles(true);
-		advancedConfig.setUseNewSpecialEvents(true);
+		advancedConfig.setEventsCore(true);
+		advancedConfig.setEventsOnTheBrink(true);
 	}
 
 	@Test
@@ -340,7 +342,7 @@ public class TestComponentsFactory {
 		when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
 		
 		// No special events
-		List<Card> events = componentsFactory.createSpecialEvents(false, 2);
+		List<Card> events = componentsFactory.createSpecialEvents(basicConfig);
 		assertEquals(5, events.size());
 		
 		Card event = events.get(0);
@@ -350,8 +352,8 @@ public class TestComponentsFactory {
 		assertEquals("Forecast", event.getName());
 		
 		// With special events
-		events = componentsFactory.createSpecialEvents(true, 3);
-		assertEquals(6, events.size());
+		events = componentsFactory.createSpecialEvents(advancedConfig);
+		assertEquals(8, events.size());
 		
 		// At least an event of id > 54 in the draw
 		boolean newEvent = false;

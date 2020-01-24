@@ -145,7 +145,7 @@ public class PandemicModel implements Serializable {
 
 		// First, let's set up a deck containing only player (city) cards and Special Events		
 		cardsLibrary.addAll(componentsFactory.createPlayerCards(cityList));
-		cardsLibrary.addAll(componentsFactory.createSpecialEvents(config.isUseNewSpecialEvents(), config.getNbOfRoles()));
+		cardsLibrary.addAll(componentsFactory.createSpecialEvents(config));
 		
 		// Then shuffle
 		Collections.shuffle(cardsLibrary);

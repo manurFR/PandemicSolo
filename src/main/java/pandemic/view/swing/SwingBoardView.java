@@ -271,7 +271,7 @@ public class SwingBoardView extends SwingView implements BoardView {
 
         // **** NEW ASSIGNMENT BUTTON *************** (only if the new Special
         // Event cards with "New Assignment" are used)
-        if (getModel().getConfig().isUseNewSpecialEvents()) {
+        if (getModel().getConfig().isEventsOnTheBrink()) {
             JButton newAssignmentButton = new JButton();
             ImageIcon newAssignmentImage = getResourceProvider().getIcon("newassignment_button.jpg");
             newAssignmentButton.setIcon(newAssignmentImage);

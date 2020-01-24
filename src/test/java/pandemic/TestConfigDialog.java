@@ -46,9 +46,9 @@ public class TestConfigDialog {
 	
 	@Test
 	public void testUseNewSpecialEvents() {
-		dialog.chckbxNewSpecialEvents.setSelected(false);
+		dialog.chckbxEventsOnTheBrink.setSelected(false);
 		dialog.controllerValidateAndClose();
-		assertTrue(!config.isUseNewSpecialEvents());
+		assertTrue(!config.isEventsOnTheBrink());
 	}
 
 	@Test
