@@ -68,6 +68,7 @@ public class ConfigDialog extends JDialog {
 	public JComboBox comboBoxDifficultyLevel = new JComboBox();
 	public JCheckBox chckbxEventsCore = new JCheckBox();
 	public JCheckBox chckbxEventsOnTheBrink = new JCheckBox();
+	public JCheckBox chckbxEventsInTheLab = new JCheckBox();
 	public JCheckBox chckbxSurvivalMode = new JCheckBox();
 	public JCheckBox chckbxVirulentStrain = new JCheckBox();
 	public JCheckBox chckbxMutation = new JCheckBox();
@@ -96,6 +97,7 @@ public class ConfigDialog extends JDialog {
 		modelConfig.setDifficultyLevel((DifficultyLevel)comboBoxDifficultyLevel.getSelectedItem());
 		modelConfig.setEventsCore(chckbxEventsCore.isSelected());
 		modelConfig.setEventsOnTheBrink(chckbxEventsOnTheBrink.isSelected());
+		modelConfig.setEventsInTheLab(chckbxEventsInTheLab.isSelected());
 		modelConfig.setPlayVirulentStrain(chckbxVirulentStrain.isSelected());
 		modelConfig.setPlayMutation(chckbxMutation.isSelected());
 		modelConfig.setSurvivalMode(chckbxSurvivalMode.isSelected());
@@ -125,6 +127,7 @@ public class ConfigDialog extends JDialog {
 		comboBoxDifficultyLevel.setSelectedItem(modelConfig.getDifficultyLevel());
 		chckbxEventsCore.setSelected(modelConfig.isEventsCore());
 		chckbxEventsOnTheBrink.setSelected(modelConfig.isEventsOnTheBrink());
+		chckbxEventsInTheLab.setSelected(modelConfig.isEventsInTheLab());
 		chckbxVirulentStrain.setSelected(modelConfig.isPlayVirulentStrain());
 		chckbxMutation.setSelected(modelConfig.isPlayMutation());
 		chckbxSurvivalMode.setSelected(modelConfig.isSurvivalMode());
@@ -216,6 +219,10 @@ public class ConfigDialog extends JDialog {
 		chckbxEventsOnTheBrink.setText("On The Brink");
 		chckbxEventsOnTheBrink.setBounds(200, 275, 100, 23);
 		contentPanel.add(chckbxEventsOnTheBrink);
+
+		chckbxEventsInTheLab.setText("In The Lab");
+		chckbxEventsInTheLab.setBounds(320, 275, 100, 23);
+		contentPanel.add(chckbxEventsInTheLab);
 
 		chckbxSurvivalMode.setText("Survival Mode (no event or role that could influence the roles or the infection deck)");
 		chckbxSurvivalMode.setBounds(130, 300, 500, 23);

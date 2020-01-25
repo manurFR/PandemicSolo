@@ -318,15 +318,38 @@ public class TestComponentsFactory {
         List<Card> events = componentsFactory.createSpecialEvents(prepareAdvancedConfig(), new Random());
         assertEquals(8, events.size());
 
-        // At least an event of id > 54 in the draw
-        boolean newEvent = false;
+        // In the Lab events are #54, 55, 56, 57, 58, 59, 60, 61
+        boolean onTheBrink = false;
         for (Card card : events) {
-            if (card.getId() > 54) {
-                newEvent = true;
+            if (card.getId() >= 54 && card.getId() <= 61) {
+                onTheBrink = true;
                 break;
             }
         }
-        assertTrue(newEvent);
+        assertTrue(onTheBrink);
+    }
+
+    @Test
+    public void test_createSpecialEvents_withCoreAndInTheLab() {
+        MockBundle mb = new MockBundle("specialEvent.50", "Forecast");
+        mb.addKV("cards.defaultPosition", "3000;3000;\"card{0}.jpg\"");
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
+
+        final GameConfig advancedConfig = prepareAdvancedConfig();
+        advancedConfig.setEventsOnTheBrink(false);
+        advancedConfig.setEventsInTheLab(true);
+        List<Card> events = componentsFactory.createSpecialEvents(advancedConfig, new Random());
+        assertEquals(8, events.size());
+
+        // In the Lab events are #62, 63, 64
+        boolean inTheLab = false;
+        for (Card card : events) {
+            if (card.getId() >= 62 && card.getId() <= 64) {
+                inTheLab = true;
+                break;
+            }
+        }
+        assertTrue(inTheLab);
     }
 
     @Test

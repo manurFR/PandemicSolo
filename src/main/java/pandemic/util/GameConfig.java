@@ -48,6 +48,7 @@ public class GameConfig implements Serializable {
 	private boolean useRevisedOperationsExpert;
 	private boolean eventsCore;
 	private boolean eventsOnTheBrink;
+	private boolean eventsInTheLab;
 	private boolean playVirulentStrain;
 	private boolean playMutation;
 	private boolean survivalMode;
@@ -85,6 +86,9 @@ public class GameConfig implements Serializable {
 		}
 		if (eventsOnTheBrink) {
 			eventCards.add("On The Brink");
+		}
+		if (eventsInTheLab) {
+			eventCards.add("In The Lab");
 		}
 		if (eventCards.isEmpty()) {
 			eventCards.add("None");
@@ -127,6 +131,7 @@ public class GameConfig implements Serializable {
 		config.setUseRevisedOperationsExpert(true);
 		config.setEventsCore(true);
 		config.setEventsOnTheBrink(true);
+		config.setEventsInTheLab(false);
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
 		
@@ -199,6 +204,14 @@ public class GameConfig implements Serializable {
 
 	public void setEventsOnTheBrink(boolean eventsOnTheBrink) {
 		this.eventsOnTheBrink = eventsOnTheBrink;
+	}
+
+	public boolean isEventsInTheLab() {
+		return eventsInTheLab;
+	}
+
+	public void setEventsInTheLab(boolean eventsInTheLab) {
+		this.eventsInTheLab = eventsInTheLab;
 	}
 
 	public boolean isPlayVirulentStrain() {
