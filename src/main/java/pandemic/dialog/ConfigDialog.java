@@ -69,6 +69,7 @@ public class ConfigDialog extends JDialog {
 	public JCheckBox chckbxEventsCore = new JCheckBox();
 	public JCheckBox chckbxEventsOnTheBrink = new JCheckBox();
 	public JCheckBox chckbxEventsInTheLab = new JCheckBox();
+	public JCheckBox chckbxEventsStateOfEmergency = new JCheckBox();
 	public JCheckBox chckbxSurvivalMode = new JCheckBox();
 	public JCheckBox chckbxVirulentStrain = new JCheckBox();
 	public JCheckBox chckbxMutation = new JCheckBox();
@@ -98,6 +99,7 @@ public class ConfigDialog extends JDialog {
 		modelConfig.setEventsCore(chckbxEventsCore.isSelected());
 		modelConfig.setEventsOnTheBrink(chckbxEventsOnTheBrink.isSelected());
 		modelConfig.setEventsInTheLab(chckbxEventsInTheLab.isSelected());
+		modelConfig.setEventsStateOfEmergency(chckbxEventsStateOfEmergency.isSelected());
 		modelConfig.setPlayVirulentStrain(chckbxVirulentStrain.isSelected());
 		modelConfig.setPlayMutation(chckbxMutation.isSelected());
 		modelConfig.setSurvivalMode(chckbxSurvivalMode.isSelected());
@@ -128,6 +130,7 @@ public class ConfigDialog extends JDialog {
 		chckbxEventsCore.setSelected(modelConfig.isEventsCore());
 		chckbxEventsOnTheBrink.setSelected(modelConfig.isEventsOnTheBrink());
 		chckbxEventsInTheLab.setSelected(modelConfig.isEventsInTheLab());
+		chckbxEventsStateOfEmergency.setSelected(modelConfig.isEventsStateOfEmergency());
 		chckbxVirulentStrain.setSelected(modelConfig.isPlayVirulentStrain());
 		chckbxMutation.setSelected(modelConfig.isPlayMutation());
 		chckbxSurvivalMode.setSelected(modelConfig.isSurvivalMode());
@@ -176,6 +179,8 @@ public class ConfigDialog extends JDialog {
 
 		// ** Input fields **
 
+		// Roles
+
 		JLabel lblNumberOfRoles = new JLabel("Number of roles :");
 		lblNumberOfRoles.setBounds(116, 120, 110, 16);
 		contentPanel.add(lblNumberOfRoles);
@@ -201,12 +206,16 @@ public class ConfigDialog extends JDialog {
 		chckbxRevisedOpXprt.setBounds(299, 138, 251, 23);
 		contentPanel.add(chckbxRevisedOpXprt);
 
+		// Difficulty
+
 		JLabel lblDifficultyLevel = new JLabel("Difficulty level :");
 		lblDifficultyLevel.setBounds(116, 194, 110, 16);
 		contentPanel.add(lblDifficultyLevel);
 
 		comboBoxDifficultyLevel.setBounds(231, 189, 251, 27);
 		contentPanel.add(comboBoxDifficultyLevel);
+
+		// Event Cards
 
 		JLabel lblEventCards = new JLabel("Event Cards :");
 		lblEventCards.setBounds(116, 250, 110, 16);
@@ -224,9 +233,15 @@ public class ConfigDialog extends JDialog {
 		chckbxEventsInTheLab.setBounds(320, 275, 100, 23);
 		contentPanel.add(chckbxEventsInTheLab);
 
-		chckbxSurvivalMode.setText("Survival Mode (no event or role that could influence the roles or the infection deck)");
+		chckbxEventsStateOfEmergency.setText("State Of Emergency");
+		chckbxEventsStateOfEmergency.setBounds(420, 275, 150, 23);
+		contentPanel.add(chckbxEventsStateOfEmergency);
+
+		chckbxSurvivalMode.setText("Survival Mode (no event or role that could influence the roles or the decks)");
 		chckbxSurvivalMode.setBounds(130, 300, 500, 23);
 		contentPanel.add(chckbxSurvivalMode);
+
+		// Challenges
 
 		chckbxVirulentStrain.setText("Add the VIRULENT STRAIN challenge");
 		chckbxVirulentStrain.setBounds(116, 363, 280, 23);
@@ -235,6 +250,8 @@ public class ConfigDialog extends JDialog {
 		chckbxMutation.setText("Add the MUTATION challenge");
 		chckbxMutation.setBounds(116, 430, 222, 23);
 		contentPanel.add(chckbxMutation);
+
+		// Button Pane
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

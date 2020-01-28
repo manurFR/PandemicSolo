@@ -87,8 +87,9 @@ public class ComponentsFactory {
 	private static final Integer[] EVENTS_CORE = {49, 50, 51, 52, 53};
 	private static final Integer[] EVENTS_ONTHEBRINK = {54, 55, 56, 57, 58, 59, 60, 61};
 	private static final Integer[] EVENTS_INTHELAB = {62, 63, 64};
+	private static final Integer[] EVENTS_STATEOFEMERGENCY = {65, 66, 67, 68, 69, 70};
 
-	private static final Integer[] EVENTS_FORBIDDEN_IN_SURVIVAL_MODE = {50, 52, 53, 55, 57};
+	private static final Integer[] EVENTS_FORBIDDEN_IN_SURVIVAL_MODE = {50, 52, 53, 55, 57, 68, 69};
 
 	private static final String RESOURCEBUNDLE_BASENAME = "componentsCoordinates";
 	
@@ -261,6 +262,9 @@ public class ComponentsFactory {
 		}
 		if (config.isEventsInTheLab()) {
 			availableEvents.addAll(Arrays.asList(EVENTS_INTHELAB));
+		}
+		if (config.isEventsStateOfEmergency()) {
+			availableEvents.addAll(Arrays.asList(EVENTS_STATEOFEMERGENCY));
 		}
 
 		if (config.isSurvivalMode()) {

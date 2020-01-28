@@ -49,6 +49,7 @@ public class GameConfig implements Serializable {
 	private boolean eventsCore;
 	private boolean eventsOnTheBrink;
 	private boolean eventsInTheLab;
+	private boolean eventsStateOfEmergency;
 	private boolean playVirulentStrain;
 	private boolean playMutation;
 	private boolean survivalMode;
@@ -89,6 +90,9 @@ public class GameConfig implements Serializable {
 		}
 		if (eventsInTheLab) {
 			eventCards.add("In The Lab");
+		}
+		if (eventsStateOfEmergency) {
+			eventCards.add("State Of Emergency");
 		}
 		if (eventCards.isEmpty()) {
 			eventCards.add("None");
@@ -132,6 +136,7 @@ public class GameConfig implements Serializable {
 		config.setEventsCore(true);
 		config.setEventsOnTheBrink(true);
 		config.setEventsInTheLab(false);
+		config.setEventsStateOfEmergency(false);
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
 		
@@ -212,6 +217,14 @@ public class GameConfig implements Serializable {
 
 	public void setEventsInTheLab(boolean eventsInTheLab) {
 		this.eventsInTheLab = eventsInTheLab;
+	}
+
+	public boolean isEventsStateOfEmergency() {
+		return eventsStateOfEmergency;
+	}
+
+	public void setEventsStateOfEmergency(boolean eventsStateOfEmergency) {
+		this.eventsStateOfEmergency = eventsStateOfEmergency;
 	}
 
 	public boolean isPlayVirulentStrain() {
