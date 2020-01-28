@@ -86,7 +86,7 @@ public class AboutBox extends JDialog {
 		contentPanel.add(labelCube2);
 		contentPanel.add(labelCube3);
 
-		ImageIcon iconPawn = resourceProvider.getIcon("pawn_red.jpg");
+		ImageIcon iconPawn = resourceProvider.getIcon("pawn_troubleshooter.jpg");
 		JLabel labelPawn = new JLabel(iconPawn);
 		labelPawn.setBounds(120, 60, iconPawn.getIconWidth(), iconPawn
 				.getIconHeight());

@@ -179,7 +179,7 @@ public class TestComponentsFactory {
     @Test
     public void testCreateRoles() {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("role.116", "889;278;\"Archivist\";\"pawn_blue.jpg\";OnTheBrink"));
+                new MockBundle("role.116", "889;278;\"Archivist\";\"pawn_archivist.jpg\";OnTheBrink"));
 
         List<Role> pawns = componentsFactory.createRoles(true, true); //(roles, cities.get(0), true);
 
