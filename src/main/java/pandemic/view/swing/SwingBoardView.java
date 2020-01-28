@@ -35,6 +35,7 @@ import javax.swing.JScrollPane;
 import pandemic.BoardController;
 import pandemic.dialog.ModalDialogsManager;
 import pandemic.model.ComponentsFactory;
+import pandemic.model.Expansion;
 import pandemic.model.PandemicModel;
 import pandemic.model.objects.Card;
 import pandemic.model.objects.PandemicObject;
@@ -74,9 +75,6 @@ public class SwingBoardView extends SwingView implements BoardView {
      * Constructor We follow the MVC paradigm, and thus the view gets access to
      * the model (to fetch data) and to the controller (to notify it of
      * requests)
-     * 
-     * @param controller
-     * @param model
      */
     public SwingBoardView(JScrollPane container, BoardController controller, PandemicModel model) {
         super(controller, model);
@@ -86,9 +84,6 @@ public class SwingBoardView extends SwingView implements BoardView {
 
     /**
      * Create the graphical board
-     * 
-     * @param container
-     *            JScrollPane inside which the board will be placed
      */
     @Override
     public void createBoard() {
@@ -132,7 +127,7 @@ public class SwingBoardView extends SwingView implements BoardView {
     public void setTopDiscardCard() {
         List<Integer> discardDeck = getModel().getDiscardPile();
 
-        int newCard = -1;
+        int newCard;
         if (discardDeck.isEmpty()) {
             newCard = 300; // No discarded card !
             
@@ -269,9 +264,8 @@ public class SwingBoardView extends SwingView implements BoardView {
 
         board.add(appendixButton);
 
-        // **** NEW ASSIGNMENT BUTTON *************** (only if the new Special
-        // Event cards with "New Assignment" are used)
-        if (getModel().getConfig().isEventsOnTheBrink()) {
+        // **** NEW ASSIGNMENT BUTTON *************** (only if the new Special Event cards with "New Assignment" are used)
+        if (getModel().getConfig().getEventCardsExpansions().contains(Expansion.ON_THE_BRINK)) {
             JButton newAssignmentButton = new JButton();
             ImageIcon newAssignmentImage = getResourceProvider().getIcon("newassignment_button.jpg");
             newAssignmentButton.setIcon(newAssignmentImage);

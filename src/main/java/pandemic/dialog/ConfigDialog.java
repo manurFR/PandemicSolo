@@ -18,29 +18,23 @@
  */
 package pandemic.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Frame;
+import pandemic.PandemicSolo;
+import pandemic.model.DifficultyLevel;
+import pandemic.model.Expansion;
+import pandemic.util.GameConfig;
+import pandemic.util.ResourceProvider;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import pandemic.PandemicSolo;
-import pandemic.model.DifficultyLevel;
-import pandemic.util.GameConfig;
-import pandemic.util.ResourceProvider;
+import static pandemic.model.Expansion.*;
 
 /**
  * This dialog asks the user for all game configuration information at once.
@@ -96,17 +90,29 @@ public class ConfigDialog extends JDialog {
 		modelConfig.setUseAllRoles(chckbxAddNewRoles.isSelected());
 		modelConfig.setUseRevisedOperationsExpert(chckbxRevisedOpXprt.isSelected());
 		modelConfig.setDifficultyLevel((DifficultyLevel)comboBoxDifficultyLevel.getSelectedItem());
-		modelConfig.setEventsCore(chckbxEventsCore.isSelected());
-		modelConfig.setEventsOnTheBrink(chckbxEventsOnTheBrink.isSelected());
-		modelConfig.setEventsInTheLab(chckbxEventsInTheLab.isSelected());
-		modelConfig.setEventsStateOfEmergency(chckbxEventsStateOfEmergency.isSelected());
+
+		final Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
+		if (chckbxEventsCore.isSelected()) {
+			eventCardsExpansions.add(CORE);
+		}
+		if (chckbxEventsOnTheBrink.isSelected()) {
+			eventCardsExpansions.add(ON_THE_BRINK);
+		}
+		if (chckbxEventsInTheLab.isSelected()) {
+			eventCardsExpansions.add(IN_THE_LAB);
+		}
+		if (chckbxEventsStateOfEmergency.isSelected()) {
+			eventCardsExpansions.add(STATE_OF_EMERGENCY);
+		}
+		modelConfig.setEventCardsExpansions(eventCardsExpansions);
+
 		modelConfig.setPlayVirulentStrain(chckbxVirulentStrain.isSelected());
 		modelConfig.setPlayMutation(chckbxMutation.isSelected());
 		modelConfig.setSurvivalMode(chckbxSurvivalMode.isSelected());
 
 		this.dispose();
 	}
-	
+
 	/**
 	 * CONTROLLER
 	 * Cancel the configuration informations already selected and return to the caller.
@@ -127,10 +133,10 @@ public class ConfigDialog extends JDialog {
 		chckbxAddNewRoles.setSelected(modelConfig.isUseAllRoles());
 		chckbxRevisedOpXprt.setSelected(modelConfig.isUseRevisedOperationsExpert());
 		comboBoxDifficultyLevel.setSelectedItem(modelConfig.getDifficultyLevel());
-		chckbxEventsCore.setSelected(modelConfig.isEventsCore());
-		chckbxEventsOnTheBrink.setSelected(modelConfig.isEventsOnTheBrink());
-		chckbxEventsInTheLab.setSelected(modelConfig.isEventsInTheLab());
-		chckbxEventsStateOfEmergency.setSelected(modelConfig.isEventsStateOfEmergency());
+		chckbxEventsCore.setSelected(modelConfig.getEventCardsExpansions().contains(CORE));
+		chckbxEventsOnTheBrink.setSelected(modelConfig.getEventCardsExpansions().contains(ON_THE_BRINK));
+		chckbxEventsInTheLab.setSelected(modelConfig.getEventCardsExpansions().contains(IN_THE_LAB));
+		chckbxEventsStateOfEmergency.setSelected(modelConfig.getEventCardsExpansions().contains(STATE_OF_EMERGENCY));
 		chckbxVirulentStrain.setSelected(modelConfig.isPlayVirulentStrain());
 		chckbxMutation.setSelected(modelConfig.isPlayMutation());
 		chckbxSurvivalMode.setSelected(modelConfig.isSurvivalMode());

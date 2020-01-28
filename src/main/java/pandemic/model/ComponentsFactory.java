@@ -19,27 +19,17 @@
  */
 package pandemic.model;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.ResourceBundle;
-
-import javax.swing.ImageIcon;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pandemic.model.objects.Card;
-import pandemic.model.objects.City;
-import pandemic.model.objects.Cube;
-import pandemic.model.objects.PandemicObject;
-import pandemic.model.objects.Role;
+import pandemic.model.objects.*;
 import pandemic.util.GameConfig;
 import pandemic.util.ResourceProvider;
+
+import javax.swing.*;
+import java.text.MessageFormat;
+import java.util.*;
+
+import static pandemic.model.Expansion.CORE;
 
 /**
  * Factory to create and dispatch the components of the game (counters, cards...)
@@ -84,11 +74,6 @@ public class ComponentsFactory {
 	
 	private static final int CUBES_PER_LINE = 12;
 	
-	private static final Integer[] EVENTS_CORE = {49, 50, 51, 52, 53};
-	private static final Integer[] EVENTS_ONTHEBRINK = {54, 55, 56, 57, 58, 59, 60, 61};
-	private static final Integer[] EVENTS_INTHELAB = {62, 63, 64};
-	private static final Integer[] EVENTS_STATEOFEMERGENCY = {65, 66, 67, 68, 69, 70};
-
 	private static final Integer[] EVENTS_FORBIDDEN_IN_SURVIVAL_MODE = {50, 52, 53, 55, 57, 68, 69};
 
 	private static final String RESOURCEBUNDLE_BASENAME = "componentsCoordinates";
@@ -254,17 +239,8 @@ public class ComponentsFactory {
 
 		List<Integer> availableEvents = new ArrayList<Integer>();
 
-		if (config.isEventsCore()) {
-			availableEvents.addAll(Arrays.asList(EVENTS_CORE));
-		}
-		if (config.isEventsOnTheBrink()) {
-			availableEvents.addAll(Arrays.asList(EVENTS_ONTHEBRINK));
-		}
-		if (config.isEventsInTheLab()) {
-			availableEvents.addAll(Arrays.asList(EVENTS_INTHELAB));
-		}
-		if (config.isEventsStateOfEmergency()) {
-			availableEvents.addAll(Arrays.asList(EVENTS_STATEOFEMERGENCY));
+		for (Expansion expansion: config.getEventCardsExpansions()) {
+			availableEvents.addAll(expansion.getEventCards());
 		}
 
 		if (config.isSurvivalMode()) {
@@ -274,7 +250,7 @@ public class ComponentsFactory {
 		Collections.shuffle(availableEvents, randomizer);
 
 		int nbEventCardsToCreate;
-		if (config.isEventsCore() && !config.isEventsOnTheBrink()) {
+		if (config.getEventCardsExpansions().size() == 1 && config.getEventCardsExpansions().contains(CORE)) {
 			// if we're playing only with the core game, take all core event cards (minus the ones removed if in Survival mode)
 			nbEventCardsToCreate = availableEvents.size();
 		} else {

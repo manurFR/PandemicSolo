@@ -18,15 +18,21 @@
  */
 package pandemic.util;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pandemic.model.DifficultyLevel;
 import pandemic.model.Disease;
+import pandemic.model.Expansion;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static pandemic.model.Expansion.CORE;
+import static pandemic.model.Expansion.ON_THE_BRINK;
 
 /**
  * This class hold the game properties (number of players/roles, number of epidemics...)
@@ -46,10 +52,7 @@ public class GameConfig implements Serializable {
 	private int nbOfRoles;
 	private boolean useAllRoles;
 	private boolean useRevisedOperationsExpert;
-	private boolean eventsCore;
-	private boolean eventsOnTheBrink;
-	private boolean eventsInTheLab;
-	private boolean eventsStateOfEmergency;
+	private Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
 	private boolean playVirulentStrain;
 	private boolean playMutation;
 	private boolean survivalMode;
@@ -58,8 +61,7 @@ public class GameConfig implements Serializable {
 	 * Log the details of this game configuration through the Logger
 	 */
 	public void log() {
-		for(String line : giveDetails())
-		{
+		for(String line : giveDetails()) {
 			logger.info(line);
 		}
 	}
@@ -82,17 +84,8 @@ public class GameConfig implements Serializable {
 		
 		sb = new StringBuilder("Event Cards used : ");
 		List<String> eventCards = new ArrayList<String>();
-		if (eventsCore) {
-			eventCards.add("Core");
-		}
-		if (eventsOnTheBrink) {
-			eventCards.add("On The Brink");
-		}
-		if (eventsInTheLab) {
-			eventCards.add("In The Lab");
-		}
-		if (eventsStateOfEmergency) {
-			eventCards.add("State Of Emergency");
+		for (Expansion expansion: eventCardsExpansions) {
+			eventCards.add(expansion.getLabel());
 		}
 		if (eventCards.isEmpty()) {
 			eventCards.add("None");
@@ -133,10 +126,7 @@ public class GameConfig implements Serializable {
 		config.setNbOfRoles(2);
 		config.setUseAllRoles(true);
 		config.setUseRevisedOperationsExpert(true);
-		config.setEventsCore(true);
-		config.setEventsOnTheBrink(true);
-		config.setEventsInTheLab(false);
-		config.setEventsStateOfEmergency(false);
+		config.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
 		
@@ -156,7 +146,7 @@ public class GameConfig implements Serializable {
 			return new Disease[] { Disease.BLUE, Disease.YELLOW, Disease.BLACK, Disease.RED };
 		}
 	}
-	
+
 	/* -------------------------------------------------------------------------------------------- */
 
 	public int getNbOfEpidemics() {
@@ -195,36 +185,12 @@ public class GameConfig implements Serializable {
 		this.useRevisedOperationsExpert = useRevisedOperationsExpert;
 	}
 
-	public boolean isEventsCore() {
-		return eventsCore;
+	public Set<Expansion> getEventCardsExpansions() {
+		return eventCardsExpansions;
 	}
 
-	public void setEventsCore(boolean eventsCore) {
-		this.eventsCore = eventsCore;
-	}
-
-	public boolean isEventsOnTheBrink() {
-		return eventsOnTheBrink;
-	}
-
-	public void setEventsOnTheBrink(boolean eventsOnTheBrink) {
-		this.eventsOnTheBrink = eventsOnTheBrink;
-	}
-
-	public boolean isEventsInTheLab() {
-		return eventsInTheLab;
-	}
-
-	public void setEventsInTheLab(boolean eventsInTheLab) {
-		this.eventsInTheLab = eventsInTheLab;
-	}
-
-	public boolean isEventsStateOfEmergency() {
-		return eventsStateOfEmergency;
-	}
-
-	public void setEventsStateOfEmergency(boolean eventsStateOfEmergency) {
-		this.eventsStateOfEmergency = eventsStateOfEmergency;
+	public void setEventCardsExpansions(Set<Expansion> eventCardsExpansions) {
+		this.eventCardsExpansions = eventCardsExpansions;
 	}
 
 	public boolean isPlayVirulentStrain() {

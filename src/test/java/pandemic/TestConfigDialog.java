@@ -1,14 +1,14 @@
 package pandemic;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import pandemic.dialog.ConfigDialog;
 import pandemic.model.DifficultyLevel;
+import pandemic.model.Expansion;
 import pandemic.util.GameConfig;
+
+import static org.junit.Assert.*;
 
 public class TestConfigDialog {
 
@@ -16,7 +16,7 @@ public class TestConfigDialog {
 	ConfigDialog dialog;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		dialog = new ConfigDialog(null);
 		config = GameConfig.defaultConfigFactory();
 		dialog.setModelConfig(config);
@@ -34,7 +34,7 @@ public class TestConfigDialog {
 	public void testAddNewRoles() {
 		dialog.chckbxAddNewRoles.setSelected(false);
 		dialog.controllerValidateAndClose();
-		assertTrue(!config.isUseAllRoles());
+		assertFalse(config.isUseAllRoles());
 	}
 	
 	@Test
@@ -45,10 +45,10 @@ public class TestConfigDialog {
 	}
 	
 	@Test
-	public void testUseNewSpecialEvents() {
-		dialog.chckbxEventsOnTheBrink.setSelected(false);
+	public void testUseNonCoreExpansionEventCards() {
+		dialog.chckbxEventsInTheLab.setSelected(true);
 		dialog.controllerValidateAndClose();
-		assertTrue(!config.isEventsOnTheBrink());
+		assertTrue(config.getEventCardsExpansions().contains(Expansion.IN_THE_LAB));
 	}
 
 	@Test

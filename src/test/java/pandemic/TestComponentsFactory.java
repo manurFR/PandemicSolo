@@ -21,10 +21,7 @@ package pandemic;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pandemic.model.BoardZone;
-import pandemic.model.ComponentsFactory;
-import pandemic.model.DifficultyLevel;
-import pandemic.model.Disease;
+import pandemic.model.*;
 import pandemic.model.objects.*;
 import pandemic.util.GameConfig;
 import pandemic.util.GenericResourceProvider;
@@ -32,11 +29,13 @@ import pandemic.util.ResourceProvider;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static pandemic.model.Expansion.*;
 
 /**
  * @author manur
@@ -90,11 +89,12 @@ public class TestComponentsFactory {
         for (Cube c : cubes) {
             if (c.getColor().equals(Disease.PURPLE)) {
                 purpleFound = true;
+                break;
             }
         }
         assertTrue(purpleFound);
 
-        Cube c = (Cube) cubes.get(0);
+        Cube c = cubes.get(0);
         assertTrue(c.getImage().getDescription().endsWith("swuerfel_rot.jpg"));
         assertEquals(c.getX(), 814);
         assertEquals(c.getY(), 150);
@@ -149,8 +149,8 @@ public class TestComponentsFactory {
 
         componentsFactory.moveCubesToCity(listCubes, 1, cities.get(0));
 
-        assertTrue(!(listCubes.get(0).getX() == 814));
-        assertTrue(!(listCubes.get(0).getY() == 150));
+        assertFalse(listCubes.get(0).getX() == 814);
+        assertFalse(listCubes.get(0).getY() == 150);
     }
 
     @Test
@@ -336,8 +336,8 @@ public class TestComponentsFactory {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
 
         final GameConfig advancedConfig = prepareAdvancedConfig();
-        advancedConfig.setEventsOnTheBrink(false);
-        advancedConfig.setEventsInTheLab(true);
+        advancedConfig.getEventCardsExpansions().remove(ON_THE_BRINK);
+        advancedConfig.getEventCardsExpansions().add(IN_THE_LAB);
         List<Card> events = componentsFactory.createSpecialEvents(advancedConfig, new Random());
         assertEquals(8, events.size());
 
@@ -482,8 +482,7 @@ public class TestComponentsFactory {
         basicConfig.setPlayMutation(false);
         basicConfig.setPlayVirulentStrain(false);
         basicConfig.setUseAllRoles(false);
-        basicConfig.setEventsCore(true);
-        basicConfig.setEventsOnTheBrink(false);
+        basicConfig.getEventCardsExpansions().add(CORE);
         return basicConfig;
     }
 
@@ -494,8 +493,7 @@ public class TestComponentsFactory {
         advancedConfig.setPlayMutation(true);
         advancedConfig.setPlayVirulentStrain(true);
         advancedConfig.setUseAllRoles(true);
-        advancedConfig.setEventsCore(true);
-        advancedConfig.setEventsOnTheBrink(true);
+        advancedConfig.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
         return advancedConfig;
     }
 }

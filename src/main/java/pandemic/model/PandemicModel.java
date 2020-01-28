@@ -19,15 +19,8 @@
  */
 package pandemic.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pandemic.model.objects.Card;
 import pandemic.model.objects.City;
 import pandemic.model.objects.PandemicObject;
@@ -36,6 +29,12 @@ import pandemic.util.DecksObserver;
 import pandemic.util.GameConfig;
 import pandemic.util.ResourceProvider;
 import pandemic.util.RolesObserver;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * The "model" in the MVC pattern.
