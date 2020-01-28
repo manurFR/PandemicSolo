@@ -74,7 +74,7 @@ public class AboutBox extends JDialog {
 		contentPanel.setLayout(null);
 		getContentPane().add(contentPanel);
 
-		ImageIcon iconCube = resourceProvider.getIcon("swuerfel_blau.jpg");
+		ImageIcon iconCube = resourceProvider.getIcon("cube_blue.jpg");
 		JLabel labelCube1 = new JLabel(iconCube);
 		labelCube1.setBounds(36, 58, iconCube.getIconWidth(), iconCube.getIconHeight());
 		JLabel labelCube2 = new JLabel(iconCube);
@@ -86,14 +86,14 @@ public class AboutBox extends JDialog {
 		contentPanel.add(labelCube2);
 		contentPanel.add(labelCube3);
 
-		ImageIcon iconPawn = resourceProvider.getIcon("figur_rot.jpg");
+		ImageIcon iconPawn = resourceProvider.getIcon("pawn_red.jpg");
 		JLabel labelPawn = new JLabel(iconPawn);
 		labelPawn.setBounds(120, 60, iconPawn.getIconWidth(), iconPawn
 				.getIconHeight());
 
 		contentPanel.add(labelPawn);
 
-		ImageIcon iconRemedy = resourceProvider.getIcon("gegenmittel_gelb.jpg");
+		ImageIcon iconRemedy = resourceProvider.getIcon("cure_yellow.jpg");
 		JLabel labelRemedy = new JLabel(iconRemedy);
 		labelRemedy.setBounds(15, 15, iconRemedy.getIconWidth(), iconRemedy.getIconHeight());
 

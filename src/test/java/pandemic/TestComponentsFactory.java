@@ -77,7 +77,7 @@ public class TestComponentsFactory {
     @Test
     public void test_withMutation_createCubesIncludesPurple() {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("cubes.RED", "814;150;1;\"swuerfel_rot.jpg\""));
+                new MockBundle("cubes.RED", "814;150;1;\"cube_red.jpg\""));
 
         GameConfig configWithMutation = prepareAdvancedConfig();
 
@@ -95,7 +95,7 @@ public class TestComponentsFactory {
         assertTrue(purpleFound);
 
         Cube c = cubes.get(0);
-        assertTrue(c.getImage().getDescription().endsWith("swuerfel_rot.jpg"));
+        assertTrue(c.getImage().getDescription().endsWith("cube_red.jpg"));
         assertEquals(c.getX(), 814);
         assertEquals(c.getY(), 150);
     }
@@ -103,7 +103,7 @@ public class TestComponentsFactory {
     @Test
     public void test_withoutMutation_createCubesDoesNotIncludePurple() {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("cubes.RED", "814;150;1;\"swuerfel_rot.jpg\""));
+                new MockBundle("cubes.RED", "814;150;1;\"cube_red.jpg\""));
 
         GameConfig configWithoutMutation = prepareBasicConfig();
 
@@ -137,7 +137,7 @@ public class TestComponentsFactory {
     @Test
     public void testMoveCubesToCity() {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("cubes.RED", "814;150;1;\"swuerfel_rot.jpg\""));
+                new MockBundle("cubes.RED", "814;150;1;\"cube_red.jpg\""));
 
 		GameConfig advancedConfig = prepareAdvancedConfig();
 		List<PandemicObject> listCubes = new ArrayList<PandemicObject>(componentsFactory.createCubes(advancedConfig.getDiseases()));
@@ -156,7 +156,7 @@ public class TestComponentsFactory {
     @Test
     public void testCreateResearchStations() {
         MockBundle mb = new MockBundle("city.35", "362;97;\"Paris\";BLUE");
-        mb.addKV("researchStations.reserve", "814;230;\"slabor.jpg\"");
+        mb.addKV("researchStations.reserve", "814;230;\"research_station.jpg\"");
         mb.addKV("researchStations.cityShift", "15;-17");
         when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
 
@@ -179,7 +179,7 @@ public class TestComponentsFactory {
     @Test
     public void testCreateRoles() {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("role.116", "889;278;\"Archivist\";\"figur_blau.jpg\";OnTheBrink"));
+                new MockBundle("role.116", "889;278;\"Archivist\";\"pawn_blue.jpg\";OnTheBrink"));
 
         List<Role> pawns = componentsFactory.createRoles(true, true); //(roles, cities.get(0), true);
 
@@ -194,7 +194,7 @@ public class TestComponentsFactory {
     @Test
     public void testCreateCureMarkers() {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("cure.BLACK", "860;316;\"gegenmittel_schwarz.jpg\""));
+                new MockBundle("cure.BLACK", "860;316;\"cure_black.jpg\""));
 
         // With purple
         List<PandemicObject> markers = componentsFactory.createCureMarkers(prepareAdvancedConfig().getDiseases());
