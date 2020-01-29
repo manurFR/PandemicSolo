@@ -138,21 +138,21 @@ public class ComponentsFactory {
     public List<Role> createRoles(boolean includeExpansionRoles, boolean useRevisedOpXprt) {
         List<Role> listRole = new ArrayList<Role>();
         
-        // Role ids range from 111 to 123
-        for (int roleId=111; roleId<=123; roleId++) {
+        // Role ids range from 111 to 127
+        for (int roleId=111; roleId<=127; roleId++) {
             String roleName = getValue(KEY_ROLE + roleId, 2);
             
             int xPos = getXCoordinate(KEY_ROLE + roleId);
             int yPos = getYCoordinate(KEY_ROLE + roleId);
             BoardZone boardZone = BoardZone.RESERVE;
             
-            boolean expansionRole = (getValue(KEY_ROLE + roleId, 4).equals("OnTheBrink"));
+            boolean expansionRole = !(getValue(KEY_ROLE + roleId, 4).equals("Basic"));
             // Special case : for the Operation Expert, there is a base game version and an expansion "revised" version
             //   Thus the corresponding role can have the expansionRole flag at true or false depending on the version 
             if (roleId == OPERATIONS_EXPERT_ROLE && useRevisedOpXprt) {
                 expansionRole = true;
             } else if (!includeExpansionRoles && expansionRole) {
-                // If expansion roles are not to be included in this game, and the current role comes from On The Brink, skip it
+                // If expansion roles are not to be included in this game, skip them
                 continue;
             }
             

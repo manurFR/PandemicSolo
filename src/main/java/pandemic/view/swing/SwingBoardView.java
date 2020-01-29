@@ -44,6 +44,8 @@ import pandemic.view.BoardView;
 import pandemic.view.listener.NewAssignmentListener;
 import pandemic.view.listener.OverframeButtonListener;
 
+import static pandemic.model.objects.Role.TROUBLESHOOTER_ROLE_ID;
+
 /**
  * The main "view" (from the MVC pattern) for the application. This class owns
  * the main graphical panel, displaying the board, knows how to set it up, and
@@ -194,7 +196,7 @@ public class SwingBoardView extends SwingView implements BoardView {
     public void roleWillChange(int roleIndex) {
         // The role will change right after this method.
         // If the old role was the Troubleshooter, remove its special button.
-        if (getModel().getAffectedRoles().get(roleIndex).isTroubleShooter()) {
+        if (getModel().getAffectedRoles().get(roleIndex).isTroubleshooter()) {
             removeTroubleshooterButton();
         }
     }
@@ -205,9 +207,8 @@ public class SwingBoardView extends SwingView implements BoardView {
         JLabel roleLabel = (JLabel) board.getComponentAt(10 + 157 * roleIndex, 408);
         roleLabel.setIcon(getResourceProvider().getIcon(buildRoleFilename(getModel().getAffectedRoles().get(roleIndex))));
 
-        // If the new role is the Troubleshooter, place the corresponding button
-        // on its rolebox
-        if (getModel().getAffectedRoles().get(roleIndex).isTroubleShooter()) {
+        // If the new role is the Troubleshooter, place the corresponding button on its rolebox
+        if (getModel().getAffectedRoles().get(roleIndex).isTroubleshooter()) {
             addTroubleshooterButton(roleIndex);
         }
     }
@@ -346,17 +347,11 @@ public class SwingBoardView extends SwingView implements BoardView {
 
         // Troubleshooter button (if there's a troubleshooter drawn)
         List<Role> roleList = getModel().getAffectedRoles();
-        int troubleshooterRoleIndex = -1;
         for (int roleIndex = 0; roleIndex < roleList.size(); roleIndex++) {
-            if (roleList.get(roleIndex).getId() == 121) {
-                troubleshooterRoleIndex = roleIndex;
+            if (roleList.get(roleIndex).getId() == TROUBLESHOOTER_ROLE_ID) {
+                addTroubleshooterButton(roleIndex);
                 break;
             }
-        }
-
-        if (troubleshooterRoleIndex >= 0) {
-            // There is a troubleshooter inside the list of roles drawn
-            addTroubleshooterButton(troubleshooterRoleIndex);
         }
 
         // ** displaying remaining playingcards.. ***********************

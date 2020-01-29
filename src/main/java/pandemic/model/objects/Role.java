@@ -27,15 +27,9 @@ import pandemic.model.BoardZone;
  * @since v2.6
  */
 public class Role extends PandemicObject {
-    /*
-     * WARNING - Using this randomly generated UID was a bad idea.
-     * During the next change to this class, please modify the value to
-     * the new version number ; example :
-     *  private static final long serialVersionUID = 28L; // last major change : v2.8
-     */
-    private static final long serialVersionUID = 706007195078135977L;
+    private static final long serialVersionUID = 28L;
 	
-	private static final int TROUBLE_SHOOTER_ROLE_ID = 121;
+	public static final int TROUBLESHOOTER_ROLE_ID = 123;
 
 	private boolean expansionRole;
 
@@ -48,8 +42,8 @@ public class Role extends PandemicObject {
 		return expansionRole;
 	}
 	
-    public boolean isTroubleShooter() {
-        return TROUBLE_SHOOTER_ROLE_ID == getId();
+    public boolean isTroubleshooter() {
+        return TROUBLESHOOTER_ROLE_ID == getId();
     }
 
 	@Override
