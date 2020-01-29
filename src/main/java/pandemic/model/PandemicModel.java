@@ -261,18 +261,23 @@ public class PandemicModel implements Serializable {
 
 	/**
 	 * Draw the role of each player, chosen randomly.
-	 * @param availableRoles The list of roles from which to choose randomly
+	 * @param allRoles The list of roles from which to choose randomly
 	 * @param nbOfRoles The number of roles to draw
 	 */
-	private List<Role> drawRoles(List<Role> availableRoles, int nbOfRoles) {
+	private List<Role> drawRoles(List<Role> allRoles, int nbOfRoles) {
 		List<Role> chosenRoles = new ArrayList<Role>();
 
+		List<Role> availableRoles = new ArrayList<Role>(allRoles); // make a copy so that allRoles stays in logical order and the Z-order of the icons is correct
 		Collections.shuffle(availableRoles, randomizer);
 
 		// Let's take the first "nbOfRoles" roles
 		for (int roleIndex=0; roleIndex<nbOfRoles; roleIndex++) {
-		    logger.debug("...chosen Role #{} : id={}", roleIndex, availableRoles.get(roleIndex).getId());
-			chosenRoles.add(availableRoles.get(roleIndex));
+			final Role chosenRole = availableRoles.get(roleIndex);
+			logger.debug("...chosen Role #{} : id={}", roleIndex, chosenRole.getId());
+			chosenRoles.add(chosenRole);
+			// the chosen roles are put at the top of allRoles for the Z-order of their icon to be correct
+			allRoles.remove(chosenRole);
+			allRoles.add(roleIndex, chosenRole);
 		}
 		
 		return chosenRoles;

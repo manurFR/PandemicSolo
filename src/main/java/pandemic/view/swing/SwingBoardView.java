@@ -97,8 +97,7 @@ public class SwingBoardView extends SwingView implements BoardView {
 
         container.setViewportView(board);
 
-        // We HAVE to put the higher components first, and the components behind
-        // others next.
+        // We HAVE to put the higher components first, and the components behind others next.
         // So, the background image (ie the board) must be put last.
         createButtons();
 
