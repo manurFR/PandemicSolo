@@ -138,8 +138,8 @@ public class ComponentsFactory {
     public List<Role> createRoles(boolean includeExpansionRoles, boolean useRevisedOpXprt) {
         List<Role> listRole = new ArrayList<Role>();
         
-        // Role ids range from 111 to 121
-        for (int roleId=111; roleId<=121; roleId++) {
+        // Role ids range from 111 to 123
+        for (int roleId=111; roleId<=123; roleId++) {
             String roleName = getValue(KEY_ROLE + roleId, 2);
             
             int xPos = getXCoordinate(KEY_ROLE + roleId);

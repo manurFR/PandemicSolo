@@ -227,19 +227,19 @@ public class ConfigDialog extends JDialog {
 		lblEventCards.setBounds(116, 250, 110, 16);
 		contentPanel.add(lblEventCards);
 
-		chckbxEventsCore.setText("Core");
+		chckbxEventsCore.setText(CORE.getLabel());
 		chckbxEventsCore.setBounds(116, 275, 80, 23);
 		contentPanel.add(chckbxEventsCore);
 
-		chckbxEventsOnTheBrink.setText("On The Brink");
+		chckbxEventsOnTheBrink.setText(ON_THE_BRINK.getLabel());
 		chckbxEventsOnTheBrink.setBounds(200, 275, 100, 23);
 		contentPanel.add(chckbxEventsOnTheBrink);
 
-		chckbxEventsInTheLab.setText("In The Lab");
+		chckbxEventsInTheLab.setText(IN_THE_LAB.getLabel());
 		chckbxEventsInTheLab.setBounds(320, 275, 100, 23);
 		contentPanel.add(chckbxEventsInTheLab);
 
-		chckbxEventsStateOfEmergency.setText("State Of Emergency");
+		chckbxEventsStateOfEmergency.setText(STATE_OF_EMERGENCY.getLabel());
 		chckbxEventsStateOfEmergency.setBounds(420, 275, 150, 23);
 		contentPanel.add(chckbxEventsStateOfEmergency);
 
