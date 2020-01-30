@@ -181,7 +181,9 @@ public class TestComponentsFactory {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
                 new MockBundle("role.118", "945;270;\"Archivist\";\"pawn_archivist.jpg\";OnTheBrink"));
 
-        List<Role> pawns = componentsFactory.createRoles(true); //(roles, cities.get(0), true);
+        Set<Expansion> allExpansions = new LinkedHashSet<Expansion>();
+        allExpansions.addAll(asList(Expansion.values()));
+        List<Role> pawns = componentsFactory.createRoles(allExpansions);
 
         assertEquals(20, pawns.size()); // With expansion roles, there are 13 of them
 
@@ -481,7 +483,7 @@ public class TestComponentsFactory {
         basicConfig.setNbOfRoles(3);
         basicConfig.setPlayMutation(false);
         basicConfig.setPlayVirulentStrain(false);
-        basicConfig.setUseAllRoles(false);
+        basicConfig.getRolesExpansions().add(CORE);
         basicConfig.getEventCardsExpansions().add(CORE);
         return basicConfig;
     }
@@ -492,7 +494,7 @@ public class TestComponentsFactory {
         advancedConfig.setNbOfRoles(4);
         advancedConfig.setPlayMutation(true);
         advancedConfig.setPlayVirulentStrain(true);
-        advancedConfig.setUseAllRoles(true);
+        advancedConfig.getRolesExpansions().addAll(asList(CORE, IN_THE_LAB));
         advancedConfig.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
         return advancedConfig;
     }

@@ -50,6 +50,7 @@ public class GameConfig implements Serializable {
 	
 	private DifficultyLevel difficultyLevel;
 	private int nbOfRoles;
+	private Set<Expansion> rolesExpansions = new LinkedHashSet<Expansion>();
 	private boolean useAllRoles;
 	private Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
 	private boolean playVirulentStrain;
@@ -66,17 +67,32 @@ public class GameConfig implements Serializable {
 	}
 	
 	public String[] giveDetails() {
-		String[] details = new String[6];
+		String[] details = new String[7];
 		
 		StringBuilder sb = new StringBuilder("Number of roles : ");
 		sb.append(nbOfRoles);
-		sb.append(" with new roles ? ");
-		sb.append(useAllRoles ? YES : NO);
 		details[0] = sb.toString();
-				
+
+		sb = new StringBuilder("Roles used : ");
+		List<String> rolesFrom = new ArrayList<String>();
+		for (Expansion expansion: rolesExpansions) {
+			rolesFrom.add(expansion.getLabel());
+		}
+		if (rolesFrom.isEmpty()) {
+			rolesFrom.add("None");
+		}
+		int nbExpansionsRoles = rolesFrom.size();
+		for (int i=0; i<nbExpansionsRoles; i++) {
+			sb.append(rolesFrom.get(i));
+			if (i<nbExpansionsRoles-1) {
+				sb.append(" | ");
+			}
+		}
+		details[1] = sb.toString();
+
 		sb = new StringBuilder("Difficulty level :");
 		sb.append(difficultyLevel);
-		details[1] = sb.toString();
+		details[2] = sb.toString();
 		
 		sb = new StringBuilder("Event Cards used : ");
 		List<String> eventCards = new ArrayList<String>();
@@ -86,26 +102,26 @@ public class GameConfig implements Serializable {
 		if (eventCards.isEmpty()) {
 			eventCards.add("None");
 		}
-		int nbSets = eventCards.size();
-		for (int i=0; i<nbSets; i++) {
+		int nbExpansionsEventCards = eventCards.size();
+		for (int i=0; i<nbExpansionsEventCards; i++) {
 			sb.append(eventCards.get(i));
-			if (i<nbSets-1) {
+			if (i<nbExpansionsEventCards-1) {
 				sb.append(" | ");
 			}
 		}
-		details[2] = sb.toString();
+		details[3] = sb.toString();
 
 		sb = new StringBuilder("Playing Virulent Strain expansion ? ");
 		sb.append(playVirulentStrain ? YES : NO);
-		details[3] = sb.toString();
+		details[4] = sb.toString();
 
 		sb = new StringBuilder("Playing Mutation expansion ? ");
 		sb.append(playMutation ? YES : NO);
-		details[4] = sb.toString();
+		details[5] = sb.toString();
 
 		sb = new StringBuilder("Survival Mode ? ");
 		sb.append(survivalMode ? YES : NO);
-		details[5] = sb.toString();
+		details[6] = sb.toString();
 		
 		return details;
 	}
@@ -120,7 +136,7 @@ public class GameConfig implements Serializable {
 		
 		config.setDifficultyLevel(DifficultyLevel.NORMAL);
 		config.setNbOfRoles(2);
-		config.setUseAllRoles(true);
+		config.getRolesExpansions().addAll(asList(CORE, ON_THE_BRINK));
 		config.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
@@ -164,14 +180,14 @@ public class GameConfig implements Serializable {
 		this.nbOfRoles = nbOfRoles;
 	}
 
-	public boolean isUseAllRoles() {
-		return useAllRoles;
+	public Set<Expansion> getRolesExpansions() {
+		return rolesExpansions;
 	}
 
-	public void setUseAllRoles(boolean useAllRoles) {
-		this.useAllRoles = useAllRoles;
+	public void setRolesExpansions(Set<Expansion> rolesExpansions) {
+		this.rolesExpansions = rolesExpansions;
 	}
-	
+
 	public Set<Expansion> getEventCardsExpansions() {
 		return eventCardsExpansions;
 	}

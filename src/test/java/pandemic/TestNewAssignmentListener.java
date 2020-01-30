@@ -33,7 +33,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import pandemic.BoardController;
 import pandemic.dialog.DialogsManager;
 import pandemic.model.BoardZone;
 import pandemic.model.PandemicModel;
@@ -67,7 +66,7 @@ public class TestNewAssignmentListener {
 		// Make model.getCountersLibrary return a List that contains only 11 roles
 		listRoles = new ArrayList<PandemicObject>();
 		for (int i=0; i<11; i++) {
-			Role role = new Role(i, "R"+i, null, 0, 0, true, BoardZone.RESERVE);
+			Role role = new Role(i, "R"+i, null, 0, 0, BoardZone.RESERVE);
 			listRoles.add(role);
 		}
 		when(mockModel.getCountersLibrary()).thenReturn(listRoles);

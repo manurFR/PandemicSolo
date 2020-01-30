@@ -58,7 +58,10 @@ public class ConfigDialog extends JDialog {
 	private GameConfig modelConfig;
 	
 	public JComboBox comboBoxNbOfRoles = new JComboBox();
-	public JCheckBox chckbxAddNewRoles = new JCheckBox();
+	public JCheckBox chckbxRolesCore = new JCheckBox();
+	public JCheckBox chckbxRolesOnTheBrink = new JCheckBox();
+	public JCheckBox chckbxRolesInTheLab = new JCheckBox();
+	public JCheckBox chckbxRolesStateOfEmergency = new JCheckBox();
 	public JComboBox comboBoxDifficultyLevel = new JComboBox();
 	public JCheckBox chckbxEventsCore = new JCheckBox();
 	public JCheckBox chckbxEventsOnTheBrink = new JCheckBox();
@@ -88,7 +91,21 @@ public class ConfigDialog extends JDialog {
 	@SuppressWarnings("ConstantConditions")
 	public void controllerValidateAndClose() {
 		modelConfig.setNbOfRoles((Integer)comboBoxNbOfRoles.getSelectedItem());
-		modelConfig.setUseAllRoles(chckbxAddNewRoles.isSelected());
+		final Set<Expansion> rolesExpansions = new LinkedHashSet<Expansion>();
+		if (chckbxRolesCore.isSelected()) {
+			rolesExpansions.add(CORE);
+		}
+		if (chckbxRolesOnTheBrink.isSelected()) {
+			rolesExpansions.add(ON_THE_BRINK);
+		}
+		if (chckbxRolesInTheLab.isSelected()) {
+			rolesExpansions.add(IN_THE_LAB);
+		}
+		if (chckbxRolesStateOfEmergency.isSelected()) {
+			rolesExpansions.add(STATE_OF_EMERGENCY);
+		}
+		modelConfig.setRolesExpansions(rolesExpansions);
+
 		modelConfig.setDifficultyLevel((DifficultyLevel)comboBoxDifficultyLevel.getSelectedItem());
 
 		final Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
@@ -130,12 +147,19 @@ public class ConfigDialog extends JDialog {
 	 */
 	public void viewRefresh() {
 		comboBoxNbOfRoles.setSelectedItem(modelConfig.getNbOfRoles());
-		chckbxAddNewRoles.setSelected(modelConfig.isUseAllRoles());
+
+		chckbxRolesCore.setSelected(modelConfig.getRolesExpansions().contains(CORE));
+		chckbxRolesOnTheBrink.setSelected(modelConfig.getEventCardsExpansions().contains(ON_THE_BRINK));
+		chckbxRolesInTheLab.setSelected(modelConfig.getEventCardsExpansions().contains(IN_THE_LAB));
+		chckbxRolesStateOfEmergency.setSelected(modelConfig.getEventCardsExpansions().contains(STATE_OF_EMERGENCY));
+
 		comboBoxDifficultyLevel.setSelectedItem(modelConfig.getDifficultyLevel());
+
 		chckbxEventsCore.setSelected(modelConfig.getEventCardsExpansions().contains(CORE));
 		chckbxEventsOnTheBrink.setSelected(modelConfig.getEventCardsExpansions().contains(ON_THE_BRINK));
 		chckbxEventsInTheLab.setSelected(modelConfig.getEventCardsExpansions().contains(IN_THE_LAB));
 		chckbxEventsStateOfEmergency.setSelected(modelConfig.getEventCardsExpansions().contains(STATE_OF_EMERGENCY));
+
 		chckbxVirulentStrain.setSelected(modelConfig.isPlayVirulentStrain());
 		chckbxMutation.setSelected(modelConfig.isPlayMutation());
 		chckbxSurvivalMode.setSelected(modelConfig.isSurvivalMode());
@@ -187,15 +211,31 @@ public class ConfigDialog extends JDialog {
 		// Roles
 
 		JLabel lblNumberOfRoles = new JLabel("Number of roles :");
-		lblNumberOfRoles.setBounds(116, 120, 110, 16);
+		lblNumberOfRoles.setBounds(116, 100, 110, 16);
 		contentPanel.add(lblNumberOfRoles);
 
-		comboBoxNbOfRoles.setBounds(231, 115, 64, 27);
+		JLabel lblRolesFrom = new JLabel("from :");
+		lblRolesFrom.setBounds(116, 120, 110, 16);
+		contentPanel.add(lblRolesFrom);
+
+		comboBoxNbOfRoles.setBounds(231, 95, 64, 27);
 		contentPanel.add(comboBoxNbOfRoles);
 
-		chckbxAddNewRoles.setText("Add new roles");
-		chckbxAddNewRoles.setBounds(299, 115, 188, 23);
-		contentPanel.add(chckbxAddNewRoles);
+		chckbxRolesCore.setText(CORE.getLabel());
+		chckbxRolesCore.setBounds(116, 140, 80, 23);
+		contentPanel.add(chckbxRolesCore);
+
+		chckbxRolesOnTheBrink.setText(ON_THE_BRINK.getLabel());
+		chckbxRolesOnTheBrink.setBounds(200, 140, 100, 23);
+		contentPanel.add(chckbxRolesOnTheBrink);
+
+		chckbxRolesInTheLab.setText(IN_THE_LAB.getLabel());
+		chckbxRolesInTheLab.setBounds(320, 140, 100, 23);
+		contentPanel.add(chckbxRolesInTheLab);
+
+		chckbxRolesStateOfEmergency.setText(STATE_OF_EMERGENCY.getLabel());
+		chckbxRolesStateOfEmergency.setBounds(420, 140, 150, 23);
+		contentPanel.add(chckbxRolesStateOfEmergency);
 
 		// Difficulty
 
@@ -208,7 +248,7 @@ public class ConfigDialog extends JDialog {
 
 		// Event Cards
 
-		JLabel lblEventCards = new JLabel("Event Cards :");
+		JLabel lblEventCards = new JLabel("Event Cards from :");
 		lblEventCards.setBounds(116, 250, 110, 16);
 		contentPanel.add(lblEventCards);
 

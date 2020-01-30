@@ -31,17 +31,10 @@ public class Role extends PandemicObject {
 	
 	public static final int TROUBLESHOOTER_ROLE_ID = 123;
 
-	private boolean expansionRole;
-
-	public Role(int id, String name, ImageIcon imageIcon, int x, int y, boolean expansionRole, BoardZone boardZone) {
+	public Role(int id, String name, ImageIcon imageIcon, int x, int y, BoardZone boardZone) {
 		super(PandemicObject.Type.PAWN, id, name, imageIcon, x, y, boardZone);
-		this.expansionRole = expansionRole;
 	}
 
-	public boolean isExpansionRole() {
-		return expansionRole;
-	}
-	
     public boolean isTroubleshooter() {
         return TROUBLESHOOTER_ROLE_ID == getId();
     }
@@ -63,7 +56,7 @@ public class Role extends PandemicObject {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Role [toString()=").append(super.toString()).append(", expansionRole=").append(expansionRole).append("]");
+        builder.append("Role [toString()=").append(super.toString()).append("]");
         return builder.toString();
     }
 

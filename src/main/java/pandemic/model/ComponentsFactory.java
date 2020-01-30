@@ -129,29 +129,27 @@ public class ComponentsFactory {
 
    /**
      * Create all useful roles
-     * @param includeExpansionRoles If true, include the roles from On The Brink
+     * @param expansionRoles list of expansions used for the roles
      * @return The List of all useful roles
      */
-    public List<Role> createRoles(boolean includeExpansionRoles) {
+    public List<Role> createRoles(Set<Expansion> expansionRoles) {
         List<Role> listRole = new ArrayList<Role>();
-        
-        // Role ids range from 111 to 130
-        for (int roleId=111; roleId<=130; roleId++) {
+
+        List<Integer> availableRoles = new ArrayList<Integer>();
+        for (Expansion expansion: expansionRoles) {
+        	availableRoles.addAll(expansion.getRoles());
+		}
+
+        for (Integer roleId: availableRoles) {
             String roleName = getValue(KEY_ROLE + roleId, 2);
             
             int xPos = getXCoordinate(KEY_ROLE + roleId);
             int yPos = getYCoordinate(KEY_ROLE + roleId);
             BoardZone boardZone = BoardZone.RESERVE;
             
-            boolean expansionRole = !(getValue(KEY_ROLE + roleId, 4).equals("Basic"));
-            if (!includeExpansionRoles && expansionRole) {
-                // If expansion roles are not to be included in this game, skip them
-                continue;
-            }
-            
             // Prepare the pawn on the board
             ImageIcon imageIcon = resourceProvider.getIcon(getValue(KEY_ROLE + roleId, 3));
-            Role pawn = new Role(roleId, roleName, imageIcon, xPos, yPos, expansionRole, boardZone);
+            Role pawn = new Role(roleId, roleName, imageIcon, xPos, yPos, boardZone);
             logger.debug("...created {}", pawn);
             
             listRole.add(pawn);

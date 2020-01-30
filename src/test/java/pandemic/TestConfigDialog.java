@@ -31,10 +31,10 @@ public class TestConfigDialog {
 	}
 	
 	@Test
-	public void testAddNewRoles() {
-		dialog.chckbxAddNewRoles.setSelected(false);
+	public void testUseNonCoreRoles() {
+		dialog.chckbxRolesStateOfEmergency.setSelected(true);
 		dialog.controllerValidateAndClose();
-		assertFalse(config.isUseAllRoles());
+		assertTrue(config.getRolesExpansions().contains(Expansion.STATE_OF_EMERGENCY));
 	}
 	
 	@Test

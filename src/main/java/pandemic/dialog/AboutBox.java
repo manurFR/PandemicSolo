@@ -35,6 +35,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 import pandemic.GameManager;
 import pandemic.PandemicSolo;
@@ -65,11 +67,11 @@ public class AboutBox extends JDialog {
 	 * @param resourceProvider The ResourceProvider that will be queried to get the icons
 	 */
 	public void createComponents(ResourceProvider resourceProvider) {
-		setBounds(0, 0, 520, 470);
+		setBounds(0, 0, 520, 520);
 		setLocationRelativeTo(getOwner());
 
 		getContentPane().setLayout(null);
-		contentPanel.setBounds(0, 0, 480, 370);
+		contentPanel.setBounds(0, 0, 480, 420);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setLayout(null);
 		getContentPane().add(contentPanel);
@@ -150,10 +152,15 @@ public class AboutBox extends JDialog {
 		txtpnCurrentConfig.setBackground(UIManager.getColor("Panel.background"));
 		txtpnCurrentConfig.setEditable(false);
 		txtpnCurrentConfig.setBounds(46, 245, 450, 140);
+
+		SimpleAttributeSet styleBold = new SimpleAttributeSet();
+		StyleConstants.setBold(styleBold, true);
+		txtpnCurrentConfig.getStyledDocument().setCharacterAttributes(0, 23, styleBold, false);
+
 		contentPanel.add(txtpnCurrentConfig);
 
 		JPanel buttonPane = new JPanel();
-		buttonPane.setBounds(0, 370, 480, 39);
+		buttonPane.setBounds(0, 420, 480, 39);
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane);
 

@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import pandemic.model.BoardZone;
 import pandemic.model.DifficultyLevel;
+import pandemic.model.Expansion;
 import pandemic.model.PandemicModel;
 import pandemic.model.objects.Card;
 import pandemic.model.objects.Role;
@@ -55,7 +56,7 @@ public class TestPandemicModel {
 
         config.setDifficultyLevel(DifficultyLevel.NORMAL);
         config.setNbOfRoles(4);
-        config.setUseAllRoles(true);
+        config.getRolesExpansions().add(Expansion.CORE);
 
         model = new PandemicModel(config);
         model.initialize(new GenericResourceProvider());
