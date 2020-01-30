@@ -439,9 +439,6 @@ public class SwingBoardView extends SwingView implements BoardView {
     private String buildRoleFilename(Role pawn) {
         StringBuilder sb = new StringBuilder("rolebox");
         sb.append(pawn.getId());
-        if (pawn.getId() == ComponentsFactory.OPERATIONS_EXPERT_ROLE && !pawn.isExpansionRole()) {
-            sb.append("basic");
-        }
         sb.append(".jpg");
         return sb.toString();
     }

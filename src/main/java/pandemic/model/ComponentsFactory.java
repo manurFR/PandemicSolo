@@ -70,8 +70,6 @@ public class ComponentsFactory {
 
 	private static final int EPIDEMIC_CARD_ID = 0;
 	
-	public static final int OPERATIONS_EXPERT_ROLE = 113;
-	
 	private static final int CUBES_PER_LINE = 12;
 	
 	private static final Integer[] EVENTS_FORBIDDEN_IN_SURVIVAL_MODE = {50, 52, 53, 55, 57, 68, 69};
@@ -132,10 +130,9 @@ public class ComponentsFactory {
    /**
      * Create all useful roles
      * @param includeExpansionRoles If true, include the roles from On The Brink
-     * @param useRevisedOpXprt If true, use the revised Operations Expert role ; use the basic one otherwise
      * @return The List of all useful roles
      */
-    public List<Role> createRoles(boolean includeExpansionRoles, boolean useRevisedOpXprt) {
+    public List<Role> createRoles(boolean includeExpansionRoles) {
         List<Role> listRole = new ArrayList<Role>();
         
         // Role ids range from 111 to 130
@@ -147,11 +144,7 @@ public class ComponentsFactory {
             BoardZone boardZone = BoardZone.RESERVE;
             
             boolean expansionRole = !(getValue(KEY_ROLE + roleId, 4).equals("Basic"));
-            // Special case : for the Operation Expert, there is a base game version and an expansion "revised" version
-            //   Thus the corresponding role can have the expansionRole flag at true or false depending on the version 
-            if (roleId == OPERATIONS_EXPERT_ROLE && useRevisedOpXprt) {
-                expansionRole = true;
-            } else if (!includeExpansionRoles && expansionRole) {
+            if (!includeExpansionRoles && expansionRole) {
                 // If expansion roles are not to be included in this game, skip them
                 continue;
             }

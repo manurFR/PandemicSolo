@@ -181,9 +181,9 @@ public class TestComponentsFactory {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
                 new MockBundle("role.118", "945;270;\"Archivist\";\"pawn_archivist.jpg\";OnTheBrink"));
 
-        List<Role> pawns = componentsFactory.createRoles(true, true); //(roles, cities.get(0), true);
+        List<Role> pawns = componentsFactory.createRoles(true); //(roles, cities.get(0), true);
 
-        assertEquals(13, pawns.size()); // With expansion roles, there are 13 of them
+        assertEquals(20, pawns.size()); // With expansion roles, there are 13 of them
 
         Role p = pawns.get(0);
         assertEquals("Archivist", p.getName());

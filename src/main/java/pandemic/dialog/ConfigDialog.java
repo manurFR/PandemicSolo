@@ -48,6 +48,7 @@ import static pandemic.model.Expansion.*;
  * @author manur
  * @since v2.7
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ConfigDialog extends JDialog {
 
 	private static final long serialVersionUID = 28L;
@@ -58,7 +59,6 @@ public class ConfigDialog extends JDialog {
 	
 	public JComboBox comboBoxNbOfRoles = new JComboBox();
 	public JCheckBox chckbxAddNewRoles = new JCheckBox();
-	public JCheckBox chckbxRevisedOpXprt = new JCheckBox();
 	public JComboBox comboBoxDifficultyLevel = new JComboBox();
 	public JCheckBox chckbxEventsCore = new JCheckBox();
 	public JCheckBox chckbxEventsOnTheBrink = new JCheckBox();
@@ -85,10 +85,10 @@ public class ConfigDialog extends JDialog {
 	 * Validate the choice by saving it in the model.
 	 * Dispose the dialog before leaving.
 	 */
+	@SuppressWarnings("ConstantConditions")
 	public void controllerValidateAndClose() {
 		modelConfig.setNbOfRoles((Integer)comboBoxNbOfRoles.getSelectedItem());
 		modelConfig.setUseAllRoles(chckbxAddNewRoles.isSelected());
-		modelConfig.setUseRevisedOperationsExpert(chckbxRevisedOpXprt.isSelected());
 		modelConfig.setDifficultyLevel((DifficultyLevel)comboBoxDifficultyLevel.getSelectedItem());
 
 		final Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
@@ -131,7 +131,6 @@ public class ConfigDialog extends JDialog {
 	public void viewRefresh() {
 		comboBoxNbOfRoles.setSelectedItem(modelConfig.getNbOfRoles());
 		chckbxAddNewRoles.setSelected(modelConfig.isUseAllRoles());
-		chckbxRevisedOpXprt.setSelected(modelConfig.isUseRevisedOperationsExpert());
 		comboBoxDifficultyLevel.setSelectedItem(modelConfig.getDifficultyLevel());
 		chckbxEventsCore.setSelected(modelConfig.getEventCardsExpansions().contains(CORE));
 		chckbxEventsOnTheBrink.setSelected(modelConfig.getEventCardsExpansions().contains(ON_THE_BRINK));
@@ -197,20 +196,6 @@ public class ConfigDialog extends JDialog {
 		chckbxAddNewRoles.setText("Add new roles");
 		chckbxAddNewRoles.setBounds(299, 115, 188, 23);
 		contentPanel.add(chckbxAddNewRoles);
-
-		chckbxAddNewRoles.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// if the new roles are allowed, use revised Operations Expert by default
-				if (chckbxAddNewRoles.isSelected()) {
-					chckbxRevisedOpXprt.setSelected(true);
-				}
-			}
-		});
-
-		chckbxRevisedOpXprt.setText("Use revised Operations Expert role");
-		chckbxRevisedOpXprt.setBounds(299, 138, 251, 23);
-		contentPanel.add(chckbxRevisedOpXprt);
 
 		// Difficulty
 

@@ -51,7 +51,6 @@ public class GameConfig implements Serializable {
 	private DifficultyLevel difficultyLevel;
 	private int nbOfRoles;
 	private boolean useAllRoles;
-	private boolean useRevisedOperationsExpert;
 	private Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
 	private boolean playVirulentStrain;
 	private boolean playMutation;
@@ -73,9 +72,6 @@ public class GameConfig implements Serializable {
 		sb.append(nbOfRoles);
 		sb.append(" with new roles ? ");
 		sb.append(useAllRoles ? YES : NO);
-		sb.append(" (with ");
-		sb.append(useRevisedOperationsExpert ? "revised" : "basic");
-		sb.append(" Operations Expert)");
 		details[0] = sb.toString();
 				
 		sb = new StringBuilder("Difficulty level :");
@@ -125,7 +121,6 @@ public class GameConfig implements Serializable {
 		config.setDifficultyLevel(DifficultyLevel.NORMAL);
 		config.setNbOfRoles(2);
 		config.setUseAllRoles(true);
-		config.setUseRevisedOperationsExpert(true);
 		config.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
@@ -177,14 +172,6 @@ public class GameConfig implements Serializable {
 		this.useAllRoles = useAllRoles;
 	}
 	
-	public boolean isUseRevisedOperationsExpert() {
-		return useRevisedOperationsExpert;
-	}
-
-	public void setUseRevisedOperationsExpert(boolean useRevisedOperationsExpert) {
-		this.useRevisedOperationsExpert = useRevisedOperationsExpert;
-	}
-
 	public Set<Expansion> getEventCardsExpansions() {
 		return eventCardsExpansions;
 	}
