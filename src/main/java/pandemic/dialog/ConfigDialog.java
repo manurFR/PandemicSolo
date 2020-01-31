@@ -70,7 +70,9 @@ public class ConfigDialog extends JDialog {
 	public JCheckBox chckbxSurvivalMode = new JCheckBox();
 	public JCheckBox chckbxVirulentStrain = new JCheckBox();
 	public JCheckBox chckbxMutation = new JCheckBox();
-	
+
+	final JLabel lblRolesWarning = new JLabel("There are not enough roles to choose from. Please select more expansions.");
+
 	/**
 	 * Constructor. Make the dialog modal.
 	 * Set up the "model" (ie list of options) of the two combo boxes.
@@ -104,6 +106,18 @@ public class ConfigDialog extends JDialog {
 		if (chckbxRolesStateOfEmergency.isSelected()) {
 			rolesExpansions.add(STATE_OF_EMERGENCY);
 		}
+
+		// validate that the chosen expansions include enough roles for the required number of players (State of Emergency includes only 3 roles)
+		int nbOfCandidateRoles = 0;
+		for (Expansion expansion: rolesExpansions) {
+			nbOfCandidateRoles += expansion.getRoles().size();
+		}
+		if (nbOfCandidateRoles < modelConfig.getNbOfRoles()) {
+			lblRolesWarning.setVisible(true);
+			return;
+		}
+		// validation OK
+
 		modelConfig.setRolesExpansions(rolesExpansions);
 
 		modelConfig.setDifficultyLevel((DifficultyLevel)comboBoxDifficultyLevel.getSelectedItem());
@@ -215,26 +229,44 @@ public class ConfigDialog extends JDialog {
 		contentPanel.add(lblNumberOfRoles);
 
 		JLabel lblRolesFrom = new JLabel("from :");
-		lblRolesFrom.setBounds(116, 120, 110, 16);
+		lblRolesFrom.setBounds(116, 125, 110, 16);
 		contentPanel.add(lblRolesFrom);
+
+		lblRolesWarning.setBounds(170, 125, 500, 16);
+		lblRolesWarning.setForeground(Color.RED);
+		lblRolesWarning.setVisible(false);
+		contentPanel.add(lblRolesWarning);
 
 		comboBoxNbOfRoles.setBounds(231, 95, 64, 27);
 		contentPanel.add(comboBoxNbOfRoles);
 
+		final ActionListener hideWarningActionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (((JCheckBox) e.getSource()).isSelected()) {
+					lblRolesWarning.setVisible(false);
+				}
+			}
+		};
+
 		chckbxRolesCore.setText(CORE.getLabel());
 		chckbxRolesCore.setBounds(116, 140, 80, 23);
+		chckbxRolesCore.addActionListener(hideWarningActionListener);
 		contentPanel.add(chckbxRolesCore);
 
 		chckbxRolesOnTheBrink.setText(ON_THE_BRINK.getLabel());
 		chckbxRolesOnTheBrink.setBounds(200, 140, 100, 23);
+		chckbxRolesOnTheBrink.addActionListener(hideWarningActionListener);
 		contentPanel.add(chckbxRolesOnTheBrink);
 
 		chckbxRolesInTheLab.setText(IN_THE_LAB.getLabel());
 		chckbxRolesInTheLab.setBounds(320, 140, 100, 23);
+		chckbxRolesInTheLab.addActionListener(hideWarningActionListener);
 		contentPanel.add(chckbxRolesInTheLab);
 
 		chckbxRolesStateOfEmergency.setText(STATE_OF_EMERGENCY.getLabel());
 		chckbxRolesStateOfEmergency.setBounds(420, 140, 150, 23);
+		chckbxRolesStateOfEmergency.addActionListener(hideWarningActionListener);
 		contentPanel.add(chckbxRolesStateOfEmergency);
 
 		// Difficulty
@@ -268,7 +300,7 @@ public class ConfigDialog extends JDialog {
 		chckbxEventsStateOfEmergency.setBounds(420, 275, 150, 23);
 		contentPanel.add(chckbxEventsStateOfEmergency);
 
-		chckbxSurvivalMode.setText("Survival Mode (no event or role that could influence the roles or the decks)");
+		chckbxSurvivalMode.setText("Survival Mode (exclude events that could influence the roles or the decks)");
 		chckbxSurvivalMode.setBounds(130, 300, 500, 23);
 		contentPanel.add(chckbxSurvivalMode);
 
