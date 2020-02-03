@@ -63,6 +63,8 @@ public class ConfigDialog extends JDialog {
 	public JCheckBox chckbxRolesInTheLab = new JCheckBox();
 	public JCheckBox chckbxRolesStateOfEmergency = new JCheckBox();
 	public JComboBox comboBoxDifficultyLevel = new JComboBox();
+	public JRadioButton rbEventsTwoPerPlayers = new JRadioButton();
+	public JRadioButton rbEventsAlwaysFive = new JRadioButton();
 	public JCheckBox chckbxEventsCore = new JCheckBox();
 	public JCheckBox chckbxEventsOnTheBrink = new JCheckBox();
 	public JCheckBox chckbxEventsInTheLab = new JCheckBox();
@@ -121,6 +123,7 @@ public class ConfigDialog extends JDialog {
 		modelConfig.setRolesExpansions(rolesExpansions);
 
 		modelConfig.setDifficultyLevel((DifficultyLevel)comboBoxDifficultyLevel.getSelectedItem());
+		modelConfig.setFiveEvents(rbEventsAlwaysFive.isSelected());
 
 		final Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
 		if (chckbxEventsCore.isSelected()) {
@@ -168,6 +171,8 @@ public class ConfigDialog extends JDialog {
 		chckbxRolesStateOfEmergency.setSelected(modelConfig.getEventCardsExpansions().contains(STATE_OF_EMERGENCY));
 
 		comboBoxDifficultyLevel.setSelectedItem(modelConfig.getDifficultyLevel());
+		rbEventsTwoPerPlayers.setSelected(!modelConfig.isFiveEvents());
+		rbEventsAlwaysFive.setSelected(modelConfig.isFiveEvents());
 
 		chckbxEventsCore.setSelected(modelConfig.getEventCardsExpansions().contains(CORE));
 		chckbxEventsOnTheBrink.setSelected(modelConfig.getEventCardsExpansions().contains(ON_THE_BRINK));
@@ -225,19 +230,19 @@ public class ConfigDialog extends JDialog {
 		// Roles
 
 		JLabel lblNumberOfRoles = new JLabel("Number of roles :");
-		lblNumberOfRoles.setBounds(116, 100, 110, 16);
+		lblNumberOfRoles.setBounds(116, 95, 110, 16);
 		contentPanel.add(lblNumberOfRoles);
 
 		JLabel lblRolesFrom = new JLabel("from :");
-		lblRolesFrom.setBounds(116, 125, 110, 16);
+		lblRolesFrom.setBounds(116, 120, 110, 16);
 		contentPanel.add(lblRolesFrom);
 
-		lblRolesWarning.setBounds(170, 125, 500, 16);
+		lblRolesWarning.setBounds(170, 120, 500, 16);
 		lblRolesWarning.setForeground(Color.RED);
 		lblRolesWarning.setVisible(false);
 		contentPanel.add(lblRolesWarning);
 
-		comboBoxNbOfRoles.setBounds(231, 95, 64, 27);
+		comboBoxNbOfRoles.setBounds(231, 90, 64, 27);
 		contentPanel.add(comboBoxNbOfRoles);
 
 		final ActionListener hideWarningActionListener = new ActionListener() {
@@ -280,28 +285,44 @@ public class ConfigDialog extends JDialog {
 
 		// Event Cards
 
-		JLabel lblEventCards = new JLabel("Event Cards from :");
-		lblEventCards.setBounds(116, 250, 110, 16);
+		JLabel lblEventCards = new JLabel("Event Cards :");
+		lblEventCards.setBounds(116, 245, 110, 16);
 		contentPanel.add(lblEventCards);
 
+		rbEventsTwoPerPlayers.setText("2 cards per player");
+		rbEventsTwoPerPlayers.setBounds(210, 242, 130, 23);
+		contentPanel.add(rbEventsTwoPerPlayers);
+
+		rbEventsAlwaysFive.setText("Always 5 cards");
+		rbEventsAlwaysFive.setBounds(350, 242, 130, 23);
+		contentPanel.add(rbEventsAlwaysFive);
+
+		ButtonGroup groupNbEventCards = new ButtonGroup();
+		groupNbEventCards.add(rbEventsTwoPerPlayers);
+		groupNbEventCards.add(rbEventsAlwaysFive);
+
+		JLabel lblEventsFrom = new JLabel("from :");
+		lblEventsFrom.setBounds(116, 265, 110, 16);
+		contentPanel.add(lblEventsFrom);
+
 		chckbxEventsCore.setText(CORE.getLabel());
-		chckbxEventsCore.setBounds(116, 275, 80, 23);
+		chckbxEventsCore.setBounds(116, 285, 80, 23);
 		contentPanel.add(chckbxEventsCore);
 
 		chckbxEventsOnTheBrink.setText(ON_THE_BRINK.getLabel());
-		chckbxEventsOnTheBrink.setBounds(200, 275, 100, 23);
+		chckbxEventsOnTheBrink.setBounds(200, 285, 100, 23);
 		contentPanel.add(chckbxEventsOnTheBrink);
 
 		chckbxEventsInTheLab.setText(IN_THE_LAB.getLabel());
-		chckbxEventsInTheLab.setBounds(320, 275, 100, 23);
+		chckbxEventsInTheLab.setBounds(320, 285, 100, 23);
 		contentPanel.add(chckbxEventsInTheLab);
 
 		chckbxEventsStateOfEmergency.setText(STATE_OF_EMERGENCY.getLabel());
-		chckbxEventsStateOfEmergency.setBounds(420, 275, 150, 23);
+		chckbxEventsStateOfEmergency.setBounds(420, 285, 150, 23);
 		contentPanel.add(chckbxEventsStateOfEmergency);
 
 		chckbxSurvivalMode.setText("Survival Mode (exclude events that could influence the roles or the decks)");
-		chckbxSurvivalMode.setBounds(130, 300, 500, 23);
+		chckbxSurvivalMode.setBounds(130, 310, 500, 23);
 		contentPanel.add(chckbxSurvivalMode);
 
 		// Challenges

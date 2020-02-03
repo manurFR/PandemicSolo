@@ -87,6 +87,14 @@ public class TestConfigDialog {
 		assertEquals(DifficultyLevel.LEGENDARY, config.getDifficultyLevel());
 		verify(dialog).dispose();
 	}
+
+	@Test
+	public void testNumberOfEventCards() {
+		dialog.rbEventsAlwaysFive.setSelected(true);
+		dialog.controllerValidateAndClose();
+		assertTrue(config.isFiveEvents());
+		verify(dialog).dispose();
+	}
 	
 	@Test
 	public void testUseNonCoreExpansionEventCards() {

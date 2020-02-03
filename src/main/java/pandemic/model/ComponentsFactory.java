@@ -216,10 +216,6 @@ public class ComponentsFactory {
     
     /**
      * Create the deck of Special Event cards
-	 * @param config Whether the new Special Events from the Expansion should be used,
-	 *          along with the alternative number of Special Event cards in the card and their random selection
-	 * @param randomizer
-	 *
 	 */
     public List<Card> createSpecialEvents(GameConfig config, Random randomizer) {
         List<Card> specialEventsCards = new ArrayList<Card>();
@@ -240,14 +236,8 @@ public class ComponentsFactory {
 
 		Collections.shuffle(availableEvents, randomizer);
 
-		int nbEventCardsToCreate;
-		if (config.getEventCardsExpansions().size() == 1 && config.getEventCardsExpansions().contains(CORE)) {
-			// if we're playing only with the core game, take all core event cards (minus the ones removed if in Survival mode)
-			nbEventCardsToCreate = availableEvents.size();
-		} else {
-			// Pick nbOfRoles*2 special events, taken at random between available cards
-			nbEventCardsToCreate = Math.min(config.getNbOfRoles() * 2, availableEvents.size());
-		}
+		// never draw more event cards than is available
+		int nbEventCardsToCreate = Math.min(config.isFiveEvents() ? 5 : config.getNbOfRoles() * 2, availableEvents.size());
 
 		for (int i=0; i<nbEventCardsToCreate; i++) {
 			int eventId = availableEvents.get(i);

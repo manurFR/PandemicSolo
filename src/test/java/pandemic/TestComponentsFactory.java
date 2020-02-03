@@ -377,6 +377,19 @@ public class TestComponentsFactory {
         assertArrayEquals(new int[] {49, 51}, eventIds);
     }
 
+    @Test
+    public void test_createSpecialEvents_withFiveEvents() {
+        MockBundle mb = new MockBundle("specialEvent.50", "Error");
+        mb.addKV("cards.defaultPosition", "3000;3000;\"card{0}.jpg\"");
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
+
+        GameConfig basicConfig = prepareBasicConfig(); // two players, only core
+        basicConfig.setFiveEvents(true);
+
+        List<Card> events = componentsFactory.createSpecialEvents(basicConfig, new Random());
+        assertEquals(5, events.size());
+    }
+
     /* Note: distributeStartingCards() is tested inside the class TestDistributeStartingCards */
 
     @Test
@@ -484,6 +497,7 @@ public class TestComponentsFactory {
         basicConfig.setPlayMutation(false);
         basicConfig.setPlayVirulentStrain(false);
         basicConfig.getRolesExpansions().add(CORE);
+        basicConfig.setFiveEvents(false);
         basicConfig.getEventCardsExpansions().add(CORE);
         return basicConfig;
     }
@@ -495,6 +509,7 @@ public class TestComponentsFactory {
         advancedConfig.setPlayMutation(true);
         advancedConfig.setPlayVirulentStrain(true);
         advancedConfig.getRolesExpansions().addAll(asList(CORE, IN_THE_LAB));
+        advancedConfig.setFiveEvents(false);
         advancedConfig.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
         return advancedConfig;
     }

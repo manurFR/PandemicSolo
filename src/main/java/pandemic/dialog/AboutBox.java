@@ -90,8 +90,7 @@ public class AboutBox extends JDialog {
 
 		ImageIcon iconPawn = resourceProvider.getIcon("pawn_troubleshooter.jpg");
 		JLabel labelPawn = new JLabel(iconPawn);
-		labelPawn.setBounds(120, 60, iconPawn.getIconWidth(), iconPawn
-				.getIconHeight());
+		labelPawn.setBounds(120, 60, iconPawn.getIconWidth(), iconPawn.getIconHeight());
 
 		contentPanel.add(labelPawn);
 
@@ -144,14 +143,14 @@ public class AboutBox extends JDialog {
 		txtpnCurrentConfig.setFont(lucida12);
 		String[] configDetails = gameManager.getCurrentModel().getConfig().giveDetails();
 		String config = "Current configuration :\n";
-		for (String line : configDetails)
-		{
+		for (String line : configDetails) {
 			config += line + "\n";
 		}
 		txtpnCurrentConfig.setText(config);
 		txtpnCurrentConfig.setBackground(UIManager.getColor("Panel.background"));
 		txtpnCurrentConfig.setEditable(false);
-		txtpnCurrentConfig.setBounds(46, 245, 450, 140);
+		// get height dynamically depending on the content text
+		txtpnCurrentConfig.setBounds(46, 245, 450, txtpnCurrentConfig.getPreferredSize().height);
 
 		SimpleAttributeSet styleBold = new SimpleAttributeSet();
 		StyleConstants.setBold(styleBold, true);

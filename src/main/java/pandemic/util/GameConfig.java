@@ -51,7 +51,7 @@ public class GameConfig implements Serializable {
 	private DifficultyLevel difficultyLevel;
 	private int nbOfRoles;
 	private Set<Expansion> rolesExpansions = new LinkedHashSet<Expansion>();
-	private boolean useAllRoles;
+	private boolean fiveEvents;
 	private Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
 	private boolean playVirulentStrain;
 	private boolean playMutation;
@@ -67,7 +67,7 @@ public class GameConfig implements Serializable {
 	}
 	
 	public String[] giveDetails() {
-		String[] details = new String[7];
+		String[] details = new String[8];
 		
 		StringBuilder sb = new StringBuilder("Number of roles : ");
 		sb.append(nbOfRoles);
@@ -93,7 +93,11 @@ public class GameConfig implements Serializable {
 		sb = new StringBuilder("Difficulty level :");
 		sb.append(difficultyLevel);
 		details[2] = sb.toString();
-		
+
+		sb = new StringBuilder("Number of event cards : ");
+		sb.append(fiveEvents ? "Always 5" : "2 per player");
+		details[3] = sb.toString();
+
 		sb = new StringBuilder("Event Cards used : ");
 		List<String> eventCards = new ArrayList<String>();
 		for (Expansion expansion: eventCardsExpansions) {
@@ -109,19 +113,19 @@ public class GameConfig implements Serializable {
 				sb.append(" | ");
 			}
 		}
-		details[3] = sb.toString();
+		details[4] = sb.toString();
 
 		sb = new StringBuilder("Playing Virulent Strain expansion ? ");
 		sb.append(playVirulentStrain ? YES : NO);
-		details[4] = sb.toString();
+		details[5] = sb.toString();
 
 		sb = new StringBuilder("Playing Mutation expansion ? ");
 		sb.append(playMutation ? YES : NO);
-		details[5] = sb.toString();
+		details[6] = sb.toString();
 
 		sb = new StringBuilder("Survival Mode ? ");
 		sb.append(survivalMode ? YES : NO);
-		details[6] = sb.toString();
+		details[7] = sb.toString();
 		
 		return details;
 	}
@@ -137,6 +141,7 @@ public class GameConfig implements Serializable {
 		config.setDifficultyLevel(DifficultyLevel.NORMAL);
 		config.setNbOfRoles(2);
 		config.getRolesExpansions().addAll(asList(CORE, ON_THE_BRINK));
+		config.setFiveEvents(false);
 		config.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
 		config.setPlayVirulentStrain(false);
 		config.setPlayMutation(false);
@@ -186,6 +191,14 @@ public class GameConfig implements Serializable {
 
 	public void setRolesExpansions(Set<Expansion> rolesExpansions) {
 		this.rolesExpansions = rolesExpansions;
+	}
+
+	public boolean isFiveEvents() {
+		return fiveEvents;
+	}
+
+	public void setFiveEvents(boolean fiveEvents) {
+		this.fiveEvents = fiveEvents;
 	}
 
 	public Set<Expansion> getEventCardsExpansions() {
