@@ -326,12 +326,10 @@ public class ComponentsFactory {
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
         int yPos = getYCoordinate(KEY_CARD_DEFAULTPOSITION);
-        String templateName = getValue(KEY_CARD_DEFAULTPOSITION, 2);
-        
-        if (playVirulentStrain) {
-            // There are 8 different Virulent Strain Epidemic cards, numbered from 201 to 208 (included)
-            // We have to take nbOfEpidemicCards randomly from that set
-            Integer[] cardIds = {201, 202, 203, 204, 205, 206, 207, 208};
+		String templateName = getValue(KEY_CARD_DEFAULTPOSITION, 2);
+
+		if (playVirulentStrain) { // Virulent Strain challenge epidemic cards
+            Integer[] cardIds = {201, 202, 203, 204, 205, 206, 207, 208, 209, 210};
             List<Integer> availableCards = Arrays.asList(cardIds);
             Collections.shuffle(availableCards, randomizer);
             for (int cardIndex=0; cardIndex<nbOfEpidemicCards; cardIndex++) {
@@ -345,9 +343,8 @@ public class ComponentsFactory {
                 
                 epidemicCards.add(card);
             }
-        }
-        else {
-            String imageName = MessageFormat.format(templateName, EPIDEMIC_CARD_ID);
+        } else { // classic epidemic cards
+			String imageName = MessageFormat.format(templateName, EPIDEMIC_CARD_ID);
             ImageIcon imageIcon = resourceProvider.getIcon(imageName);
 
             for (int cardIndex=0; cardIndex<nbOfEpidemicCards; cardIndex++) {
