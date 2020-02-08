@@ -26,6 +26,8 @@ import pandemic.util.ResourceProvider;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +36,7 @@ import java.awt.event.WindowEvent;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static javax.swing.SwingConstants.CENTER;
 import static pandemic.model.Expansion.*;
 
 /**
@@ -53,8 +56,9 @@ public class ConfigDialog extends JDialog {
 
 	private static final long serialVersionUID = 28L;
 	
-	private static final int ICON_CENTER = 55;
-	
+	private static final int SECTION_ICON_CENTER_X = 55;
+	private static final int VARIANT_ICON_CENTER_Y = 400;
+
 	private GameConfig modelConfig;
 	
 	public JComboBox comboBoxNbOfRoles = new JComboBox();
@@ -72,6 +76,9 @@ public class ConfigDialog extends JDialog {
 	public JCheckBox chckbxSurvivalMode = new JCheckBox();
 	public JCheckBox chckbxVirulentStrain = new JCheckBox();
 	public JCheckBox chckbxMutation = new JCheckBox();
+	public JCheckBox chckbxWorldwidePanic = new JCheckBox();
+	public JCheckBox chckbxEmergencyEvents = new JCheckBox();
+	public JCheckBox chckbxQuarantines = new JCheckBox();
 
 	final JLabel lblRolesWarning = new JLabel("There are not enough roles to choose from. Please select more expansions.");
 
@@ -193,7 +200,7 @@ public class ConfigDialog extends JDialog {
 		JPanel contentPanel = new JPanel();
 
 		setTitle("New game...");
-		setBounds(0, 0, 700, 560);
+		setBounds(0, 0, 675, 600);
 		// Center the dialog relatively to the owner Frame
 		setLocationRelativeTo(getOwner());
 
@@ -219,11 +226,9 @@ public class ConfigDialog extends JDialog {
 
 		// ** Icons **
 
-		contentPanel.add(createIconLabel(resourceProvider.getIcon("roleicon.jpg"), 100));
-		contentPanel.add(createIconLabel(resourceProvider.getIcon("difficultyicon.jpg"), 165));
-		contentPanel.add(createIconLabel(resourceProvider.getIcon("speceventicon.jpg"), 250));
-		contentPanel.add(createIconLabel(resourceProvider.getIcon("virulenticon.jpg"), 335));
-		contentPanel.add(createIconLabel(resourceProvider.getIcon("mutationicon.jpg"), 420));
+		contentPanel.add(createSectionIcon(resourceProvider.getIcon("roleicon.jpg"), 100));
+		contentPanel.add(createSectionIcon(resourceProvider.getIcon("difficultyicon.jpg"), 165));
+		contentPanel.add(createSectionIcon(resourceProvider.getIcon("speceventicon.jpg"), 250));
 
 		// ** Input fields **
 
@@ -325,19 +330,69 @@ public class ConfigDialog extends JDialog {
 		chckbxSurvivalMode.setBounds(130, 310, 500, 23);
 		contentPanel.add(chckbxSurvivalMode);
 
-		// Challenges
+		// Variants
 
-		chckbxVirulentStrain.setText("Add the VIRULENT STRAIN challenge");
-		chckbxVirulentStrain.setBounds(116, 363, 280, 23);
+		final JLabel iconVirulentStrain = createVariantIcon(resourceProvider.getIcon("challenge_virulentstrain.jpg"), 50);
+		contentPanel.add(iconVirulentStrain);
+		final JLabel iconMutation = createVariantIcon(resourceProvider.getIcon("challenge_mutation.jpg"), 240);
+		contentPanel.add(iconMutation);
+		final JLabel iconEmergencyEvents = createVariantIcon(resourceProvider.getIcon("challenge_emergency.png"), 375);
+		contentPanel.add(iconEmergencyEvents);
+		final JLabel iconQuarantines = createVariantIcon(resourceProvider.getIcon("variant_quarantines.png"), 535);
+		contentPanel.add(iconQuarantines);
+
+		chckbxVirulentStrain.setText("Virulent Strain!");
+		chckbxVirulentStrain.setBounds(component_centered(iconVirulentStrain, chckbxVirulentStrain), 455, chckbxVirulentStrain.getPreferredSize().width, 16);
 		contentPanel.add(chckbxVirulentStrain);
 
-		chckbxMutation.setText("Add the MUTATION challenge");
-		chckbxMutation.setBounds(116, 430, 222, 23);
+		chckbxMutation.setText("Mutation");
+		chckbxMutation.setBounds(component_centered(iconMutation, chckbxMutation), 438, chckbxMutation.getPreferredSize().width, 16);
 		contentPanel.add(chckbxMutation);
+
+		JLabel lblOr = new JLabel("or");
+		lblOr.setBounds(component_centered(iconMutation, lblOr), 455, lblOr.getPreferredSize().width, 16);
+		contentPanel.add(lblOr);
+
+		chckbxWorldwidePanic.setText("Worldwide Panic");
+		chckbxWorldwidePanic.setBounds(component_centered(iconMutation, chckbxWorldwidePanic), 473, chckbxWorldwidePanic.getPreferredSize().width, 16);
+		contentPanel.add(chckbxWorldwidePanic);
+
+		chckbxEmergencyEvents.setText("Emergency Events");
+		chckbxEmergencyEvents.setBounds(component_centered(iconEmergencyEvents, chckbxEmergencyEvents), 455, chckbxEmergencyEvents.getPreferredSize().width, 16);
+		contentPanel.add(chckbxEmergencyEvents);
+
+		chckbxQuarantines.setText("Quarantines");
+		chckbxQuarantines.setBounds(component_centered(iconQuarantines, chckbxQuarantines), 455, chckbxQuarantines.getPreferredSize().width, 16);
+		contentPanel.add(chckbxQuarantines);
+
+		// Mutation and Worldwide Panic challenges are mutually exclusive
+		chckbxMutation.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (chckbxMutation.isSelected()) {
+					chckbxWorldwidePanic.setSelected(false);
+				}
+			}
+		});
+
+		chckbxWorldwidePanic.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (chckbxWorldwidePanic.isSelected()) {
+					chckbxMutation.setSelected(false);
+				}
+			}
+		});
+
+		JPanel variantsPanel = new JPanel();
+		variantsPanel.setBounds(25, 340, 610, 160);
+		variantsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Variants"));
+		contentPanel.add(variantsPanel);
 
 		// Button Pane
 
 		JPanel buttonPane = new JPanel();
+		buttonPane.setBorder(new EmptyBorder(0, 0, 10, 20)); // margin to the edges
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
@@ -355,7 +410,7 @@ public class ConfigDialog extends JDialog {
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				controllerCancel();
 			}
 		});
@@ -370,7 +425,18 @@ public class ConfigDialog extends JDialog {
 			}
 		});
 	}
-	
+
+	/**
+	 * Calculate the x position for a variant checkbox or label so that it will be centered on the corresponding icon.
+	 * We compute the middle point of the icon and substract half the length of the component to center.
+	 * @param icon the variant's corresponding icon
+	 * @param component the component to center
+	 * @return
+	 */
+	private int component_centered(JLabel icon, JComponent component) {
+		return icon.getX() + icon.getWidth()/2 - component.getPreferredSize().width/2;
+	}
+
 	/**
 	 * Creates and returns a JLabel displaying an image icon.
 	 *  The x coordinate is calculated to center the image on ICON_CENTER ;
@@ -379,9 +445,15 @@ public class ConfigDialog extends JDialog {
 	 * @param y Y coordinate where to place the label
 	 * @return The constructed JLabel
 	 */
-	private JLabel createIconLabel(ImageIcon icon, int y) {
+	private JLabel createSectionIcon(ImageIcon icon, int y) {
 		JLabel label = new JLabel(icon);
-		label.setBounds(ICON_CENTER - icon.getIconWidth() / 2, y, icon.getIconWidth(), icon.getIconHeight());
+		label.setBounds(SECTION_ICON_CENTER_X - icon.getIconWidth() / 2, y, icon.getIconWidth(), icon.getIconHeight());
+		return label;
+	}
+
+	private JLabel createVariantIcon(ImageIcon icon, int x) {
+		JLabel label = new JLabel(icon);
+		label.setBounds(x, VARIANT_ICON_CENTER_Y - icon.getIconHeight() / 2, icon.getIconWidth(), icon.getIconHeight());
 		return label;
 	}
 	
