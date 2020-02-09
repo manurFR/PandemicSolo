@@ -158,7 +158,7 @@ public class SwingBoardView extends SwingView implements BoardView {
     public void playerCardDrawn(Card newCard) {
         // bring the newly drawn card to the player card zone
         newCard.move(648, 418);
-        // small hack to put each newly drawn card on TOP of former cards
+        // put each newly drawn card on TOP of former cards
         board.setComponentZOrder(newCard.getSwingComponent(), 0);
         // update the display of the number of remaining player cards
         remainingCards.setText(Integer.toString(getModel().getNbOfPlayerCards()));

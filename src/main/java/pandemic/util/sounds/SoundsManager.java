@@ -69,6 +69,8 @@ public class SoundsManager extends AbstractSoundsFactory implements DecksObserve
         playSound(Sounds.FLIP);
         if (newCard.getType().equals(PandemicObject.Type.EPIDEMIC_CARD)) {
             playSound(Sounds.GONG);
+        } else if (newCard.getType().equals(PandemicObject.Type.EMERGENCY_EVENT_CARD)) {
+            playSound(Sounds.EMERGENCY);
         } else if (newCard.getType().equals(PandemicObject.Type.MUTATION_EVENT_CARD)) {
             playSound(Sounds.BUBBLE);
         }
@@ -133,8 +135,6 @@ public class SoundsManager extends AbstractSoundsFactory implements DecksObserve
 		/**
 		 * Do not instantiate this class directly. One must use the static
 		 * method playSound() to create the thread using an instance of this
-		 * 
-		 * @param wavFile
 		 */
 		private SoundThread(String fileName) {
 			this.fileName = fileName;

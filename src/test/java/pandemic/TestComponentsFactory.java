@@ -432,7 +432,9 @@ public class TestComponentsFactory {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
 
         // Classic game
-        List<Card> classicEpidemics = componentsFactory.createEpidemicCards(6, false, new Random());
+        GameConfig config = prepareBasicConfig();
+        config.setDifficultyLevel(DifficultyLevel.HEROIC);
+        List<Card> classicEpidemics = componentsFactory.createEpidemicCards(config, new Random());
         assertEquals(6, classicEpidemics.size());
 
         Card epidemic = classicEpidemics.get(0);
@@ -442,11 +444,13 @@ public class TestComponentsFactory {
         assertEquals(PandemicObject.Type.EPIDEMIC_CARD, epidemic.getType());
 
         // Virulent strain variant
-        List<Card> virulentEpidemics = componentsFactory.createEpidemicCards(5, true, new Random());
+        config = prepareAdvancedConfig();
+        config.setDifficultyLevel(DifficultyLevel.NORMAL);
+        List<Card> virulentEpidemics = componentsFactory.createEpidemicCards(config, new Random());
         assertEquals(5, virulentEpidemics.size());
 
         epidemic = virulentEpidemics.get(0);
-        if (epidemic.getId() < 201 || epidemic.getId() > 208) {
+        if (epidemic.getId() < 201 || epidemic.getId() > 210) {
             fail();
         }
         assertEquals(PandemicObject.Type.EPIDEMIC_CARD, epidemic.getType());
@@ -469,13 +473,13 @@ public class TestComponentsFactory {
 
     @Test
     public void testAddCardsEvenlySimple() {
-        List<Card> deck = new ArrayList<Card>();
+        List<Card> initialDeck = new ArrayList<Card>();
         List<Card> cardsToAdd = new ArrayList<Card>();
 
         Card deckCard = new Card(PandemicObject.Type.PLAYER_CITY_CARD, 1, "Dummy", null, 1, 1, BoardZone.RESERVE);
         // Place 7 dummy cards in the deck
         for (int i = 0; i < 7; i++) {
-            deck.add(deckCard);
+            initialDeck.add(deckCard);
         }
 
         // Create 2 epidemics to add
@@ -485,12 +489,46 @@ public class TestComponentsFactory {
         // Add those 2 epidemics "evenly"
         Random mockRandomizer = mock(Random.class);
         when(mockRandomizer.nextInt(anyInt())).thenReturn(1);
-        componentsFactory.addCardsEvenly(deck, cardsToAdd, mockRandomizer);
+        final List<Card> finalDeck =
+                componentsFactory.addCardsEvenly(initialDeck, cardsToAdd, Collections.<Card>emptyList(), mockRandomizer);
 
-        // our two cards should be in position 1 and 6 since our mock randomizer put them one position after the start of their stack
-        assertEquals(201, deck.get(1).getId());
-        assertEquals(202, deck.get(6).getId());
+        // the mock randomizer will always place the epidemic cards at the place before the last in each pile
+        assertEquals(201, finalDeck.get(3).getId());
+        assertEquals(202, finalDeck.get(7).getId());
     }
+
+    @Test
+    public void testAddCardsEvenly_withEmergencyEvents() {
+        List<Card> initialDeck = new ArrayList<Card>();
+        List<Card> cardsToAdd = new ArrayList<Card>();
+
+        Card deckCard = new Card(PandemicObject.Type.PLAYER_CITY_CARD, 1, "Dummy", null, 1, 1, BoardZone.RESERVE);
+        // Place 7 dummy cards in the deck
+        for (int i = 0; i < 7; i++) {
+            initialDeck.add(deckCard);
+        }
+
+        // Create 2 epidemics to add
+        cardsToAdd.add(new Card(PandemicObject.Type.EPIDEMIC_CARD, 201, "201", null, 1, 1, BoardZone.RESERVE));
+        cardsToAdd.add(new Card(PandemicObject.Type.EPIDEMIC_CARD, 202, "202", null, 1, 1, BoardZone.RESERVE));
+
+        // Emergency Events
+        List<Card> emergencyEvents = new ArrayList<Card>();
+        emergencyEvents.add(new Card(PandemicObject.Type.EMERGENCY_EVENT_CARD, 401, "401", null, 1, 1, BoardZone.RESERVE));
+        emergencyEvents.add(new Card(PandemicObject.Type.EMERGENCY_EVENT_CARD, 402, "402", null, 1, 1, BoardZone.RESERVE));
+
+        // Add those 2 epidemics "evenly"
+        Random mockRandomizer = mock(Random.class);
+        when(mockRandomizer.nextInt(anyInt())).thenReturn(1);
+        final List<Card> finalDeck = componentsFactory.addCardsEvenly(initialDeck, cardsToAdd, emergencyEvents, mockRandomizer);
+
+        // the mock randomizer will always place the emergency event cards at the place before the last in each pile
+        assertEquals(201, finalDeck.get(3).getId());
+        assertEquals(401, finalDeck.get(4).getId());
+        assertEquals(202, finalDeck.get(8).getId());
+        assertEquals(402, finalDeck.get(9).getId());
+    }
+
 
     private GameConfig prepareBasicConfig() {
         GameConfig basicConfig = new GameConfig();

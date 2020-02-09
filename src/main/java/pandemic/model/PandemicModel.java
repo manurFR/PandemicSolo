@@ -36,8 +36,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static java.util.Collections.unmodifiableList;
+import static pandemic.model.Variant.EMERGENCY_EVENTS;
 import static pandemic.model.Variant.MUTATION;
-import static pandemic.model.Variant.VIRULENT_STRAIN;
 
 /**
  * The "model" in the MVC pattern.
@@ -176,16 +177,23 @@ public class PandemicModel implements Serializable {
 		}
 		
 		// Get the epidemic cards...
-		List<Card> epidemicCards = componentsFactory.createEpidemicCards(config.getNbOfEpidemics(), config.getVariants().contains(VIRULENT_STRAIN), randomizer);
-		
-		// ...And add them intelligently to the library, dividing the deck in as many stacks 
-		//  as there are epidemics to add, and adding one epidemic card at a random place in each stack
+		List<Card> epidemicCards = componentsFactory.createEpidemicCards(config, randomizer);
+
+		// Prepare Emergency Events...
+		List<Card> emergencyEvents = Collections.emptyList();
+		if (config.getVariants().contains(EMERGENCY_EVENTS)) {
+			emergencyEvents = componentsFactory.createEmergencyEvents(config, randomizer);
+		}
+
+		// ...And add them intelligently to the player deck, splitting it into piles of the same size
+		// and adding one epidemic card at a random place in each pile
 		logger.debug("Add Epidemic cards :");
-		componentsFactory.addCardsEvenly(playerDeck, epidemicCards, randomizer);
+		playerDeck = componentsFactory.addCardsEvenly(playerDeck, unmodifiableList(epidemicCards), unmodifiableList(emergencyEvents), randomizer);
 		
 		// Finally, add the epidemic cards in the library to keep a reference on them
 		cardsLibrary.addAll(epidemicCards);
-		
+		cardsLibrary.addAll(emergencyEvents);
+
 		if (logger.isDebugEnabled()) {
 		    logger.debug("Starting player deck :");
 		    for (int i=0; i<playerDeck.size(); i++) {

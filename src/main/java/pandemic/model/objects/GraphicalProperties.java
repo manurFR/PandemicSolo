@@ -33,13 +33,7 @@ import javax.swing.JComponent;
  */
 
 public class GraphicalProperties implements Serializable {
-	/*
-	 * WARNING - Using this randomly generated UID was a bad idea.
-	 * During the next change to this class, please modify the value to
-	 * the new version number ; example :
-	 *  private static final long serialVersionUID = 28L; // last major change : v2.8
-	 */
-	private static final long serialVersionUID = 3564467594188400376L;
+	private static final long serialVersionUID = 28L;
 
 	private ImageIcon image;
     private int x;

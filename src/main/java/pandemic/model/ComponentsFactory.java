@@ -29,8 +29,6 @@ import javax.swing.*;
 import java.text.MessageFormat;
 import java.util.*;
 
-import static pandemic.model.Expansion.CORE;
-
 /**
  * Factory to create and dispatch the components of the game (counters, cards...)
  * 
@@ -64,6 +62,7 @@ public class ComponentsFactory {
 	private static final String KEY_CARD_SPECIALEVENT = "specialEvent.";
 	private static final String KEY_CARD_MUTATIONEVENT = "mutationEvent.";
 	private static final String KEY_CARD_VIRULENTEPIDEMIC = "virulentEpidemic.";
+	private static final String KEY_CARD_EMERGENCYEVENT = "emergencyEvent.";
 	private static final String KEY_CARDSPERROLE = "playerCardsFor.";
 	private static final String KEY_PLAYERCARDSBOX = "playerCardsBox.";
 	private static final String KEY_PLAYERCARDSBOX_SEPARATION = "playerCardsBox.separation";
@@ -316,22 +315,19 @@ public class ComponentsFactory {
     
     /**
      * Create the deck of epidemic cards
-	 * @param nbOfEpidemicCards Number of epidemic cards in the game, depends on the selected difficulty
-	 * @param playVirulentStrain Whether the Virulent Strain variant, which has a different set of epidemic cards, is played
-	 * @param randomizer
 	 */
-    public List<Card> createEpidemicCards(int nbOfEpidemicCards, boolean playVirulentStrain, Random randomizer) {
+    public List<Card> createEpidemicCards(GameConfig config, Random randomizer) {
         List<Card> epidemicCards = new ArrayList<Card>();
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
         int yPos = getYCoordinate(KEY_CARD_DEFAULTPOSITION);
 		String templateName = getValue(KEY_CARD_DEFAULTPOSITION, 2);
 
-		if (playVirulentStrain) { // Virulent Strain challenge epidemic cards
+		if (config.getVariants().contains(Variant.VIRULENT_STRAIN)) { // Virulent Strain challenge epidemic cards
             Integer[] cardIds = {201, 202, 203, 204, 205, 206, 207, 208, 209, 210};
             List<Integer> availableCards = Arrays.asList(cardIds);
             Collections.shuffle(availableCards, randomizer);
-            for (int cardIndex=0; cardIndex<nbOfEpidemicCards; cardIndex++) {
+            for (int cardIndex=0; cardIndex<config.getNbOfEpidemics(); cardIndex++) {
                 String imageName = MessageFormat.format(templateName, availableCards.get(cardIndex));
                 
                 String epidemicName = getValue(KEY_CARD_VIRULENTEPIDEMIC + availableCards.get(cardIndex), 0);
@@ -346,7 +342,7 @@ public class ComponentsFactory {
 			String imageName = MessageFormat.format(templateName, EPIDEMIC_CARD_ID);
             ImageIcon imageIcon = resourceProvider.getIcon(imageName);
 
-            for (int cardIndex=0; cardIndex<nbOfEpidemicCards; cardIndex++) {
+            for (int cardIndex=0; cardIndex<config.getNbOfEpidemics(); cardIndex++) {
                 Card card = new Card(PandemicObject.Type.EPIDEMIC_CARD, EPIDEMIC_CARD_ID, "Epidemic!", imageIcon, xPos, yPos, BoardZone.RESERVE);
                 logger.debug("...created {}", card);
                 
@@ -356,40 +352,66 @@ public class ComponentsFactory {
         
         return epidemicCards;
     }
-    
-    /**
-     * Add a List of cards evenly inside a deck. The deck is splitted in as many piles as there are cards to add.
-     * (See specifics in the javadoc for determinePileSizes().)
-     * Each card is added randomly inside a pile.
-	 * @param cardsLibrary The deck where to insert the new cards
-	 * @param cardsToAdd The List of cards to add evenly to the deck
-	 * @param randomizer
-	 */
-    public void addCardsEvenly(List<Card> cardsLibrary, List<Card> cardsToAdd, Random randomizer) {
-        int nbOfPiles = cardsToAdd.size();
-        logger.debug("...nb of cards in deck : {}", cardsLibrary.size());
-        logger.debug("...nb of piles / cards to add : {}", nbOfPiles);
-    	
-    	int[] pileSizes = determinePileSizes(cardsLibrary.size(), cardsToAdd.size());
 
-        int currentSum = 0;
-        for (int i=0; i<nbOfPiles; i++) {
-            // Each card is inserted between the start and the end index of its pile.
-            //  The start index is the number of cards in the preceding piles, which have all already been inserted a card. 
-            //  Thus the starting index of the i-nth pile is : SUM(pilesSize[0 .. i-1]) + i ;
-            //   the end index being : starting index + pilesSize[i].
-            //  Thus the index inside its pile (starting at 0), where we place the new card is between 0 and pilesSize[i]-1.
-            //  Considering randomizer.nextInt(n) returns an integer between 0 and n-1, we can compute :
-            int placeToInsert = (currentSum + i) + randomizer.nextInt(pileSizes[i]);
-            cardsLibrary.add(placeToInsert, cardsToAdd.get(i));
-                        
-            logger.debug("...pile #{} [range {}-{}]; epidemic added at index : {}", 
-                    new Object[] {i, currentSum + i, currentSum + i + pileSizes[i], placeToInsert});
-            
-            currentSum += pileSizes[i];
-        }
+	public List<Card> createEmergencyEvents(GameConfig config, Random randomizer) {
+    	List<Card> emergencyEventCards = new ArrayList<Card>();
+
+		int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
+		int yPos = getYCoordinate(KEY_CARD_DEFAULTPOSITION);
+
+		for (int id = 401; id <= 410; id++) {
+			String imageName = MessageFormat.format("emergency{0,number,00}.jpg", id);
+
+			String cardName = getValue(KEY_CARD_EMERGENCYEVENT + id, 0);
+
+			ImageIcon imageIcon = resourceProvider.getIcon(imageName);
+			Card card = new Card(PandemicObject.Type.EMERGENCY_EVENT_CARD, id, cardName, imageIcon, xPos, yPos, BoardZone.RESERVE);
+			logger.debug("...created {}", card);
+
+			emergencyEventCards.add(card);
+		}
+
+		Collections.shuffle(emergencyEventCards, randomizer);
+		return emergencyEventCards;
+	}
+
+    /**
+     * Split the player deck in as many piles as there are epidemic cards to add.
+     * Add one epidemic card in each pile (plus one Emergency Event card if this variant is used), shuffle the piles,
+	 * and finally stack these piles to create the final player deck
+	 * @param initialDeck The deck of player cards to which the epidemic cards will be added
+	 * @param epidemics The List of epidemic cards to add evenly to the deck
+	 * @param emergencyEventsToAdd The list of emergency event cards to add to the deck (an empty list if Emergency Events is not used)
+	 * @return the new player deck, with epidemic cards added
+	 */
+    public List<Card> addCardsEvenly(List<Card> initialDeck, List<Card> epidemics, List<Card> emergencyEventsToAdd, Random randomizer) {
+        int nbOfPiles = epidemics.size();
+        logger.debug("...nb of cards in deck : {}", initialDeck.size());
+        logger.debug("...nb of piles / cards to add : {}", nbOfPiles);
+
+        List<Card> finalDeck = new ArrayList<Card>();
+
+    	int[] pileSizes = determinePileSizes(initialDeck.size(), epidemics.size());
+
+    	int idx = 0; // index of cards in the initial deck
+    	int iCurrPile = 0; // number of the current pile
+		for (Integer pileSize: pileSizes) {
+			List<Card> currentPile = new ArrayList<Card>(initialDeck.subList(idx, idx + pileSize));
+
+			currentPile.add(epidemics.get(iCurrPile));
+			if (!emergencyEventsToAdd.isEmpty()) {
+				currentPile.add(emergencyEventsToAdd.get(iCurrPile));
+			}
+			Collections.shuffle(currentPile, randomizer);
+			finalDeck.addAll(currentPile);
+
+			idx += pileSize;
+			iCurrPile++;
+		}
+
+		return finalDeck;
     }
-    
+
     /**
      * Prepare an array specifying the number of cards in each pile.
      * We need to follow precisely the rulebook :
@@ -402,21 +424,21 @@ public class ComponentsFactory {
      */
     public int[] determinePileSizes(int nbOfCards, int nbOfPiles) {
     	int[] pileSizes = new int[nbOfPiles];
-    	
+
     	int minSize = nbOfCards / nbOfPiles;
     	int remainingCards = nbOfCards - (nbOfPiles * minSize);
-    	
-    	/* Each pile will have at least minSize cards, and the X remaining ones will be put, 
+
+    	/* Each pile will have at least minSize cards, and the X remaining ones will be put,
     	 *  one per pile, on the first X piles.	 */
     	for (int i=0; i<nbOfPiles; i++) {
     		pileSizes[i] = minSize + ((i<remainingCards) ? 1 : 0);
     	}
-    	
+
     	logger.debug("...nb of cards per pile : {}", pileSizes);
-    	
+
     	return pileSizes;
     }
-    
+
 	/**
 	 * Creates four groups of 24 cubes for each of the main four diseases, plus a group
 	 * of 12 cubes for the purple diseases when they are used.
@@ -430,52 +452,52 @@ public class ComponentsFactory {
 		for (Disease color : diseases) {
 			int xSeparation = getXCoordinate(KEY_RESERVE_SEPARATION);
 			int ySeparation = getYCoordinate(KEY_RESERVE_SEPARATION);
-			
+
 			// Starting pixel references - will not change
 			int xRef = getXCoordinate(KEY_CUBES + color.name());
 			int yRef = getYCoordinate(KEY_CUBES + color.name());
 
 			ImageIcon cubeImage = resourceProvider.getIcon(getValue(KEY_CUBES + color.name(), 3));
-			
+
 			int nbOfCubes = Integer.parseInt(getValue(KEY_CUBES + color.name(), 2));
-			// Calculate the number of full rows 
+			// Calculate the number of full rows
 			int nbOfRows = nbOfCubes / CUBES_PER_LINE;
-			
+
 			// Current cube coordinates - initialized at the reference point
 			int xPos = xRef;
 			int yPos = yRef;
 
 			for (int row = 0; row < nbOfRows; row++) {
-				for (int item = 0; item < CUBES_PER_LINE; item++) { 
+				for (int item = 0; item < CUBES_PER_LINE; item++) {
 					Cube cube = new Cube(color.ordinal(), cubeImage, xPos, yPos, color, BoardZone.RESERVE);
 					listCubes.add(cube);
-		
+
 					xPos += xSeparation;
 				}
 				yPos += ySeparation;
 				xPos = xRef; // start back at the beginning of the row
 			}
-			
+
 			// if the nb of cubes is not divisible by CUBES_PER_LINE, add a row for the remaining cubes
 			if ((nbOfCubes % CUBES_PER_LINE) != 0.0) {
-				for (int item = 0; item < (nbOfCubes - nbOfRows * CUBES_PER_LINE); item++) { 
+				for (int item = 0; item < (nbOfCubes - nbOfRows * CUBES_PER_LINE); item++) {
 					Cube cube = new Cube(color.ordinal(), cubeImage, xPos, yPos, color, BoardZone.BOARD);
 					listCubes.add(cube);
-		
+
 					xPos += xSeparation;
 				}
 			}
-			
+
 			cubesUsed.put(color, 0);
 			logger.debug("...color {}, created {} cubes", color, nbOfCubes);
 		}
 
 		// Reverse the order of the cubes in the List, in order to display them logically according to the shadows
 		Collections.reverse(listCubes);
-		
+
 		return listCubes;
 	}
-	
+
 	/**
 	 * Take cubes from the reserve to put on a city on the board
 	 * @param countersLibrary The main counters reference, where to find the cubes
@@ -495,12 +517,12 @@ public class ComponentsFactory {
 					}
 				}
 			}
-			
+
 			if (cube == null) {
 				throw new IllegalArgumentException("No cube available in the Reserve for this city's color (" + city.getColor().name() + ")");
 			}
 
-		
+
 			// Calculate the new position around the city marker
 			// Please note that depending on the number of cubes to move, they
 			//  won't be placed following the same pattern around the city
@@ -532,7 +554,7 @@ public class ComponentsFactory {
 			cube.setX(city.getX() + posX);
 			cube.setY(city.getY() + posY);
 			cube.setBoardZone(BoardZone.BOARD);
-			
+
 			logger.debug("...moving cube to x={}, y={}", cube.getX(), cube.getY());
 		}
 	}
@@ -544,33 +566,33 @@ public class ComponentsFactory {
 	 */
 	public List<PandemicObject> createResearchStations(City startingCity) {
 		List<PandemicObject> listStations = new ArrayList<PandemicObject>();
-		
+
 		int xPosReserve = getXCoordinate(KEY_RESERVE_RESEARCHSTATIONS);
 		int yPosReserve = getYCoordinate(KEY_RESERVE_RESEARCHSTATIONS);
-		
+
 		int xSeparation = getXCoordinate(KEY_RESERVE_SEPARATION);
-		
+
 		ImageIcon imgResearchStation = resourceProvider.getIcon(getValue(KEY_RESERVE_RESEARCHSTATIONS, 2));
-		
+
 		// 5 Research Stations in the reserve
 		for (int i=0; i<5; i++) {
 			PandemicObject researchStation = new PandemicObject(
-					PandemicObject.Type.RESEARCH_STATION, 
+					PandemicObject.Type.RESEARCH_STATION,
 					"Research Station",
-					imgResearchStation, 
+					imgResearchStation,
 					xPosReserve + i * xSeparation,
 					yPosReserve,
 					BoardZone.RESERVE);
 			listStations.add(researchStation);
 		}
-		
+
 		// 1 starting Research Station in the starting city
 		int xShift = getXCoordinate(KEY_RESEARCHSTATIONS_CITYSHIFT);
 		int yShift = getYCoordinate(KEY_RESEARCHSTATIONS_CITYSHIFT);
 		PandemicObject researchStation = new PandemicObject(
-				PandemicObject.Type.RESEARCH_STATION, 
+				PandemicObject.Type.RESEARCH_STATION,
 				"Research Station",
-				imgResearchStation, 
+				imgResearchStation,
 				startingCity.getX() + xShift,
 				startingCity.getY() + yShift,
 				BoardZone.BOARD);
@@ -578,10 +600,10 @@ public class ComponentsFactory {
 
 		// Reverse the order of the research stations in the List, in order to display them coherently
 		Collections.reverse(listStations);
-		
+
 		return listStations;
 	}
-	
+
 	/**
 	 * Move the selected roles to their starting city
 	 * @param usedRoles List of the roles that will be played
@@ -589,33 +611,33 @@ public class ComponentsFactory {
 	 */
 	public void placeUsedRoles(List<Role> usedRoles, City startingCity) {
 		int j = 0;
-		
+
 		for (Role pawn : usedRoles) {
 			// Change coordinates to the starting city (Atlanta)
 			pawn.setX(startingCity.getX() + getXCoordinate(KEY_FIRSTPAWN_CITYSHIFT) + j * getXCoordinate(KEY_NEXTPAWNS_SHIFT));
 			pawn.setY(startingCity.getY() + getYCoordinate(KEY_FIRSTPAWN_CITYSHIFT) + j * getYCoordinate(KEY_NEXTPAWNS_SHIFT));
 			pawn.setBoardZone(BoardZone.BOARD);
-			
+
 			j++;
 		}
 	}
-	
+
 	/**
 	 * Create the cure markers for used diseases and place them on the board
-	 * @param colors The array of the colors (Diseases) used ; a marker will be created for each color 
+	 * @param colors The array of the colors (Diseases) used ; a marker will be created for each color
 	 * @return The List of the cure markers
 	 */
 	public List<PandemicObject> createCureMarkers(Disease[] colors) {
 		List<PandemicObject> listMarkers = new ArrayList<PandemicObject>();
-		
+
 		for (Disease color : colors) {
 			String key = KEY_CURE + color.name();
 			listMarkers.add(createIconMarker(PandemicObject.Type.CURE_MARKER, key, 2));
 		}
-		
+
 		return listMarkers;
 	}
-	
+
 	/**
 	 * Create and place the eradication markers needed for playing (one per disease)
 	 * @param colors The array of the colors (diseases) used for this game
@@ -623,23 +645,23 @@ public class ComponentsFactory {
 	 */
 	public List<PandemicObject> createEradicationMarkers(Disease[] colors) {
 		List<PandemicObject> listMarkers = new ArrayList<PandemicObject>();
-		
+
 		int xSeparation = getXCoordinate(KEY_ERADICATION_SEPARATION);
-		
+
 		int xPos = getXCoordinate(KEY_RESERVE_ERADICATION);
 		int yPos = getYCoordinate(KEY_RESERVE_ERADICATION);
 		ImageIcon imgEradication = resourceProvider.getIcon(getValue(KEY_RESERVE_ERADICATION, 2));
-		
+
 		for (@SuppressWarnings("unused") Disease color : colors) { // color is not used, but it ensures there's one marker per color
 			PandemicObject eradicationMarker = new PandemicObject(PandemicObject.Type.ERADICATION_MARKER, "Eradication marker", imgEradication, xPos, yPos, BoardZone.RESERVE);
 			listMarkers.add(eradicationMarker);
-			
+
 			xPos += xSeparation;
 		}
-		
+
 		return listMarkers;
 	}
-	
+
 	/**
 	 * Create the Infection Rate marker and place it on the first space of the Infection Rate Track
 	 * @return The marker
