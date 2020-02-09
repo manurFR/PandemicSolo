@@ -36,6 +36,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static pandemic.model.Variant.MUTATION;
+import static pandemic.model.Variant.VIRULENT_STRAIN;
+
 /**
  * The "model" in the MVC pattern.
  * This class will own and manage all information about the internal state of the game, 
@@ -126,7 +129,7 @@ public class PandemicModel implements Serializable {
 
 		// Mutation expansion
 		// The two mutation cards are put on top of the Infection *discard* pile
-		if (config.isPlayMutation()) {
+		if (config.getVariants().contains(MUTATION)) {
 			discardPile.add(0, 100);
 			discardPile.add(1, 101);
 
@@ -168,12 +171,12 @@ public class PandemicModel implements Serializable {
        currentPlayerCard = 1; // initialization, for debugging purposes
 		
 		// Add the Mutation event cards randomly in the deck
-		if (config.isPlayMutation()) {
+		if (config.getVariants().contains(MUTATION)) {
 			componentsFactory.addMutationEventsCards(playerDeck, cardsLibrary, randomizer);
 		}
 		
 		// Get the epidemic cards...
-		List<Card> epidemicCards = componentsFactory.createEpidemicCards(config.getNbOfEpidemics(), config.isPlayVirulentStrain(), randomizer);
+		List<Card> epidemicCards = componentsFactory.createEpidemicCards(config.getNbOfEpidemics(), config.getVariants().contains(VIRULENT_STRAIN), randomizer);
 		
 		// ...And add them intelligently to the library, dividing the deck in as many stacks 
 		//  as there are epidemics to add, and adding one epidemic card at a random place in each stack

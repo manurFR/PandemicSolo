@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import pandemic.configuration.ConfigBuilder;
 import pandemic.dialog.DialogsManager;
 import pandemic.model.PandemicModel;
+import pandemic.model.Variant;
 import pandemic.util.GameConfig;
 import pandemic.util.ResourceProvider;
 import pandemic.util.sounds.SoundsManager;
@@ -131,11 +132,9 @@ public class GameManager {
 		sb.append(PandemicSolo.VERSION);
 		sb.append("  -  Difficulty level:  ");
 		sb.append(config.getDifficultyLevel());
-		if (config.isPlayVirulentStrain()) {
-			sb.append("  +  VIRULENT STRAIN!");
-		}
-		if (config.isPlayMutation()) {
-			sb.append("  +  MUTATION!");
+		for (Variant variant: config.getVariants()) {
+			sb.append(" + ");
+			sb.append(variant.getLabel());
 		}
 		return sb.toString();
 	}

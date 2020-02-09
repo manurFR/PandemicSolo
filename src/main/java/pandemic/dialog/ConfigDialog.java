@@ -21,6 +21,7 @@ package pandemic.dialog;
 import pandemic.PandemicSolo;
 import pandemic.model.DifficultyLevel;
 import pandemic.model.Expansion;
+import pandemic.model.Variant;
 import pandemic.util.GameConfig;
 import pandemic.util.ResourceProvider;
 
@@ -38,6 +39,7 @@ import java.util.Set;
 
 import static javax.swing.SwingConstants.CENTER;
 import static pandemic.model.Expansion.*;
+import static pandemic.model.Variant.*;
 
 /**
  * This dialog asks the user for all game configuration information at once.
@@ -147,9 +149,24 @@ public class ConfigDialog extends JDialog {
 		}
 		modelConfig.setEventCardsExpansions(eventCardsExpansions);
 
-		modelConfig.setPlayVirulentStrain(chckbxVirulentStrain.isSelected());
-		modelConfig.setPlayMutation(chckbxMutation.isSelected());
 		modelConfig.setSurvivalMode(chckbxSurvivalMode.isSelected());
+
+		final Set<Variant> chosenVariants = new LinkedHashSet<Variant>();
+		if (chckbxVirulentStrain.isSelected()) {
+			chosenVariants.add(VIRULENT_STRAIN);
+		}
+		if (chckbxMutation.isSelected()) {
+			chosenVariants.add(MUTATION);
+		} else if (chckbxWorldwidePanic.isSelected()) {
+			chosenVariants.add(WORLDWIDE_PANIC);
+		}
+		if (chckbxEmergencyEvents.isSelected()) {
+			chosenVariants.add(EMERGENCY_EVENTS);
+		}
+		if (chckbxQuarantines.isSelected()) {
+			chosenVariants.add(QUARANTINES);
+		}
+		modelConfig.setVariants(chosenVariants);
 
 		this.dispose();
 	}
@@ -186,9 +203,13 @@ public class ConfigDialog extends JDialog {
 		chckbxEventsInTheLab.setSelected(modelConfig.getEventCardsExpansions().contains(IN_THE_LAB));
 		chckbxEventsStateOfEmergency.setSelected(modelConfig.getEventCardsExpansions().contains(STATE_OF_EMERGENCY));
 
-		chckbxVirulentStrain.setSelected(modelConfig.isPlayVirulentStrain());
-		chckbxMutation.setSelected(modelConfig.isPlayMutation());
 		chckbxSurvivalMode.setSelected(modelConfig.isSurvivalMode());
+
+		chckbxVirulentStrain.setSelected(modelConfig.getVariants().contains(VIRULENT_STRAIN));
+		chckbxMutation.setSelected(modelConfig.getVariants().contains(MUTATION));
+		chckbxWorldwidePanic.setSelected(modelConfig.getVariants().contains(WORLDWIDE_PANIC));
+		chckbxEmergencyEvents.setSelected(modelConfig.getVariants().contains(EMERGENCY_EVENTS));
+		chckbxQuarantines.setSelected(modelConfig.getVariants().contains(QUARANTINES));
 	}
 
 	/**

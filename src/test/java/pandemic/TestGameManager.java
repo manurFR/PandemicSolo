@@ -18,6 +18,7 @@
  */
 package pandemic;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -25,6 +26,7 @@ import org.junit.Test;
 import pandemic.GameManager;
 import pandemic.PandemicSolo;
 import pandemic.model.DifficultyLevel;
+import pandemic.model.Variant;
 import pandemic.util.GameConfig;
 
 
@@ -38,21 +40,20 @@ public class TestGameManager {
 	public void testConstructMainTitle() {
 		GameManager gameManager = new GameManager();
 		
-		String expected = "Pandemic Solitaire  version " + PandemicSolo.VERSION + "  -  Difficulty level:  'Heroic' - 6 Epidemics  +  MUTATION!";
+		String expected = "Pandemic Solitaire  version " + PandemicSolo.VERSION + "  -  Difficulty level:  'Heroic' - 6 Epidemics + Mutation";
 		
 		GameConfig config = new GameConfig();
 		config.setDifficultyLevel(DifficultyLevel.HEROIC);
-		config.setPlayVirulentStrain(false);
-		config.setPlayMutation(true);
-		
+		config.getVariants().add(Variant.MUTATION);
+
 		assertEquals(expected, gameManager.constructMainTitle(config));
-		
-		expected = "Pandemic Solitaire  version " + PandemicSolo.VERSION + "  -  Difficulty level:  'Normal' - 5 Epidemics  +  VIRULENT STRAIN!";
+
+		expected = "Pandemic Solitaire  version " + PandemicSolo.VERSION + "  -  Difficulty level:  'Normal' - 5 Epidemics + Virulent Strain! + Quarantines";
 		
 		config.setDifficultyLevel(DifficultyLevel.NORMAL);
-		config.setPlayVirulentStrain(true);
-		config.setPlayMutation(false);
-		
+		config.getVariants().clear();
+		config.getVariants().addAll(asList(Variant.VIRULENT_STRAIN, Variant.QUARANTINES));
+
 		assertEquals(expected, gameManager.constructMainTitle(config));
 	}
 

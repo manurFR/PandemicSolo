@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import pandemic.dialog.ConfigDialog;
 import pandemic.model.DifficultyLevel;
 import pandemic.model.Expansion;
+import pandemic.model.Variant;
 import pandemic.util.GameConfig;
 import pandemic.util.ResourceProvider;
 
@@ -108,7 +109,7 @@ public class TestConfigDialog {
 	public void testVirulentStrain() {
 		dialog.chckbxVirulentStrain.setSelected(true);
 		dialog.controllerValidateAndClose();
-		assertTrue(config.isPlayVirulentStrain());
+		assertTrue(config.getVariants().contains(Variant.VIRULENT_STRAIN));
 		verify(dialog).dispose();
 	}
 	
@@ -116,7 +117,7 @@ public class TestConfigDialog {
 	public void testMutation() {
 		dialog.chckbxMutation.setSelected(true);
 		dialog.controllerValidateAndClose();
-		assertTrue(config.isPlayMutation());
+		assertTrue(config.getVariants().contains(Variant.MUTATION));
 		verify(dialog).dispose();
 	}
 	

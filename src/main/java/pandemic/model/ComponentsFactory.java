@@ -179,7 +179,6 @@ public class ComponentsFactory {
             logger.debug("...created {}", city);
             
             cities.add(city);
-            // TODO check if it's useful to have the Epidemic card in the cities list
         }
         
         return cities;

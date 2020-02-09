@@ -36,6 +36,8 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static pandemic.model.Expansion.*;
+import static pandemic.model.Variant.MUTATION;
+import static pandemic.model.Variant.VIRULENT_STRAIN;
 
 /**
  * @author manur
@@ -494,8 +496,7 @@ public class TestComponentsFactory {
         GameConfig basicConfig = new GameConfig();
         basicConfig.setDifficultyLevel(DifficultyLevel.NORMAL);
         basicConfig.setNbOfRoles(3);
-        basicConfig.setPlayMutation(false);
-        basicConfig.setPlayVirulentStrain(false);
+        basicConfig.getVariants().clear();
         basicConfig.getRolesExpansions().add(CORE);
         basicConfig.setFiveEvents(false);
         basicConfig.getEventCardsExpansions().add(CORE);
@@ -506,8 +507,7 @@ public class TestComponentsFactory {
         GameConfig advancedConfig = new GameConfig();
         advancedConfig.setDifficultyLevel(DifficultyLevel.HEROIC);
         advancedConfig.setNbOfRoles(4);
-        advancedConfig.setPlayMutation(true);
-        advancedConfig.setPlayVirulentStrain(true);
+        advancedConfig.getVariants().addAll(asList(VIRULENT_STRAIN, MUTATION));
         advancedConfig.getRolesExpansions().addAll(asList(CORE, IN_THE_LAB));
         advancedConfig.setFiveEvents(false);
         advancedConfig.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));

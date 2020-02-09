@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import pandemic.model.DifficultyLevel;
 import pandemic.model.Disease;
 import pandemic.model.Expansion;
+import pandemic.model.Variant;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,8 +54,7 @@ public class GameConfig implements Serializable {
 	private Set<Expansion> rolesExpansions = new LinkedHashSet<Expansion>();
 	private boolean fiveEvents;
 	private Set<Expansion> eventCardsExpansions = new LinkedHashSet<Expansion>();
-	private boolean playVirulentStrain;
-	private boolean playMutation;
+	private Set<Variant> variants = new LinkedHashSet<Variant>();
 	private boolean survivalMode;
 	
 	/**
@@ -67,7 +67,7 @@ public class GameConfig implements Serializable {
 	}
 	
 	public String[] giveDetails() {
-		String[] details = new String[8];
+		String[] details = new String[7];
 		
 		StringBuilder sb = new StringBuilder("Number of roles : ");
 		sb.append(nbOfRoles);
@@ -115,17 +115,26 @@ public class GameConfig implements Serializable {
 		}
 		details[4] = sb.toString();
 
-		sb = new StringBuilder("Playing Virulent Strain expansion ? ");
-		sb.append(playVirulentStrain ? YES : NO);
-		details[5] = sb.toString();
-
-		sb = new StringBuilder("Playing Mutation expansion ? ");
-		sb.append(playMutation ? YES : NO);
-		details[6] = sb.toString();
-
 		sb = new StringBuilder("Survival Mode ? ");
 		sb.append(survivalMode ? YES : NO);
-		details[7] = sb.toString();
+		details[5] = sb.toString();
+
+		sb = new StringBuilder("Variants used : ");
+		List<String> variantsUsed = new ArrayList<String>();
+		for (Variant variant: variants) {
+			variantsUsed.add(variant.getLabel());
+		}
+		if (variantsUsed.isEmpty()) {
+			variantsUsed.add("None");
+		}
+		int nbVariants = variantsUsed.size();
+		for (int i=0; i<nbVariants; i++) {
+			sb.append(variantsUsed.get(i));
+			if (i<nbVariants-1) {
+				sb.append(" | ");
+			}
+		}
+		details[6] = sb.toString();
 		
 		return details;
 	}
@@ -143,20 +152,20 @@ public class GameConfig implements Serializable {
 		config.getRolesExpansions().addAll(asList(CORE, ON_THE_BRINK));
 		config.setFiveEvents(false);
 		config.getEventCardsExpansions().addAll(asList(CORE, ON_THE_BRINK));
-		config.setPlayVirulentStrain(false);
-		config.setPlayMutation(false);
-		
+		config.getVariants().clear();
+		config.setSurvivalMode(false);
+
 		return config;
 	}
 	
 	/**
 	 * Returns an array with the diseases (colors) used when playing with this config.
-	 * Regular game uses only blue, yellow, black and red. When using the Mutation variant,
+	 * Regular game uses only blue, yellow, black and red. When using the Mutation/Worldwide Panic variants,
 	 * one adds purple.
 	 * @return An array of the diseases used by this config
 	 */
 	public Disease[] getDiseases() {
-		if (playMutation) {
+		if (variants.contains(Variant.MUTATION) || variants.contains(Variant.WORLDWIDE_PANIC)) {
 			return Disease.values();
 		} else {
 			return new Disease[] { Disease.BLUE, Disease.YELLOW, Disease.BLACK, Disease.RED };
@@ -209,20 +218,12 @@ public class GameConfig implements Serializable {
 		this.eventCardsExpansions = eventCardsExpansions;
 	}
 
-	public boolean isPlayVirulentStrain() {
-		return playVirulentStrain;
+	public Set<Variant> getVariants() {
+		return variants;
 	}
 
-	public void setPlayVirulentStrain(boolean playVirulentStrain) {
-		this.playVirulentStrain = playVirulentStrain;
-	}
-
-	public boolean isPlayMutation() {
-		return playMutation;
-	}
-
-	public void setPlayMutation(boolean playMutation) {
-		this.playMutation = playMutation;
+	public void setVariants(Set<Variant> variants) {
+		this.variants = variants;
 	}
 
 	public boolean isSurvivalMode() {
