@@ -37,8 +37,7 @@ import java.util.List;
 import java.util.Random;
 
 import static java.util.Collections.unmodifiableList;
-import static pandemic.model.Variant.EMERGENCY_EVENTS;
-import static pandemic.model.Variant.MUTATION;
+import static pandemic.model.Variant.*;
 
 /**
  * The "model" in the MVC pattern.
@@ -135,9 +134,17 @@ public class PandemicModel implements Serializable {
 			discardPile.add(1, 101);
 
 			logger.debug("...add mutation to infection discard pile : {}", discardPile.get(0));
-			logger.debug("...add mutation to infection discard pile : {}", discardPile.get(0));
+			logger.debug("...add mutation to infection discard pile : {}", discardPile.get(1));
+		} else if (config.getVariants().contains(WORLDWIDE_PANIC)) {
+			// Worldwide Panic challenge
+			// Add the two alternative mutation cards on top of the Infection *discard* pile
+			discardPile.add(0, 110);
+			discardPile.add(0, 111);
+
+			logger.debug("...add worldwide panic mutation to infection discard pile : {}", discardPile.get(0));
+			logger.debug("...add worldwide panic mutation to infection discard pile : {}", discardPile.get(1));
 		}
-		
+
         if (logger.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder();
             for (Integer card : infectionDeck) {
@@ -172,7 +179,7 @@ public class PandemicModel implements Serializable {
        currentPlayerCard = 1; // initialization, for debugging purposes
 		
 		// Add the Mutation event cards randomly in the deck
-		if (config.getVariants().contains(MUTATION)) {
+		if (config.getVariants().contains(MUTATION) || config.getVariants().contains(WORLDWIDE_PANIC)) {
 			componentsFactory.addMutationEventsCards(playerDeck, cardsLibrary, randomizer);
 		}
 		
@@ -321,7 +328,7 @@ public class PandemicModel implements Serializable {
 		discardPile.add(nextCard);
 
         logger.debug("Drew infection card: {} - {} => discarded", new Object[] { nextCard,
-                (nextCard == 100 || nextCard == 101) ? "MUTATION!" : cityList.get(nextCard).getName() });
+                (nextCard >= 100 && nextCard < 200) ? "MUTATION!" : cityList.get(nextCard).getName() });
         		
 		// Notify the observers (to put the card graphically on top of the pile)
 		for (DecksObserver observer : decksObservers) {
