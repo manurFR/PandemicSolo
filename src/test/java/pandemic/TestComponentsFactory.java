@@ -33,8 +33,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static pandemic.model.Expansion.*;
 import static pandemic.model.Variant.MUTATION;
 import static pandemic.model.Variant.VIRULENT_STRAIN;
@@ -78,40 +77,39 @@ public class TestComponentsFactory {
 
     @Test
     public void test_withMutation_createCubesIncludesPurple() {
-        when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("cubes.RED", "814;150;1;\"cube_red.jpg\""));
+        final MockBundle properties = new MockBundle("cubes.RED", "10;10;\"cube_red.jpg\"");
+        properties.addKV("cubes.BLUE", "10;20;\"\"cube_blue.jpg\"");
+        properties.addKV("cubes.YELLOW", "10;30;\"\"cube_yellow.jpg\"");
+        properties.addKV("cubes.BLACK", "10;40;\"\"cube_black.jpg\"");
+        properties.addKV("cubes.PURPLE", "100;100;\"\"cube_purple.jpg\"");
+        properties.addKV("reserve.separation", "0;5");
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(properties);
 
         GameConfig configWithMutation = prepareAdvancedConfig();
 
-        List<Cube> cubes = componentsFactory.createCubes(configWithMutation.getDiseases());
-
-        assertEquals(cubes.size(), 5); // 1 cube for each color, including purple
-
-        boolean purpleFound = false;
-        for (Cube c : cubes) {
+        List<Cube> cubes = componentsFactory.createCubes(configWithMutation);
+        int purples = 0;
+        for (Cube c: cubes) {
             if (c.getColor().equals(Disease.PURPLE)) {
-                purpleFound = true;
-                break;
+                purples++;
             }
         }
-        assertTrue(purpleFound);
+        assertEquals(12, purples);
 
         Cube c = cubes.get(0);
-        assertTrue(c.getImage().getDescription().endsWith("cube_red.jpg"));
-        assertEquals(c.getX(), 814);
-        assertEquals(c.getY(), 150);
+        assertTrue(c.getImage().getDescription().endsWith("cube_purple.jpg"));
+        assertEquals(c.getX(), 100);
+        assertEquals(c.getY(), 100);
     }
 
     @Test
     public void test_withoutMutation_createCubesDoesNotIncludePurple() {
-        when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("cubes.RED", "814;150;1;\"cube_red.jpg\""));
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(new MockBundle("cubes.RED", "814;150;\"cube_red.jpg\""));
 
         GameConfig configWithoutMutation = prepareBasicConfig();
 
-        List<Cube> cubes = componentsFactory.createCubes(configWithoutMutation.getDiseases());
-
-        assertEquals(cubes.size(), 4);
+        List<Cube> cubes = componentsFactory.createCubes(configWithoutMutation);
+        assertEquals(4*24, cubes.size());
 
         for (Cube c : cubes) {
             if (c.getColor().equals(Disease.PURPLE)) {
@@ -138,21 +136,33 @@ public class TestComponentsFactory {
 
     @Test
     public void testMoveCubesToCity() {
-        when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("cubes.RED", "814;150;1;\"cube_red.jpg\""));
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(new MockBundle("cubes.RED", "814;150;\"cube_red.jpg\""));
 
-		GameConfig advancedConfig = prepareAdvancedConfig();
-		List<PandemicObject> listCubes = new ArrayList<PandemicObject>(componentsFactory.createCubes(advancedConfig.getDiseases()));
+		GameConfig config = prepareBasicConfig();
+		List<PandemicObject> listCubes = new ArrayList<PandemicObject>(componentsFactory.createCubes(config));
 
-        when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("city.35", "362;97;\"Paris\";BLUE"));
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(new MockBundle("city.35", "362;97;\"Paris\";BLUE"));
 
         List<City> cities = componentsFactory.createCities();
+        City paris = cities.get(0);
 
-        componentsFactory.moveCubesToCity(listCubes, 1, cities.get(0));
+        componentsFactory.moveCubesToCity(listCubes, 3, paris);
 
-        assertFalse(listCubes.get(0).getX() == 814);
-        assertFalse(listCubes.get(0).getY() == 150);
+        Cube cube1 = (Cube)listCubes.get(listCubes.size()-1);
+        Cube cube2 = (Cube)listCubes.get(listCubes.size()-2);
+        Cube cube3 = (Cube)listCubes.get(listCubes.size()-3);
+
+        assertEquals(paris.getX() - 21, cube1.getX());
+        assertEquals(paris.getY() - 14, cube1.getY());
+        assertEquals(BoardZone.BOARD, cube1.getBoardZone());
+
+        assertEquals(paris.getX() - 4, cube2.getX());
+        assertEquals(paris.getY() - 14, cube2.getY());
+        assertEquals(BoardZone.BOARD, cube2.getBoardZone());
+
+        assertEquals(paris.getX() - 12, cube3.getX());
+        assertEquals(paris.getY() - 3, cube3.getY());
+        assertEquals(BoardZone.BOARD, cube3.getBoardZone());
     }
 
     @Test

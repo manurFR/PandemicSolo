@@ -207,7 +207,7 @@ public class PandemicModel implements Serializable {
 		 **************************************************************************/
 		
 		// Add cubes in the reserve (including the purple disease when the Mutation variant is activated)
-		countersLibrary.addAll(componentsFactory.createCubes(config.getDiseases()));
+		countersLibrary.addAll(componentsFactory.createCubes(config));
 		
 		// ***************** Place the initial infection-cubes on the board
 		// *************************************************************

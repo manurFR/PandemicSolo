@@ -440,16 +440,14 @@ public class ComponentsFactory {
     }
 
 	/**
-	 * Creates four groups of 24 cubes for each of the main four diseases, plus a group
-	 * of 12 cubes for the purple diseases when they are used.
+	 * Creates cubes for the four or five diseases, depending on the variants.
 	 * The cubes are split in rows of 12 items.
-	 * @param diseases An array of the used diseases for this game
 	 * @return The list of all cubes set up.
 	 */
-	public List<Cube> createCubes(Disease[] diseases) {
+	public List<Cube> createCubes(GameConfig config) {
 		List<Cube> listCubes = new ArrayList<Cube>();
 
-		for (Disease color : diseases) {
+		for (Disease color : config.getDiseases()) {
 			int xSeparation = getXCoordinate(KEY_RESERVE_SEPARATION);
 			int ySeparation = getYCoordinate(KEY_RESERVE_SEPARATION);
 
@@ -457,9 +455,9 @@ public class ComponentsFactory {
 			int xRef = getXCoordinate(KEY_CUBES + color.name());
 			int yRef = getYCoordinate(KEY_CUBES + color.name());
 
-			ImageIcon cubeImage = resourceProvider.getIcon(getValue(KEY_CUBES + color.name(), 3));
+			ImageIcon cubeImage = resourceProvider.getIcon(getValue(KEY_CUBES + color.name(), 2));
 
-			int nbOfCubes = Integer.parseInt(getValue(KEY_CUBES + color.name(), 2));
+			int nbOfCubes = config.numberOfCubes(color);
 			// Calculate the number of full rows
 			int nbOfRows = nbOfCubes / CUBES_PER_LINE;
 
@@ -479,7 +477,7 @@ public class ComponentsFactory {
 			}
 
 			// if the nb of cubes is not divisible by CUBES_PER_LINE, add a row for the remaining cubes
-			if ((nbOfCubes % CUBES_PER_LINE) != 0.0) {
+			if ((nbOfCubes % CUBES_PER_LINE) != 0) {
 				for (int item = 0; item < (nbOfCubes - nbOfRows * CUBES_PER_LINE); item++) {
 					Cube cube = new Cube(color.ordinal(), cubeImage, xPos, yPos, color, BoardZone.BOARD);
 					listCubes.add(cube);
@@ -505,15 +503,17 @@ public class ComponentsFactory {
 	 * @param city The destination city
 	 */
 	public void moveCubesToCity(List<PandemicObject> countersLibrary, int nbOfCubes, City city) {
-		for (int cubeIndex=0; cubeIndex < nbOfCubes; cubeIndex++) { // Reverse order to preserve a coherent display
+		for (int cubeIndex=0; cubeIndex < nbOfCubes; cubeIndex++) {
 			// Look for the first cube of the city's color in the reserve
 			Cube cube = null;
-			for (int counterIndex = countersLibrary.size()-1; counterIndex >= 0; counterIndex--) {
+			for (int counterIndex = countersLibrary.size()-1; counterIndex >= 0; counterIndex--) { // Reverse order to preserve a coherent display
 				PandemicObject counter = countersLibrary.get(counterIndex);
 				if (counter.getType().equals(PandemicObject.Type.CUBE)) {
 					cube = (Cube)counter;
 					if (cube.getColor().equals(city.getColor()) && cube.getBoardZone().equals(BoardZone.RESERVE)) {
 						break;
+					} else {
+						cube = null;
 					}
 				}
 			}
@@ -521,7 +521,6 @@ public class ComponentsFactory {
 			if (cube == null) {
 				throw new IllegalArgumentException("No cube available in the Reserve for this city's color (" + city.getColor().name() + ")");
 			}
-
 
 			// Calculate the new position around the city marker
 			// Please note that depending on the number of cubes to move, they

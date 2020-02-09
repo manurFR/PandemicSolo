@@ -46,5 +46,4 @@ public class Cube extends PandemicObject {
 	public Disease getColor() {
 		return color;
 	}
-	
 }

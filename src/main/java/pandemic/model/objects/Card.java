@@ -76,10 +76,12 @@ public class Card extends PandemicObject {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Card [");
-        if (super.toString() != null)
-            builder.append("toString()=").append(super.toString()).append(", ");
-        if (city != null)
-            builder.append("city=").append(city.getId());
+        if (super.toString() != null) {
+			builder.append("toString()=").append(super.toString()).append(", ");
+		}
+        if (city != null) {
+			builder.append("city=").append(city.getId());
+		}
         builder.append("]");
         return builder.toString();
     }

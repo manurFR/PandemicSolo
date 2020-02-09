@@ -34,6 +34,8 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static pandemic.model.Expansion.CORE;
 import static pandemic.model.Expansion.ON_THE_BRINK;
+import static pandemic.model.Variant.MUTATION;
+import static pandemic.model.Variant.WORLDWIDE_PANIC;
 
 /**
  * This class hold the game properties (number of players/roles, number of epidemics...)
@@ -165,10 +167,31 @@ public class GameConfig implements Serializable {
 	 * @return An array of the diseases used by this config
 	 */
 	public Disease[] getDiseases() {
-		if (variants.contains(Variant.MUTATION) || variants.contains(Variant.WORLDWIDE_PANIC)) {
+		if (variants.contains(MUTATION) || variants.contains(WORLDWIDE_PANIC)) {
 			return Disease.values();
 		} else {
 			return new Disease[] { Disease.BLUE, Disease.YELLOW, Disease.BLACK, Disease.RED };
+		}
+	}
+
+	/**
+	 * Returns the number of cubes to prepare for the color, depending on the variants used.
+	 */
+	public int numberOfCubes(Disease color) {
+		switch (color) {
+			case BLUE:
+			case RED:
+			case BLACK:
+			case YELLOW:
+				return 24;
+			case PURPLE:
+				if (variants.contains(WORLDWIDE_PANIC)) {
+					return 24;
+				} else if (variants.contains(MUTATION)) {
+					return 12;
+				}
+			default:
+				return 0;
 		}
 	}
 
@@ -177,7 +200,7 @@ public class GameConfig implements Serializable {
 	public int getNbOfEpidemics() {
 		return difficultyLevel.getLevel();
 	}
-	
+
 	public DifficultyLevel getDifficultyLevel() {
 		return difficultyLevel;
 	}
