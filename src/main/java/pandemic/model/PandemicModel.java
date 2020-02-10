@@ -216,22 +216,36 @@ public class PandemicModel implements Serializable {
 		// Add cubes in the reserve (including the purple disease when the Mutation variant is activated)
 		countersLibrary.addAll(componentsFactory.createCubes(config));
 		
-		// ***************** Place the initial infection-cubes on the board
-		// *************************************************************
-		
+		// ***************** Place the initial infection-cubes on the board ********************************************
+
 		// Draw 9 cards from the infection deck and discard them.
-		// Place 3 cubes for each of the first 3 infections cards, 2 cubes for the next 
-		// 3 infection cards, and 1 cube for the last 3 infection cards. 
-		// The cubes are to be taken from the reserve and placed on the city depicted 
+		// Place 3 cubes for each of the first 3 infections cards, 2 cubes for the next
+		// 3 infection cards, and 1 cube for the last 3 infection cards.
+		// The cubes are to be taken from the reserve and placed on the city depicted
 		// on each infection card.
-		//
 		for (int nbOfCubes = 3; nbOfCubes > 0; nbOfCubes--) {
 			logger.debug("...placing {} cube{} in :", nbOfCubes, ((nbOfCubes>1) ? "s" : "") );
 			for (int infectionCard=0; infectionCard < 3; infectionCard++) {
-				int nextInfectionCard = drawInfectionCard(false); // no cough sound on set up
-				
-				// Move the nbOfCubes cubes
-				componentsFactory.moveCubesToCity(countersLibrary, nbOfCubes, cityList.get(nextInfectionCard));
+				int nextInfectionCard = drawInfectionCard(); // no cough sound on set up
+
+				// Prepare the cubes to move to the city (nbOfCubes cubes of the city's color)
+				List<Disease> cubes = new ArrayList<Disease>();
+				for (int i = 0; i < nbOfCubes; i++) {
+					cubes.add(cityList.get(nextInfectionCard).getColor());
+				}
+
+				/* Worldwide Panic :
+				   put 1 purple cube on the 1st city drawn (in addition to 3 cubes of the card’s color);
+				   put 2 purple cubes on the 4th city drawn (in addition to 2 cubes of that card’s color);
+				   and put 3 purple	cubes on the 7th city drawn (in addition to 1 cube of that card’s color). */
+				if (infectionCard==0 && config.getVariants().contains(WORLDWIDE_PANIC)) {
+					for (int i = 0; i < 4-nbOfCubes; i++) {
+						cubes.add(Disease.PURPLE);
+					}
+				}
+
+				// Move the cubes
+				componentsFactory.moveCubesToCity(countersLibrary, cubes, cityList.get(nextInfectionCard));
 			}
 		}
 		
@@ -320,15 +334,14 @@ public class PandemicModel implements Serializable {
 	
 	/**
 	 * Draw a card from the top of the infection pile and display it on that pile.
-	 * @param cough true if the cough sound must be launched (but it will be heard only if the sound is on)
 	 * @return the drawn card id
 	 */
-	public int drawInfectionCard(boolean cough) {
+	public int drawInfectionCard() {
 		int nextCard = infectionDeck.remove(0);
 		discardPile.add(nextCard);
 
-        logger.debug("Drew infection card: {} - {} => discarded", new Object[] { nextCard,
-                (nextCard >= 100 && nextCard < 200) ? "MUTATION!" : cityList.get(nextCard).getName() });
+        logger.debug("Drew infection card: {} - {} => discarded",
+				new Object[] { nextCard, (nextCard >= 100 && nextCard < 200) ? "MUTATION!" : cityList.get(nextCard).getName() });
         		
 		// Notify the observers (to put the card graphically on top of the pile)
 		for (DecksObserver observer : decksObservers) {

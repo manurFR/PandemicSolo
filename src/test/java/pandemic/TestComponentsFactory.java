@@ -34,9 +34,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static pandemic.model.Disease.BLUE;
+import static pandemic.model.Disease.PURPLE;
 import static pandemic.model.Expansion.*;
-import static pandemic.model.Variant.MUTATION;
-import static pandemic.model.Variant.VIRULENT_STRAIN;
+import static pandemic.model.Variant.*;
 
 /**
  * @author manur
@@ -131,7 +132,7 @@ public class TestComponentsFactory {
         assertEquals(tested.getX(), 362);
         assertEquals(tested.getY(), 97);
         assertEquals(tested.getName(), "Paris");
-        assertEquals(tested.getColor(), Disease.BLUE);
+        assertEquals(tested.getColor(), BLUE);
     }
 
     @Test
@@ -139,6 +140,7 @@ public class TestComponentsFactory {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(new MockBundle("cubes.RED", "814;150;\"cube_red.jpg\""));
 
 		GameConfig config = prepareBasicConfig();
+		config.getVariants().add(WORLDWIDE_PANIC);
 		List<PandemicObject> listCubes = new ArrayList<PandemicObject>(componentsFactory.createCubes(config));
 
         when(mockResourceProvider.getBundle(anyString())).thenReturn(new MockBundle("city.35", "362;97;\"Paris\";BLUE"));
@@ -146,23 +148,32 @@ public class TestComponentsFactory {
         List<City> cities = componentsFactory.createCities();
         City paris = cities.get(0);
 
-        componentsFactory.moveCubesToCity(listCubes, 3, paris);
+        List<Disease> cubeColors = asList(BLUE, BLUE, PURPLE);
+        componentsFactory.moveCubesToCity(listCubes, cubeColors, paris);
 
-        Cube cube1 = (Cube)listCubes.get(listCubes.size()-1);
-        Cube cube2 = (Cube)listCubes.get(listCubes.size()-2);
-        Cube cube3 = (Cube)listCubes.get(listCubes.size()-3);
+        List<Cube> movedCubes = new ArrayList<Cube>();
+        for (PandemicObject cube: listCubes) {
+            if (cube.getBoardZone().equals(BoardZone.BOARD)) {
+                movedCubes.add((Cube)cube);
+            }
+        }
+        assertEquals(3, movedCubes.size());
 
-        assertEquals(paris.getX() - 21, cube1.getX());
-        assertEquals(paris.getY() - 14, cube1.getY());
-        assertEquals(BoardZone.BOARD, cube1.getBoardZone());
+        Cube cube1 = movedCubes.get(0);
+        Cube cube2 = movedCubes.get(1);
+        Cube cube3 = movedCubes.get(2);
+
+        assertEquals(paris.getX() - 12, cube1.getX());
+        assertEquals(paris.getY() - 3, cube1.getY());
+        assertEquals(PURPLE, cube1.getColor());
 
         assertEquals(paris.getX() - 4, cube2.getX());
         assertEquals(paris.getY() - 14, cube2.getY());
-        assertEquals(BoardZone.BOARD, cube2.getBoardZone());
+        assertEquals(BLUE, cube2.getColor());
 
-        assertEquals(paris.getX() - 12, cube3.getX());
-        assertEquals(paris.getY() - 3, cube3.getY());
-        assertEquals(BoardZone.BOARD, cube3.getBoardZone());
+        assertEquals(paris.getX() - 21, cube3.getX());
+        assertEquals(paris.getY() - 14, cube3.getY());
+        assertEquals(BLUE, cube3.getColor());
     }
 
     @Test

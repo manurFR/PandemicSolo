@@ -35,8 +35,6 @@ import pandemic.model.objects.Role;
 import pandemic.util.DecksObserver;
 import pandemic.util.GameConfig;
 import pandemic.util.GenericResourceProvider;
-import pandemic.util.sounds.SoundsManager;
-import pandemic.view.swing.SwingBoardView;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -77,7 +75,7 @@ public class TestPandemicModel {
     public void testDrawInfectionCard() {
         Integer topCard = model.getInfectionDeck().get(0);
 
-        int drawnCard = model.drawInfectionCard(false);
+        int drawnCard = model.drawInfectionCard();
 
         assertFalse(model.getInfectionDeck().get(0).intValue() == topCard.intValue());
         assertEquals(topCard.intValue(), drawnCard);

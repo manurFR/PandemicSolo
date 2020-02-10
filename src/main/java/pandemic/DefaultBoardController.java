@@ -97,7 +97,7 @@ public class DefaultBoardController implements BoardController {
 
 	@Override
 	public void drawInfectionCard() {
-		model.drawInfectionCard(true); // and let the cough sound be heard
+		model.drawInfectionCard(); // and let the cough sound be heard
 	}
 
 	@Override
