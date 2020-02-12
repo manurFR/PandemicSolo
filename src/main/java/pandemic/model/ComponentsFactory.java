@@ -75,6 +75,8 @@ public class ComponentsFactory {
 
     private static final Integer[] EVENTS_FORBIDDEN_IN_SURVIVAL_MODE = {50, 52, 53, 55, 57, 68, 69};
 
+    private static final Integer ROLE_COLONEL = 131;
+
     private static final String RESOURCEBUNDLE_BASENAME = "componentsCoordinates";
 
     private ResourceProvider resourceProvider;
@@ -126,15 +128,19 @@ public class ComponentsFactory {
 
     /**
      * Create all useful roles
-     * @param expansionRoles list of expansions used for the roles
-     * @return The List of all useful roles
+     *
+     * @param config@return The List of all useful roles
      */
-    public List<Role> createRoles(Set<Expansion> expansionRoles) {
+    public List<Role> createRoles(GameConfig config) {
         List<Role> listRole = new ArrayList<Role>();
 
         List<Integer> availableRoles = new ArrayList<Integer>();
-        for (Expansion expansion : expansionRoles) {
+        for (Expansion expansion : config.getRolesExpansions()) {
             availableRoles.addAll(expansion.getRoles());
+        }
+
+        if (config.getVariants().contains(Variant.QUARANTINES)) {
+            availableRoles.add(ROLE_COLONEL);
         }
 
         for (Integer roleId : availableRoles) {

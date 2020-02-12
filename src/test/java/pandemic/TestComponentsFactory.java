@@ -206,9 +206,12 @@ public class TestComponentsFactory {
 
         Set<Expansion> allExpansions = new LinkedHashSet<Expansion>();
         allExpansions.addAll(asList(Expansion.values()));
-        List<Role> pawns = componentsFactory.createRoles(allExpansions);
+        GameConfig config = prepareBasicConfig();
+        config.setRolesExpansions(allExpansions);
+        config.getVariants().add(QUARANTINES); // add the Colonel
+        List<Role> pawns = componentsFactory.createRoles(config);
 
-        assertEquals(20, pawns.size()); // With expansion roles, there are 13 of them
+        assertEquals(21, pawns.size()); // With expansion roles, there are 13 of them
 
         Role p = pawns.get(0);
         assertEquals("Archivist", p.getName());

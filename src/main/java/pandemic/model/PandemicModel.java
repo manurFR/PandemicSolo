@@ -108,7 +108,7 @@ public class PandemicModel implements Serializable {
 		 *                               Roles                                    *
 		 **************************************************************************/
 		
-		allRoles = componentsFactory.createRoles(config.getRolesExpansions());
+		allRoles = componentsFactory.createRoles(config);
 		affectedRoles = drawRoles(allRoles, config.getNbOfRoles());
 
 		/**************************************************************************
