@@ -55,6 +55,8 @@ public class ComponentsFactory {
     private static final String KEY_CURE = "cure.";
     private static final String KEY_RESERVE_ERADICATION = "eradication.reserve";
     private static final String KEY_ERADICATION_SEPARATION = "eradication.separation";
+    private static final String KEY_RESERVE_QUARANTINE = "quarantine.reserve";
+    private static final String KEY_QUARANTINE_SEPARATION = "quarantine.separation";
     private static final String KEY_INFECTIONRATE = "infectionRateMarker";
     private static final String KEY_OUTBREAKS = "outbreaksMarker";
     private static final String KEY_CURRENTPLAYER = "currentPlayerMarker";
@@ -672,6 +674,33 @@ public class ComponentsFactory {
         }
 
         return listMarkers;
+    }
+
+    /**
+     * Create 6 quarantine markers of each side
+     * @return
+     */
+    public List<PandemicObject> createQuarantineTokens() {
+        List<PandemicObject> listQuarantineTokens = new ArrayList<PandemicObject>();
+
+        int xSeparation = getXCoordinate(KEY_QUARANTINE_SEPARATION);
+        int ySeparation = getYCoordinate(KEY_QUARANTINE_SEPARATION);
+
+        int xPos = getXCoordinate(KEY_RESERVE_QUARANTINE);
+        int yPos = getYCoordinate(KEY_RESERVE_QUARANTINE);
+        ImageIcon imgQuarantine1 = resourceProvider.getIcon(getValue(KEY_RESERVE_QUARANTINE, 2).replace("#", "1"));
+        ImageIcon imgQuarantine2 = resourceProvider.getIcon(getValue(KEY_RESERVE_QUARANTINE, 2).replace("#", "2"));
+
+        for (int i = 0; i < 6; i++) {
+            PandemicObject quarantine2Token = new PandemicObject(PandemicObject.Type.QUARANTINE_TOKEN, "Quarantine token", imgQuarantine2, xPos+i*xSeparation, yPos, BoardZone.RESERVE);
+            listQuarantineTokens.add(quarantine2Token);
+        }
+        for (int i = 0; i < 6; i++) {
+            PandemicObject quarantine1Token = new PandemicObject(PandemicObject.Type.QUARANTINE_TOKEN, "Quarantine token", imgQuarantine1, xPos+i*xSeparation, yPos+ySeparation, BoardZone.RESERVE);
+            listQuarantineTokens.add(quarantine1Token);
+        }
+
+        return listQuarantineTokens;
     }
 
     /**

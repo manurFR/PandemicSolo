@@ -274,7 +274,13 @@ public class PandemicModel implements Serializable {
 		// ERADICATION TOKENS ********** (including a fifth one only for the Mutation variant)
 
 		countersLibrary.addAll(componentsFactory.createEradicationMarkers(config.getDiseases()));
-		
+
+		// QUARANTINE TOKENS **********
+
+		if (config.getVariants().contains(QUARANTINES)) {
+			countersLibrary.addAll(componentsFactory.createQuarantineTokens());
+		}
+
 		// INFECTION RATE TOKEN **********
 
 		countersLibrary.add(componentsFactory.createInfectionRateMarker());
@@ -286,8 +292,8 @@ public class PandemicModel implements Serializable {
 		// CURRENT PLAYER-MARKER TOKEN **********
 
 		countersLibrary.add(componentsFactory.createCurrentPlayerMarker());
-		
-		logger.trace("...Model initialization done");    
+
+		logger.trace("...Model initialization done");
 	}
 
 	/**

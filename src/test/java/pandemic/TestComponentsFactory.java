@@ -260,6 +260,22 @@ public class TestComponentsFactory {
     }
 
     @Test
+    public void testCreateQuarantineTokens() {
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(
+                new MockBundle("quarantine.reserve", "918;326;\"quarantine#.png\""));
+
+        List<PandemicObject> markers = componentsFactory.createQuarantineTokens();
+
+        assertEquals(12, markers.size());
+
+        PandemicObject marker = markers.get(0);
+        assertEquals(918, marker.getX());
+        assertEquals(326, marker.getY());
+        assertEquals(PandemicObject.Type.QUARANTINE_TOKEN, marker.getType());
+        assertEquals(BoardZone.RESERVE, marker.getBoardZone());
+    }
+
+    @Test
     public void testCreateInfectionRateMarker() {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
                 new MockBundle("infectionRateMarker", "551;8;\"infection_token.jpg\""));
