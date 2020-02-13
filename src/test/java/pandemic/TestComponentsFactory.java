@@ -33,7 +33,8 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static pandemic.model.Disease.BLUE;
 import static pandemic.model.Disease.PURPLE;
 import static pandemic.model.Expansion.*;
@@ -351,6 +352,13 @@ public class TestComponentsFactory {
         assertEquals(3000, event.getY());
         assertEquals(PandemicObject.Type.SPECIAL_EVENT_CARD, event.getType());
         assertEquals("Forecast", event.getName());
+
+        // No Local Initiative event
+        List<Integer> eventIds = new ArrayList<Integer>();
+        for (Card e: events) {
+            eventIds.add(e.getId());
+        }
+        assertFalse(eventIds.contains(71));
     }
 
     @Test
@@ -430,6 +438,24 @@ public class TestComponentsFactory {
 
         List<Card> events = componentsFactory.createSpecialEvents(basicConfig, new Random());
         assertEquals(5, events.size());
+    }
+
+    @Test
+    public void test_createSpecialEvents_withQuarantines_shouldIncludeLocalInitiative() {
+        MockBundle mb = new MockBundle("specialEvent.71", "Local Initiative");
+        mb.addKV("cards.defaultPosition", "3000;3000;\"card{0}.jpg\"");
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
+
+        GameConfig basicConfig = prepareBasicConfig(); // two players, only core
+        basicConfig.getVariants().add(QUARANTINES);
+
+        List<Card> events = componentsFactory.createSpecialEvents(basicConfig, new Random());
+        assertEquals(6, events.size());
+        List<Integer> eventIds = new ArrayList<Integer>();
+        for (Card event: events) {
+            eventIds.add(event.getId());
+        }
+        assertTrue(eventIds.contains(71));
     }
 
     /* Note: distributeStartingCards() is tested inside the class TestDistributeStartingCards */

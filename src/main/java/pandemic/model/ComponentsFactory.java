@@ -75,7 +75,9 @@ public class ComponentsFactory {
 
     private static final Integer[] EVENTS_FORBIDDEN_IN_SURVIVAL_MODE = {50, 52, 53, 55, 57, 68, 69};
 
+    // Quarantines specific elements
     private static final Integer ROLE_COLONEL = 131;
+    private static final Integer SPECIALEVENT_LOCAL_INITIATIVE = 71;
 
     private static final String RESOURCEBUNDLE_BASENAME = "componentsCoordinates";
 
@@ -230,6 +232,10 @@ public class ComponentsFactory {
 
         for (Expansion expansion : config.getEventCardsExpansions()) {
             availableEvents.addAll(expansion.getEventCards());
+        }
+
+        if (config.getVariants().contains(Variant.QUARANTINES)) {
+            availableEvents.add(SPECIALEVENT_LOCAL_INITIATIVE);
         }
 
         if (config.isSurvivalMode()) {
