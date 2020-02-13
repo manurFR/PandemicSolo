@@ -40,6 +40,9 @@ import pandemic.util.ResourceProvider;
 import pandemic.util.sounds.SoundsManager;
 import pandemic.view.ViewFactory;
 
+import static pandemic.PandemicSolo.MAINWINDOW_HEIGHT;
+import static pandemic.PandemicSolo.MAINWINDOW_WIDTH;
+
 /**
  * Main operations to manage a game : create a new game, saving, restoring, etc.
  * 
@@ -49,7 +52,7 @@ import pandemic.view.ViewFactory;
 public class GameManager {
 
 	public static final String SAVEFILE_EXTENSION = "sav";
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(PandemicSolo.class);
 	
 	private ConfigBuilder configBuilder;
@@ -116,7 +119,7 @@ public class GameManager {
         controller.setUpView();
         
         mainWindow.pack();
-        mainWindow.setSize(1034, 728 + ((PandemicSolo.IS_MACOS) ? 0 : 8));
+        mainWindow.setSize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT + ((PandemicSolo.IS_MACOS) ? 0 : 8));
         
         logger.debug("----- Game ready to play -----");
 	}

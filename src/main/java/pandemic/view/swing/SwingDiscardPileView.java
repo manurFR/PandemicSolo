@@ -134,7 +134,7 @@ public class SwingDiscardPileView extends SwingView implements DiscardPileView {
 		discardFrame.add(scrollPane);
 
 		// Size and display the frame
-		discardFrame.setSize(new Dimension(550, 240));
+		discardFrame.setSize(new Dimension(550, 250));
 		discardFrame.setLocation(334, 460);
 		discardFrame.setVisible(true);
 		discardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);		

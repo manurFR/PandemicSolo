@@ -86,16 +86,17 @@ public class NewAssignmentListener implements ActionListener {
 		// Select the new role
 		List<PandemicObject> allCounters = model.getCountersLibrary();
 		List<Role> allRoles = new ArrayList<Role>();
-		String[] roleNames = new String[11];
+		List<String> roleNames = new ArrayList<String>();
 		int index = 0;
 		for (PandemicObject counter : allCounters) {
 			if (counter.getType().equals(PandemicObject.Type.PAWN)) {
 				allRoles.add((Role)counter);
-				roleNames[index++] = counter.getName();
+				roleNames.add(counter.getName());
 			}
 		}
 
-		String newRoleName = dialogsManager.chooseFromStrings("New Assignment", "Change it to...", roleNames, 0, null); 
+		String newRoleName = dialogsManager.chooseFromStrings(
+				"New Assignment", "Change it to...", roleNames.toArray(new String[0]), 0, null);
 		if (newRoleName == null) {
 			return;
 		}

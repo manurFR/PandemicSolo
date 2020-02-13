@@ -97,7 +97,7 @@ If one or more of the following behaviors are reported :
 6. Version history
 ***********************
 
-v2.8   - 02/xx/2020 - Added the event cards from In The Lab (3 events) and State of Emergency (6 events)
+v2.8   - 02/13/2020 - Added the event cards from In The Lab (3 events) and State of Emergency (6 events)
                     - Added the roles from In The Lab (4 roles) and State of Emergency (3 roles)
                     - Introduced a Survival mode that removes some event cards from the pool before their random draw
                       (New Assignment, One Quiet Night, Resilient Population, Commercial Travel Ban, Forecast,

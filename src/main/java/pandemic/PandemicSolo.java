@@ -56,20 +56,23 @@ import pandemic.view.swing.SwingViewFactory;
  */
 public class PandemicSolo {
 
-	public static final String VERSION = "2.7.1";
+	public static final String VERSION = "2.8";
 	
 	public static final boolean IS_MACOS = System.getProperty("os.name").startsWith("Mac OS X");
 	public static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
-	
-	private static final Logger logger = LoggerFactory.getLogger(PandemicSolo.class);
-	private static final String LOGBACK_FILE_APPENDER = "logFile";
-	private static final String LOGBACK_CONSOLE_APPENDER = "systemOut";
-	
-	private static final String[] disclaimer = {
+
+    public static final int MAINWINDOW_WIDTH = 1038;
+    public static final int MAINWINDOW_HEIGHT = 742;
+
+    private static final Logger logger = LoggerFactory.getLogger(PandemicSolo.class);
+    private static final String LOGBACK_FILE_APPENDER = "logFile";
+    private static final String LOGBACK_CONSOLE_APPENDER = "systemOut";
+
+    private static final String[] disclaimer = {
 		"===============================================================",
 		"          Pandemic Solitaire - version " + VERSION,
 		"===============================================================",
-		"Copyright (C) 2011 Emmanuel Bizieau, (C) 2010 Andras Domian",
+		"Copyright (C) 2020 Emmanuel Bizieau, (C) 2010 Andras Domian",
 		"This program comes with ABSOLUTELY NO WARRANTY.",
 		"This is free software, and you are welcome to redistribute it",
 		"under certain conditions.",
@@ -97,7 +100,7 @@ public class PandemicSolo {
 
         JFrame window = new JFrame();
         window.setTitle("Pandemic Solitaire  version " + VERSION);
-        window.setSize(1027, 728);
+        window.setSize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
         
         // Set up the scroll pane for the game to take place
         JScrollPane gameContainer = new JScrollPane();

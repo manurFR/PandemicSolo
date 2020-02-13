@@ -19,18 +19,15 @@
  */
 package pandemic.util.sounds;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-
 import pandemic.model.objects.Card;
 import pandemic.model.objects.PandemicObject;
 import pandemic.util.DecksObserver;
 import pandemic.util.GenericResourceProvider;
 import pandemic.util.ResourceProvider;
 import pandemic.util.RolesObserver;
+
+import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
 
 /**
  * This class has a triple purpose : 
@@ -150,7 +147,7 @@ public class SoundsManager extends AbstractSoundsFactory implements DecksObserve
 				
 				AudioInputStream audioInputStream = 
 					AudioSystem.getAudioInputStream(
-						resourceProvider.getAudioStream(this.fileName));
+                            new BufferedInputStream(resourceProvider.getAudioStream(this.fileName)));
 				
 				AudioFormat audioFormat = audioInputStream.getFormat();
 				DataLine.Info dataLineInfo = 
