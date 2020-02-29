@@ -123,6 +123,10 @@ public class ConfigDialog extends JDialog {
 		for (Expansion expansion: rolesExpansions) {
 			nbOfCandidateRoles += expansion.getRoles().size();
 		}
+		// count another possible role for the Colonel if the Quarantines variant is used
+		if (chckbxQuarantines.isSelected()) {
+			nbOfCandidateRoles += 1;
+		}
 		if (nbOfCandidateRoles < modelConfig.getNbOfRoles()) {
 			lblRolesWarning.setVisible(true);
 			return;

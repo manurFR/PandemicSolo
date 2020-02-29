@@ -97,7 +97,8 @@ If one or more of the following behaviors are reported :
 6. Version history
 ***********************
 
-v2.8   - 02/13/2020 - Added the event cards from In The Lab (3 events) and State of Emergency (6 events)
+v2.8   - 02/13/2020  ** Release sponsored and tested by PandyAndy, with help from Smellybluesocks and MentalGuy **
+                    - Added the event cards from In The Lab (3 events) and State of Emergency (6 events)
                     - Added the roles from In The Lab (4 roles) and State of Emergency (3 roles)
                     - Introduced a Survival mode that removes some event cards from the pool before their random draw
                       (New Assignment, One Quiet Night, Resilient Population, Commercial Travel Ban, Forecast,
@@ -116,6 +117,7 @@ v2.8   - 02/13/2020 - Added the event cards from In The Lab (3 events) and State
                        special event, that will both be added to the pool of available elements before draw
                     - Redesign of the Configuration window. One can now choose by expansion which set of roles
                        and special events are included.
+                    - New "Quick Instructions" and "Appendix" contents, designed by PandyAndy.
 
 v2.7.1 - 12/10/2011 - Some internal refactoring - More log messages - Bugfix release :
                        - the Containment Specialist's pawn is not beige (not grey like the Generalist)
