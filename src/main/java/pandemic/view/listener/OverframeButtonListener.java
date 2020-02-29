@@ -18,7 +18,7 @@
  */
 package pandemic.view.listener;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,21 +38,35 @@ import pandemic.util.ResourceProvider;
  */
 public class OverframeButtonListener implements ActionListener {
 
-	private String frameName;
-	private String frameContentPath;
-	
+	public static final int OVERFRAME_X_LOCATION = 168;
+
+	public enum Overframe {
+		INSTRUCTIONS("Quick Instructions", "instructions.jpg", 920),
+		APPENDIX("Appendix", "appendix.jpg", 1500);
+
+		private final String name;
+		private final String image;
+		private final int width;
+
+		Overframe(String name, String image, int width) {
+			this.name = name;
+			this.image = image;
+			this.width = width;
+		}
+	}
+
+	private final Overframe overframe;
 	private ResourceProvider resourceProvider;
 	
-	public OverframeButtonListener(String name, String contentPath, ResourceProvider resourceProvider) {
-		this.frameName = name;
-		this.frameContentPath = contentPath;
+	public OverframeButtonListener(Overframe overframe, ResourceProvider resourceProvider) {
+		this.overframe = overframe;
 		this.resourceProvider = resourceProvider;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// A label for the image content
-		ImageIcon content = resourceProvider.getIcon(frameContentPath);
+		ImageIcon content = resourceProvider.getIcon(overframe.image);
 		JLabel contentLabel = new JLabel(content);
 		
 		// A panel to put the JLabel
@@ -63,12 +77,14 @@ public class OverframeButtonListener implements ActionListener {
 		JScrollPane scrollPane = new JScrollPane(contentPanel);
 		
 		// At least, the frame, where we place the ScrollPane
-		JFrame overFrame = new JFrame(frameName);
+		JFrame overFrame = new JFrame(overframe.name);
 		overFrame.add(scrollPane);
 
-		// Let's set common properties of the frame and display it
-		overFrame.setSize(new Dimension(740, 600));
-		overFrame.setLocation(168, 48);
+		// If necessary, resize the theorical width of the frame so that it doesn't exceed the screen size
+		int effectiveWidth = Math.min(overframe.width,
+				new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue() - OVERFRAME_X_LOCATION);
+		overFrame.setSize(new Dimension(effectiveWidth, 800));
+		overFrame.setLocation(OVERFRAME_X_LOCATION, 48);
 		overFrame.setVisible(true);
 		overFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}

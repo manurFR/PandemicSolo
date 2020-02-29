@@ -34,7 +34,6 @@ import javax.swing.JScrollPane;
 
 import pandemic.BoardController;
 import pandemic.dialog.ModalDialogsManager;
-import pandemic.model.ComponentsFactory;
 import pandemic.model.Expansion;
 import pandemic.model.PandemicModel;
 import pandemic.model.objects.Card;
@@ -43,6 +42,7 @@ import pandemic.model.objects.Role;
 import pandemic.view.BoardView;
 import pandemic.view.listener.NewAssignmentListener;
 import pandemic.view.listener.OverframeButtonListener;
+import pandemic.view.listener.OverframeButtonListener.Overframe;
 
 import static pandemic.model.objects.Role.TROUBLESHOOTER_ROLE_ID;
 
@@ -248,10 +248,10 @@ public class SwingBoardView extends SwingView implements BoardView {
 
         // **** READ INSTRUCTIONS BUTTON ********************
 
-        JButton instructionsButton = new JButton("Read Instructions!");
+        JButton instructionsButton = new JButton("Quick Instructions");
         instructionsButton.setBounds(15, 15, 140, 25);
 
-        instructionsButton.addActionListener(new OverframeButtonListener("Quick Instructions", "instructions.jpg", getResourceProvider()));
+        instructionsButton.addActionListener(new OverframeButtonListener(Overframe.INSTRUCTIONS, getResourceProvider()));
 
         board.add(instructionsButton);
 
@@ -260,7 +260,7 @@ public class SwingBoardView extends SwingView implements BoardView {
         JButton appendixButton = new JButton("Appendix");
         appendixButton.setBounds(15, 45, 140, 25);
 
-        appendixButton.addActionListener(new OverframeButtonListener("Appendix", "appendix.jpg", getResourceProvider()));
+        appendixButton.addActionListener(new OverframeButtonListener(Overframe.APPENDIX, getResourceProvider()));
 
         board.add(appendixButton);
 
@@ -437,10 +437,7 @@ public class SwingBoardView extends SwingView implements BoardView {
     }
 
     private String buildRoleFilename(Role pawn) {
-        StringBuilder sb = new StringBuilder("rolebox");
-        sb.append(pawn.getId());
-        sb.append(".jpg");
-        return sb.toString();
+        return "rolebox" + pawn.getId() + ".jpg";
     }
 
     /**
