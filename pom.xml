@@ -29,10 +29,11 @@
             <version>1.6.1</version>
         </dependency>
 
-        <!-- For now, you'll need to install that version locally : a) Download
-            it at : http://developer.apple.com/library/mac/#samplecode/AppleJavaExtensions/Introduction/Intro.html
-            b) Run the command : mvn deploy:deploy-file -DgroupId=com.apple -DartifactId=AppleJavaExtensions
-            -Dversion=1.6 -Dpackaging=jar -Dfile=/path/to/jars/AppleJavaExtensions.jar -Durl=file:///path/to/local/repository -->
+        <!-- For now, you'll need to install that version locally :
+            a) Download it at : http://developer.apple.com/library/mac/#samplecode/AppleJavaExtensions/Introduction/Intro.html
+                OR take it from this repository in /jars.
+            b) Install it in your local maven repository :
+                mvn install:install-file -DgroupId=com.apple -DartifactId=AppleJavaExtensions -Dversion=1.6 -Dpackaging=jar -Dfile=/path/to/jars/AppleJavaExtensions.jar -->
         <dependency>
             <groupId>com.apple</groupId>
             <artifactId>AppleJavaExtensions</artifactId>
