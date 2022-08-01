@@ -34,9 +34,9 @@
  This application can run on most systems that support Java. That includes all forms of Windows, Mac OS X,
  all forms of Linuxes and Unixes, and many more.
 
- All you need is the Java Runtime Environment 6 (or higher) installed on your computer. 
+ All you need is the Java Runtime Environment, aka "JRE", version 11 (or higher) installed on your computer.
  
- If you don't already have Java, you can get it here : <http://www.java.com/download/>.
+ If you don't already have a Java "JRE", you can get it here : <https://adoptium.net/temurin/releases?version=11>.
  Alternatively, make a search for "Java Runtime Environment".
   
 3. Starting the application
