@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pandemic.model.objects.*;
 import pandemic.util.GameConfig;
+import pandemic.util.RandomUtil;
 import pandemic.util.ResourceProvider;
 
 import javax.swing.*;
@@ -82,9 +83,14 @@ public class ComponentsFactory {
     private static final String RESOURCEBUNDLE_BASENAME = "componentsCoordinates";
 
     private ResourceProvider resourceProvider;
+    private RandomUtil randomizer;
 
     public void setResourceProvider(ResourceProvider resourceProvider) {
         this.resourceProvider = resourceProvider;
+    }
+
+    public void setRandomizer(RandomUtil randomizer) {
+        this.randomizer = randomizer;
     }
 
     /**********************************************************
@@ -221,7 +227,7 @@ public class ComponentsFactory {
     /**
      * Create the deck of Special Event cards
      */
-    public List<Card> createSpecialEvents(GameConfig config, Random randomizer) {
+    public List<Card> createSpecialEvents(GameConfig config) {
         List<Card> specialEventsCards = new ArrayList<Card>();
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
@@ -242,7 +248,7 @@ public class ComponentsFactory {
             availableEvents.removeAll(Arrays.asList(EVENTS_FORBIDDEN_IN_SURVIVAL_MODE));
         }
 
-        Collections.shuffle(availableEvents, randomizer);
+        randomizer.shuffleInPlace(availableEvents);
 
         // never draw more event cards than is available
         int nbEventCardsToCreate = Math.min(config.isFiveEvents() ? 5 : config.getNbOfRoles() * 2, availableEvents.size());
@@ -286,7 +292,7 @@ public class ComponentsFactory {
                 card.setBoardZone(BoardZone.HAND_OR_DISCARD);
 
                 logger.debug("...card {} ({}) distributed to player {} (x={}, y={})",
-                        new Object[]{card.getId(), card.getName(), roleNumber, card.getX(), card.getY()});
+                        card.getId(), card.getName(), roleNumber, card.getX(), card.getY());
             }
         }
     }
@@ -297,9 +303,8 @@ public class ComponentsFactory {
      * The cards are placed randomly in the deck, except at the top and bottom.
      * @param pileDeck The deck of cards where to insert the Mutation Event cards
      * @param cardsLibrary We also add the new cards in the Library to keep a reference on them
-     * @param randomizer Utility to get random numbers
      */
-    public void addMutationEventsCards(List<Card> pileDeck, List<Card> cardsLibrary, Random randomizer) {
+    public void addMutationEventsCards(List<Card> pileDeck, List<Card> cardsLibrary) {
         logger.debug("...remaining player cards deck size : {}", pileDeck.size());
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
@@ -326,7 +331,7 @@ public class ComponentsFactory {
     /**
      * Create the deck of epidemic cards
      */
-    public List<Card> createEpidemicCards(GameConfig config, Random randomizer) {
+    public List<Card> createEpidemicCards(GameConfig config) {
         List<Card> epidemicCards = new ArrayList<Card>();
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
@@ -336,7 +341,7 @@ public class ComponentsFactory {
         if (config.getVariants().contains(Variant.VIRULENT_STRAIN)) { // Virulent Strain challenge epidemic cards
             Integer[] cardIds = {201, 202, 203, 204, 205, 206, 207, 208, 209, 210};
             List<Integer> availableCards = Arrays.asList(cardIds);
-            Collections.shuffle(availableCards, randomizer);
+            randomizer.shuffleInPlace(availableCards);
             for (int cardIndex = 0; cardIndex < config.getNbOfEpidemics(); cardIndex++) {
                 String imageName = MessageFormat.format(templateName, availableCards.get(cardIndex));
 
@@ -363,7 +368,7 @@ public class ComponentsFactory {
         return epidemicCards;
     }
 
-    public List<Card> createEmergencyEvents(GameConfig config, Random randomizer) {
+    public List<Card> createEmergencyEvents(GameConfig config) {
         List<Card> emergencyEventCards = new ArrayList<Card>();
 
         int xPos = getXCoordinate(KEY_CARD_DEFAULTPOSITION);
@@ -381,7 +386,7 @@ public class ComponentsFactory {
             emergencyEventCards.add(card);
         }
 
-        Collections.shuffle(emergencyEventCards, randomizer);
+        randomizer.shuffleInPlace(emergencyEventCards);
         return emergencyEventCards;
     }
 
@@ -394,7 +399,7 @@ public class ComponentsFactory {
      * @param emergencyEventsToAdd The list of emergency event cards to add to the deck (an empty list if Emergency Events is not used)
      * @return the new player deck, with epidemic cards added
      */
-    public List<Card> addCardsEvenly(List<Card> initialDeck, List<Card> epidemics, List<Card> emergencyEventsToAdd, Random randomizer) {
+    public List<Card> addCardsEvenly(List<Card> initialDeck, List<Card> epidemics, List<Card> emergencyEventsToAdd) {
         int nbOfPiles = epidemics.size();
         logger.debug("...nb of cards in deck : {}", initialDeck.size());
         logger.debug("...nb of piles / cards to add : {}", nbOfPiles);
@@ -412,7 +417,7 @@ public class ComponentsFactory {
             if (!emergencyEventsToAdd.isEmpty()) {
                 currentPile.add(emergencyEventsToAdd.get(iCurrPile));
             }
-            Collections.shuffle(currentPile, randomizer);
+            randomizer.shuffleInPlace(currentPile);
             finalDeck.addAll(currentPile);
 
             idx += pileSize;
@@ -581,7 +586,7 @@ public class ComponentsFactory {
             cube.setY(city.getY() + posY);
             cube.setBoardZone(BoardZone.BOARD);
 
-            logger.debug("...moving {} cube to x={}, y={}", new Object[] {cube.getColor().name(), cube.getX(), cube.getY()});
+            logger.debug("...moving {} cube to x={}, y={}", cube.getColor().name(), cube.getX(), cube.getY());
         }
     }
 

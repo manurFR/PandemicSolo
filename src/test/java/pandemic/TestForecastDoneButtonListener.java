@@ -18,22 +18,16 @@
  */
 package pandemic;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Before;
+import org.junit.Test;
+import pandemic.dialog.DialogsManager;
+import pandemic.view.listener.ForecastDoneButtonListener;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
-import javax.swing.JTextField;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import pandemic.BoardController;
-import pandemic.dialog.DialogsManager;
-import pandemic.view.listener.ForecastDoneButtonListener;
+import static org.mockito.Mockito.*;
 
 /** 
 * @author manur
@@ -111,7 +105,7 @@ public class TestForecastDoneButtonListener {
 		listener.actionPerformed(mockEvent);
 		
 		// then
-		verify(mockController).rearrangeInfectionDeck(Arrays.asList(new Integer[] {1, 4, 0, 3, 2}));
+		verify(mockController).rearrangeInfectionDeck(Arrays.asList(1, 4, 0, 3, 2));
 	}
 
 }

@@ -18,16 +18,13 @@
  */
 package pandemic;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
-
-import pandemic.GameManager;
-import pandemic.PandemicSolo;
 import pandemic.model.DifficultyLevel;
 import pandemic.model.Variant;
 import pandemic.util.GameConfig;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 
 
 /** 

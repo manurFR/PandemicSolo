@@ -18,10 +18,7 @@
  */
 package pandemic;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,6 +30,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.mockito.ArgumentMatchers;
 import pandemic.dialog.DialogsManager;
 import pandemic.model.BoardZone;
 import pandemic.model.PandemicModel;
@@ -87,10 +85,22 @@ public class TestNewAssignmentListener {
 	public void testActionPerformedDuplicateRole()
 	{
 		// First call 
-		when(mockManager.chooseFromStrings(eq("New Assignment"), eq("Change the following role..."), any(String[].class), anyInt(), anyString())).thenReturn("Role 3");
+		when(mockManager.chooseFromStrings(
+				eq("New Assignment"),
+				eq("Change the following role..."),
+				any(String[].class),
+				anyInt(),
+				String.valueOf(ArgumentMatchers.<Boolean>isNull()))
+		).thenReturn("Role 3");
 		
 		// The second call returns a duplicate
-		when(mockManager.chooseFromStrings(eq("New Assignment"), eq("Change it to..."), any(String[].class), anyInt(), anyString())).thenReturn("R1"); // already affected
+		when(mockManager.chooseFromStrings(
+				eq("New Assignment"),
+				eq("Change it to..."),
+				any(String[].class),
+				anyInt(),
+				String.valueOf(ArgumentMatchers.<Boolean>isNull()))
+		).thenReturn("R1"); // already affected
 		
 		listener.actionPerformed(mockEvent);
 		verify(mockManager).showAlert("This role is already in use!");
@@ -100,10 +110,22 @@ public class TestNewAssignmentListener {
 	public void testActionPerformed()
 	{
 		// First call 
-		when(mockManager.chooseFromStrings(eq("New Assignment"), eq("Change the following role..."), any(String[].class), anyInt(), anyString())).thenReturn("Role 3");
+		when(mockManager.chooseFromStrings(
+				eq("New Assignment"),
+				eq("Change the following role..."),
+				any(String[].class),
+				anyInt(),
+				String.valueOf(ArgumentMatchers.<Boolean>isNull()))
+		).thenReturn("Role 3");
 		
 		// The second call returns a new role
-		when(mockManager.chooseFromStrings(eq("New Assignment"), eq("Change it to..."), any(String[].class), anyInt(), anyString())).thenReturn("R4");
+		when(mockManager.chooseFromStrings(
+				eq("New Assignment"),
+				eq("Change it to..."),
+				any(String[].class),
+				anyInt(),
+				String.valueOf(ArgumentMatchers.<Boolean>isNull()))
+		).thenReturn("R4");
 		
 		listener.actionPerformed(mockEvent);
 		

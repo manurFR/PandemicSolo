@@ -34,9 +34,9 @@
  This application can run on most systems that support Java. That includes all forms of Windows, Mac OS X,
  all forms of Linuxes and Unixes, and many more.
 
- All you need is the Java Runtime Environment, aka "JRE", version 11 (or higher) installed on your computer.
- 
- If you don't already have a Java "JRE", you can get it here : <https://adoptium.net/temurin/releases?version=11>.
+ All you need is the Java Runtime Environment 6 (or higher) installed on your computer.
+
+ If you don't already have Java, you can get it here : <http://www.java.com/download/>.
  Alternatively, make a search for "Java Runtime Environment".
   
 3. Starting the application
@@ -96,6 +96,8 @@ If one or more of the following behaviors are reported :
 
 6. Version history
 ***********************
+
+v2.9   - 08/02/2022 -
 
 v2.8   - 02/13/2020  ** Release sponsored and tested by PandyAndy, with help from Smellybluesocks and MentalGuy **
                     - Added the event cards from In The Lab (3 events) and State of Emergency (6 events)

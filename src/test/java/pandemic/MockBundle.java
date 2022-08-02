@@ -33,8 +33,8 @@ import java.util.ResourceBundle;
  * @since v2.6
  */
 class MockBundle extends ResourceBundle {
-	private HashMap<String, String> properties;
-	private String defaultValue;
+	private final HashMap<String, String> properties;
+	private final String defaultValue;
 	
 	public MockBundle(String key, String value) {
 		properties = new HashMap<String, String>();

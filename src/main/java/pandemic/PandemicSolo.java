@@ -72,7 +72,7 @@ public class PandemicSolo {
 		"===============================================================",
 		"          Pandemic Solitaire - version " + VERSION,
 		"===============================================================",
-		"Copyright (C) 2020 Emmanuel Bizieau, (C) 2010 Andras Domian",
+		"Copyright (C) 2022 Emmanuel Bizieau, (C) 2010 Andras Domian",
 		"This program comes with ABSOLUTELY NO WARRANTY.",
 		"This is free software, and you are welcome to redistribute it",
 		"under certain conditions.",

@@ -18,20 +18,14 @@
  */
 package pandemic;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Before;
+import org.junit.Test;
+import pandemic.model.PandemicModel;
 
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.mockito.Mockito.*;
 
-import pandemic.BoardController;
-import pandemic.DefaultBoardController;
-import pandemic.model.PandemicModel;
 
 /** 
 * @author manur
@@ -73,7 +67,7 @@ public class TestBoardController {
 	@Test
 	public void testRemoveDiscardedCardWrongIndex()
 	{
-		when(mockModel.getDiscardPile()).thenReturn(Arrays.asList(new Integer[] { 1, 2 }));
+		when(mockModel.getDiscardPile()).thenReturn(Arrays.asList(1, 2));
 		
 		controller.removeDiscardedCard(5);
 		

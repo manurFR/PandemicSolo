@@ -25,14 +25,14 @@ import pandemic.model.*;
 import pandemic.model.objects.*;
 import pandemic.util.GameConfig;
 import pandemic.util.GenericResourceProvider;
+import pandemic.util.RandomUtil;
 import pandemic.util.ResourceProvider;
 
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static pandemic.model.Disease.BLUE;
@@ -61,12 +61,12 @@ public class TestComponentsFactory {
         //  not the ResourceProvider interface)
 
         componentsFactory.setResourceProvider(mockResourceProvider);
+        componentsFactory.setRandomizer(new RandomUtil());
     }
 
     @Test
     public void testGetValue() {
-        when(mockResourceProvider.getBundle(anyString())).thenReturn(
-                new MockBundle("dummy", "A1;\"B2\";c3"));
+        when(mockResourceProvider.getBundle(anyString())).thenReturn(new MockBundle("dummy", "A1;\"B2\";c3"));
 
         assertEquals("B2", componentsFactory.getValue("dummy", 1));
 
@@ -205,8 +205,7 @@ public class TestComponentsFactory {
         when(mockResourceProvider.getBundle(anyString())).thenReturn(
                 new MockBundle("role.118", "945;270;\"Archivist\";\"pawn_archivist.jpg\";OnTheBrink"));
 
-        Set<Expansion> allExpansions = new LinkedHashSet<Expansion>();
-        allExpansions.addAll(asList(Expansion.values()));
+        Set<Expansion> allExpansions = new LinkedHashSet<Expansion>(asList(Expansion.values()));
         GameConfig config = prepareBasicConfig();
         config.setRolesExpansions(allExpansions);
         config.getVariants().add(QUARANTINES); // add the Colonel
@@ -344,7 +343,7 @@ public class TestComponentsFactory {
         mb.addKV("cards.defaultPosition", "3000;3000;\"card{0}.jpg\"");
         when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
 
-        List<Card> events = componentsFactory.createSpecialEvents(prepareBasicConfig(), new Random());
+        List<Card> events = componentsFactory.createSpecialEvents(prepareBasicConfig());
         assertEquals(5, events.size());
 
         Card event = events.get(0);
@@ -367,7 +366,7 @@ public class TestComponentsFactory {
         mb.addKV("cards.defaultPosition", "3000;3000;\"card{0}.jpg\"");
         when(mockResourceProvider.getBundle(anyString())).thenReturn(mb);
 
-        List<Card> events = componentsFactory.createSpecialEvents(prepareAdvancedConfig(), new Random());
+        List<Card> events = componentsFactory.createSpecialEvents(prepareAdvancedConfig());
         assertEquals(8, events.size());
 
         // In the Lab events are #54, 55, 56, 57, 58, 59, 60, 61
@@ -390,7 +389,7 @@ public class TestComponentsFactory {
         final GameConfig advancedConfig = prepareAdvancedConfig();
         advancedConfig.getEventCardsExpansions().remove(ON_THE_BRINK);
         advancedConfig.getEventCardsExpansions().add(IN_THE_LAB);
-        List<Card> events = componentsFactory.createSpecialEvents(advancedConfig, new Random());
+        List<Card> events = componentsFactory.createSpecialEvents(advancedConfig);
         assertEquals(8, events.size());
 
         // In the Lab events are #62, 63, 64
@@ -413,13 +412,13 @@ public class TestComponentsFactory {
         GameConfig basicConfig = prepareBasicConfig(); // two players, only core
         basicConfig.setSurvivalMode(true);
 
-        List<Card> events = componentsFactory.createSpecialEvents(basicConfig, new Random());
+        List<Card> events = componentsFactory.createSpecialEvents(basicConfig);
         assertEquals(2, events.size());
 
         Collections.sort(events, new Comparator<Card>() {
             @Override
             public int compare(Card o1, Card o2) {
-                return new Integer(o1.getId()).compareTo(o2.getId());
+                return Integer.valueOf(o1.getId()).compareTo(o2.getId());
             }
         });
 
@@ -436,7 +435,7 @@ public class TestComponentsFactory {
         GameConfig basicConfig = prepareBasicConfig(); // two players, only core
         basicConfig.setFiveEvents(true);
 
-        List<Card> events = componentsFactory.createSpecialEvents(basicConfig, new Random());
+        List<Card> events = componentsFactory.createSpecialEvents(basicConfig);
         assertEquals(5, events.size());
     }
 
@@ -449,7 +448,7 @@ public class TestComponentsFactory {
         GameConfig basicConfig = prepareBasicConfig(); // two players, only core
         basicConfig.getVariants().add(QUARANTINES);
 
-        List<Card> events = componentsFactory.createSpecialEvents(basicConfig, new Random());
+        List<Card> events = componentsFactory.createSpecialEvents(basicConfig);
         assertEquals(6, events.size());
         List<Integer> eventIds = new ArrayList<Integer>();
         for (Card event: events) {
@@ -472,7 +471,7 @@ public class TestComponentsFactory {
         List<City> cities = componentsFactory.createCities();
         List<Card> cityCards = componentsFactory.createPlayerCards(cities);
 
-        componentsFactory.addMutationEventsCards(cityCards, new ArrayList<Card>(), new Random());
+        componentsFactory.addMutationEventsCards(cityCards, new ArrayList<Card>());
 
         List<Card> mutationEvents = new ArrayList<Card>();
         for (Card card : cityCards) {
@@ -500,7 +499,7 @@ public class TestComponentsFactory {
         // Classic game
         GameConfig config = prepareBasicConfig();
         config.setDifficultyLevel(DifficultyLevel.HEROIC);
-        List<Card> classicEpidemics = componentsFactory.createEpidemicCards(config, new Random());
+        List<Card> classicEpidemics = componentsFactory.createEpidemicCards(config);
         assertEquals(6, classicEpidemics.size());
 
         Card epidemic = classicEpidemics.get(0);
@@ -512,7 +511,7 @@ public class TestComponentsFactory {
         // Virulent strain variant
         config = prepareAdvancedConfig();
         config.setDifficultyLevel(DifficultyLevel.NORMAL);
-        List<Card> virulentEpidemics = componentsFactory.createEpidemicCards(config, new Random());
+        List<Card> virulentEpidemics = componentsFactory.createEpidemicCards(config);
         assertEquals(5, virulentEpidemics.size());
 
         epidemic = virulentEpidemics.get(0);
@@ -552,15 +551,21 @@ public class TestComponentsFactory {
         cardsToAdd.add(new Card(PandemicObject.Type.EPIDEMIC_CARD, 201, "201", null, 1, 1, BoardZone.RESERVE));
         cardsToAdd.add(new Card(PandemicObject.Type.EPIDEMIC_CARD, 202, "202", null, 1, 1, BoardZone.RESERVE));
 
-        // Add those 2 epidemics "evenly"
-        Random mockRandomizer = mock(Random.class);
-        when(mockRandomizer.nextInt(anyInt())).thenReturn(1);
-        final List<Card> finalDeck =
-                componentsFactory.addCardsEvenly(initialDeck, cardsToAdd, Collections.<Card>emptyList(), mockRandomizer);
+        // neutralize the shuffle
+        RandomUtil mockRandomizer = new RandomUtil() {
+            public void shuffleInPlace(List<?> list) {
+                // do nothing
+            }
+        };
+        componentsFactory.setRandomizer(mockRandomizer);
 
-        // the mock randomizer will always place the epidemic cards at the place before the last in each pile
-        assertEquals(201, finalDeck.get(3).getId());
-        assertEquals(202, finalDeck.get(7).getId());
+        // Add those 2 epidemics "evenly"
+        final List<Card> finalDeck =
+                componentsFactory.addCardsEvenly(initialDeck, cardsToAdd, Collections.<Card>emptyList());
+
+        // the epidemic cards will be at the last place in each pile, and no shuffle occurs
+        assertEquals(201, finalDeck.get(4).getId());
+        assertEquals(202, finalDeck.get(8).getId());
     }
 
     @Test
@@ -583,16 +588,22 @@ public class TestComponentsFactory {
         emergencyEvents.add(new Card(PandemicObject.Type.EMERGENCY_EVENT_CARD, 401, "401", null, 1, 1, BoardZone.RESERVE));
         emergencyEvents.add(new Card(PandemicObject.Type.EMERGENCY_EVENT_CARD, 402, "402", null, 1, 1, BoardZone.RESERVE));
 
-        // Add those 2 epidemics "evenly"
-        Random mockRandomizer = mock(Random.class);
-        when(mockRandomizer.nextInt(anyInt())).thenReturn(1);
-        final List<Card> finalDeck = componentsFactory.addCardsEvenly(initialDeck, cardsToAdd, emergencyEvents, mockRandomizer);
+        // neutralize the shuffle
+        RandomUtil mockRandomizer = new RandomUtil() {
+            public void shuffleInPlace(List<?> list) {
+                // do nothing
+            }
+        };
+        componentsFactory.setRandomizer(mockRandomizer);
 
-        // the mock randomizer will always place the emergency event cards at the place before the last in each pile
-        assertEquals(201, finalDeck.get(3).getId());
-        assertEquals(401, finalDeck.get(4).getId());
-        assertEquals(202, finalDeck.get(8).getId());
-        assertEquals(402, finalDeck.get(9).getId());
+        // Add those 2 epidemics "evenly"
+        final List<Card> finalDeck = componentsFactory.addCardsEvenly(initialDeck, cardsToAdd, emergencyEvents);
+
+        // the emergency event cards will be at the last place in each pile, and no shuffle occurs
+        assertEquals(201, finalDeck.get(4).getId());
+        assertEquals(401, finalDeck.get(5).getId());
+        assertEquals(202, finalDeck.get(9).getId());
+        assertEquals(402, finalDeck.get(10).getId());
     }
 
 
