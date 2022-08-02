@@ -1,6 +1,6 @@
 ************************************************************************************************************************
 
-                                PANDEMIC Solitaire version 2.8
+                                       PANDEMIC Solitaire version 2.9
                                 
 ************************************************************************************************************************
 
@@ -74,8 +74,8 @@ If one or more of the following behaviors are reported :
  - Error message "java.lang.NoClassDefFoundError: org/slf4j/LoggerFactory" or 
     "java.lang.ClassNotFoundException: org.slf4j.LoggerFactory"
  THEN : please check that the PandemicSolo.jar is accompanied by a "lib" directory,
-   at the same place, containing at least the following files : slf4j-api-1.6.1.jar, 
-   AppleJavaExtensions.jar, logback-core-0.9.28.jar, logback-classic-0.9.28.jar.
+   at the same place, containing at least the following files : slf4j-api-1.7.36.jar,
+   AppleJavaExtensions-1.6.jar, logback-core-1.2.11.jar, logback-classic-1.2.11.jar.
  If not, please download again the zip file (which contains this directory).
 
 5. Credits
@@ -97,7 +97,7 @@ If one or more of the following behaviors are reported :
 6. Version history
 ***********************
 
-v2.9   - 08/02/2022 -
+v2.9   - 08/02/2022 - Shuffles should be "more random".
 
 v2.8   - 02/13/2020  ** Release sponsored and tested by PandyAndy, with help from Smellybluesocks and MentalGuy **
                     - Added the event cards from In The Lab (3 events) and State of Emergency (6 events)
@@ -186,5 +186,5 @@ v2.2 - 02/26/2010 - Working version with only base game and Normal difficulty (5
 
 =======================================================================================================================
 
- This file was last modified on 13/02/2020.
- Copyright (C) 2020 Emmanuel Bizieau <manur@manur.org>, (C) 2010 Andras Damian <http://boardgamegeek.com/user/jancsoo>
+ This file was last modified on 02/08/2022.
+ Copyright (C) 2022 Emmanuel Bizieau <manur@manur.org>, (C) 2010 Andras Damian <http://boardgamegeek.com/user/jancsoo>
