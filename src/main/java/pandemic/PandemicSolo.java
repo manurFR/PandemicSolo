@@ -56,7 +56,7 @@ import pandemic.view.swing.SwingViewFactory;
  */
 public class PandemicSolo {
 
-	public static final String VERSION = "2.8";
+	public static final String VERSION = "2.9";
 	
 	public static final boolean IS_MACOS = System.getProperty("os.name").startsWith("Mac OS X");
 	public static final boolean IS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
